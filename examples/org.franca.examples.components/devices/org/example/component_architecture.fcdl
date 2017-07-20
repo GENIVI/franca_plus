@@ -1,0 +1,54 @@
+package org.example
+
+import org.example.* from "classpath:/org/example/MediaPlayer.fidl"
+
+//=====================================================
+// service definitions
+component Component1 {}
+
+component OrphanedComponent {
+	contains Component1 as Comp1Inst1Orphaned	
+}
+
+component Component2 {
+	version { major 1 minor 0 }
+	contains Component1 as ComponentInst1
+	contains Component1 as ComponentInst2
+	contains Component1 as ComponentInst3
+}
+
+//=====================================================
+// architecture structure definitions
+
+<** @framework **>
+component VehicleFuture
+{
+	contains InfotainmentFrameworkFuture as InfotainmentFramework2030
+	
+}
+
+@framework
+component InfotainmentFrameworkFuture {
+	contains AudioCluster 
+}
+
+@cluster
+component AudioCluster {
+	contains Component2 as Component2Inst1
+}
+
+instance AudioCluster as Inst1
+instance VehicleFuture as Generation2030
+instance InfotainmentFrameworkFuture as FrameworkInstance
+
+
+device HeadUnit {
+	// hosts SP2018.InfotainmentFrameworkInst.AudioClusterInst.Component2Inst1
+
+}
+
+device Amplifier {
+	instance VehicleFuture.InfotainmentFramework2030
+	instance AudioCluster.Component2Inst1.ComponentInst1
+
+}

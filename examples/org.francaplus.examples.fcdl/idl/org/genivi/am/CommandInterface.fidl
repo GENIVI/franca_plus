@@ -1,0 +1,655 @@
+package org.genivi.am.commandinterface
+import org.genivi.am.audiomanagertypes.* from "AudioManagerTypes.fidl"
+
+<**
+@description : 
+    The interface towards the Controlling Instance (e.g. HMI). It handles the communication towards the HMI and other system components who need to interact with the audio management.
+    There are two rules that have to be kept in mind when implementing against this interface:
+    @author : Christian Linke (christian.linke(at)bmw.de)
+**>
+
+interface CommandControl {
+    version {
+        major 1
+        minor 1
+    }
+
+    <**
+        @description : Callback that is called when the number of connections change.
+    **>
+    broadcast newMainConnection {
+        out {
+            AudioManagerTypes.am_MainConnectionType_s mainConnection
+        }
+    }
+
+    <**
+        @description : Callback that is called when the number of connections change.
+    **>
+    broadcast removedMainConnection {
+        out {
+            AudioManagerTypes.am_mainConnectionID_t mainConnection
+        }
+    }
+
+    <**
+        @description : Callback that is called when the number of sinks change.
+    **>
+    broadcast newSink {
+        out {
+            AudioManagerTypes.am_SinkType_s sink
+        }
+    }
+
+    <**
+        @description : Callback that is called when the number of sinks change.
+    **>
+    broadcast removedSink {
+        out {
+            AudioManagerTypes.am_sinkID_t sinkID
+        }
+    }
+
+    <**
+        @description : Callback that is called when the number of sources change.
+    **>
+    broadcast newSource {
+        out {
+            AudioManagerTypes.am_SourceType_s source
+        }
+    }
+
+    <**
+        @description : Callback that is called when the number of sources change.
+    **>
+    broadcast removedSource {
+        out {
+            AudioManagerTypes.am_sourceID_t source
+        }
+    }
+
+    <**
+        @description : This callback is called if the number of sink classes has changed.
+    **>
+    broadcast numberOfSinkClassesChanged {
+    }
+
+    <**
+        @description : This callback is fired, if the number of source classes has changed.
+    **>
+    broadcast numberOfSourceClassesChanged {
+    }
+
+    <**
+        @description : This callback is called when the connection state of a connection changed.
+    **>
+    broadcast mainConnectionStateChanged {
+        out {
+            AudioManagerTypes.am_mainConnectionID_t connectionID
+            AudioManagerTypes.am_ConnectionState_e connectionState
+        }
+    }
+
+    <**
+        @description : This callback indicates that a sink sound property has changed.
+    **>
+    broadcast mainSinkSoundPropertyChanged {
+        out {
+            AudioManagerTypes.am_sinkID_t sinkID
+            AudioManagerTypes.am_MainSoundProperty_s soundProperty
+        }
+    }
+
+    <**
+        @description : This callback indicates that a source sound property has changed.
+    **>
+    broadcast mainSourceSoundPropertyChanged {
+        out {
+            AudioManagerTypes.am_sourceID_t sourceID
+            AudioManagerTypes.am_MainSoundProperty_s soundProperty
+        }
+    }
+
+    <**
+        @description : This callback is called when the availability of a sink has changed.
+    **>
+    broadcast sinkAvailabilityChanged {
+        out {
+            AudioManagerTypes.am_sinkID_t sinkID
+            AudioManagerTypes.am_Availability_s availability
+        }
+    }
+
+    <**
+        @description : This callback is called when the availability of source has changed.
+    **>
+    broadcast sourceAvailabilityChanged {
+        out {
+            AudioManagerTypes.am_sourceID_t sourceID
+            AudioManagerTypes.am_Availability_s availability
+        }
+    }
+
+    <**
+        @description : This callback indicates a volume change on the indicated sink.
+    **>
+    broadcast volumeChanged {
+        out {
+            AudioManagerTypes.am_sinkID_t sinkID
+            AudioManagerTypes.am_mainVolume_t volume
+        }
+    }
+
+    <**
+        @description : This callback indicates a mute state change on a sink.
+    **>
+    broadcast sinkMuteStateChanged {
+        out {
+            AudioManagerTypes.am_sinkID_t sinkID
+            AudioManagerTypes.am_MuteState_e muteState
+        }
+    }
+
+    <**
+        @description : Is called if a system property changed.
+    **>
+    broadcast systemPropertyChanged {
+        out {
+            AudioManagerTypes.am_SystemProperty_s systemProperty
+        }
+    }
+
+    <**
+        @description : This callback is called, if the timing information for a main connection ID have changed.
+    **>
+    broadcast timingInformationChanged {
+        out {
+            AudioManagerTypes.am_mainConnectionID_t mainConnectionID
+            AudioManagerTypes.am_timeSync_t time
+        }
+    }
+
+    <**
+        @description : This callback is called when a sink is updated.
+    **>
+    broadcast sinkUpdated {
+        out {
+
+            <**
+                @description : The sink ID that is updated.
+            **>
+            AudioManagerTypes.am_sinkID_t sinkID
+
+            <**
+                @description : The sink class ID of the updated sink. Gives the current value even if not updated.
+            **>
+            AudioManagerTypes.am_sinkClass_t sinkClassID
+
+            <**
+                @description : The list of main sound properties. Gives the current list of main sound properties even if not changed.
+            **>
+            AudioManagerTypes.am_MainSoundProperty_L listMainSoundProperties
+        }
+    }
+
+    <**
+        @description : This callback is called when a source is updated.
+    **>
+    broadcast sourceUpdated {
+        out {
+
+            <**
+                @description : The source ID that is updated.
+            **>
+            AudioManagerTypes.am_sourceID_t sourceID
+
+            <**
+                @description : The source class ID of the updated source. Gives the current value even if not updated.
+            **>
+            AudioManagerTypes.am_sourceClass_t sourceClassID
+
+            <**
+                @description : The list of main sound properties. Gives the current list of main sound properties even if not changed.
+            **>
+            AudioManagerTypes.am_MainSoundProperty_L listMainSoundProperties
+        }
+    }
+
+    <**
+        @description : This callback is called when a notified value of a sink changes.
+    **>
+    broadcast sinkNotification {
+        out {
+
+            <**
+                @description : The sink ID.
+            **>
+            AudioManagerTypes.am_sinkID_t sinkID
+
+            <**
+                @description : The payload of the notification.
+            **>
+            AudioManagerTypes.am_NotificationPayload_s notification
+        }
+    }
+
+    <**
+        @description : This callback is called when a notified value of a source changes.
+    **>
+    broadcast sourceNotification {
+        out {
+
+            <**
+                @description : The source ID.
+            **>
+            AudioManagerTypes.am_sourceID_t sourceID
+
+            <**
+                @description : The payload of the notification.
+            **>
+            AudioManagerTypes.am_NotificationPayload_s notification
+        }
+    }
+
+    <**
+        @description : This callback is triggered when a main notification configuration is changed.
+    **>
+    broadcast mainSinkNotificationConfigurationChanged {
+        out {
+            AudioManagerTypes.am_sinkID_t sinkID
+
+            <**
+                @description : The main notification configuration that changed.
+            **>
+            AudioManagerTypes.am_NotificationConfiguration_s
+            mainNotificationConfiguration
+        }
+    }
+
+    <**
+        @description : This callback is triggered when a main notification configuration is changed.
+    **>
+    broadcast mainSourceNotificationConfigurationChanged {
+        out {
+            AudioManagerTypes.am_sourceID_t sourceID
+
+            <**
+                @description : The main notification configuration that changed.
+            **>
+            AudioManagerTypes.am_NotificationConfiguration_s
+            mainNotificationConfiguration
+        }
+    }
+
+    <**
+    @description : 
+        Connects a source to sink.
+        (at)return E_OK on success, E_NOT_POSSIBLE on failure, E_ALREADY_EXISTS if the connection does already exists
+    **>
+    method connect {
+        in {
+            AudioManagerTypes.am_sourceID_t sourceID
+            AudioManagerTypes.am_sinkID_t sinkID
+        }
+        out {
+            AudioManagerTypes.am_mainConnectionID_t mainConnectionID
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Disconnects a main connection.
+        (at)return E_OK on successes, E_NON_EXISTENT if the connection does not exist, E_NOT_POSSIBLE on error.
+    **>
+    method disconnect {
+        in {
+            AudioManagerTypes.am_mainConnectionID_t mainConnectionID
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Sets the volume for a sink.
+        (at)return E_OK on success, E_UNKNOWN on error, E_OUT_OF_RANGE in case the value is out of range
+    **>
+    method setVolume {
+        in {
+
+            <**
+                @description : The sink.
+            **>
+            AudioManagerTypes.am_sinkID_t sinkID
+
+            <**
+                @description : The volume.
+            **>
+            AudioManagerTypes.am_mainVolume_t volume
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        This function is used to increment or decrement the current volume for a sink.
+        (at)return E_OK on success, E_UNKNOWN on error and E_OUT_OF_RANGE if the value is not in the given volume range.
+    **>
+    method volumeStep {
+        in {
+            AudioManagerTypes.am_sinkID_t sinkID
+
+            <**
+                @description : Indicated the number of steps that should be incremented or decremented. Here, positive values increment, negative values decrement.
+            **>
+            Int16 step
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Requests the mute state of a sink.
+        (at)return E_OK on success, E_UNKNOWN on error
+    **>
+    method getSinkMuteState {
+        in {
+            AudioManagerTypes.am_sinkID_t sinkID
+        }
+        out {
+            AudioManagerTypes.am_MuteState_e muteState
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Sets the mute state of a sink.
+        (at)return E_OK on success, E_UNKNOWN on error. If the mute state is already the desired one, the Daemon will return E_OK
+    **>
+    method setSinkMuteState {
+        in {
+            AudioManagerTypes.am_sinkID_t sinkID
+            AudioManagerTypes.am_MuteState_e muteState
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        This method is used to set sound properties, e.g. equalizer values. Since the capabilities of the system can differ, the exact key value pairs can be extended in each product.
+        (at)return E_OK on success, E_OUT_OF_RANGE if value exceeds range, E_UNKNOWN in case of an error
+    **>
+    method setMainSinkSoundProperty {
+        in {
+            AudioManagerTypes.am_sinkID_t sinkID
+            AudioManagerTypes.am_MainSoundProperty_s soundProperty
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        This method is used to set sound properties, e.g. equalizer values. Since the capabilities of the system can differ, the exact key value pairs can be extended in each product.
+        (at)return E_OK on success, E_OUT_OF_RANGE if value exceeds range, E_UNKNOWN in case of an error
+    **>
+    method setMainSourceSoundProperty {
+        in {
+            AudioManagerTypes.am_sourceID_t sourceID
+            AudioManagerTypes.am_MainSoundProperty_s soundProperty
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Sets a specific system property.
+        (at)return E_OK on success, E_OUT_OF_RANGE if value exceeds range, E_UNKNOWN in case of an error
+    **>
+    method setSystemProperty {
+        in {
+
+            <**
+                @description : The property that shall be set.
+            **>
+            AudioManagerTypes.am_SystemProperty_s property
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Returns the current list of main connections.
+        (at)return E_OK on success, E_DATABASE_ERROR on error
+    **>
+    method getListMainConnections {
+        out {
+
+            <**
+                @description : Returns a list of all connections.
+            **>
+            AudioManagerTypes.am_MainConnection_L listConnections
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Returns the current list of sinks.
+        (at)return E_OK on success, E_DATABASE_ERROR on error
+    **>
+    method getListMainSinks {
+        out {
+
+            <**
+                @description : The list of the sinks.
+            **>
+            AudioManagerTypes.am_SinkType_L listMainSinks
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Returns the current list of sources.
+        (at)return E_OK on success, E_DATABASE_ERROR on error
+    **>
+    method getListMainSources {
+        out {
+
+            <**
+                @description : The list of sources.
+            **>
+            AudioManagerTypes.am_SourceType_L listMainSources
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        This is used to retrieve all sink sound properties related to a sink. Returns a vector of the sound properties and values as pair.
+        (at)return E_OK on success, E_DATABASE_ERROR on error
+    **>
+    method getListMainSinkSoundProperties {
+        in {
+            AudioManagerTypes.am_sinkID_t sinkID
+        }
+        out {
+            AudioManagerTypes.am_MainSoundProperty_L listSoundProperties
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        This is used to retrieve all source sound properties related to a source. Returns a vector of the sound properties and values as pair.
+        (at)return E_OK on success, E_DATABASE_ERROR on error
+    **>
+    method getListMainSourceSoundProperties {
+        in {
+            AudioManagerTypes.am_sourceID_t sourceID
+        }
+        out {
+            AudioManagerTypes.am_MainSoundProperty_L listSoundProperties
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        This is used to retrieve sink class information of all sink classes.
+        (at)return E_OK on success, E_DATABASE_ERROR on error
+    **>
+    method getListSinkClasses {
+        out {
+            AudioManagerTypes.am_SinkClass_L listSinkClasses
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        This is used to retrieve source class information of all source classes.
+        (at)return E_OK on success, E_DATABASE_ERROR on error
+    **>
+    method getListSourceClasses {
+        out {
+            AudioManagerTypes.am_SourceClass_L listSourceClasses
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Retrieves a complete list of all system properties.
+        (at)return E_OK on success, E_DATABASE_ERROR on error
+    **>
+    method getListSystemProperties {
+        out {
+            AudioManagerTypes.am_SystemProperty_L listSystemProperties
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Returns the delay in ms that the audio path for the given main connection.
+        (at)return E_OK on success, E_NOT_POSSIBLE if timing information is not yet retrieved, E_DATABASE_ERROR on read error on the database
+    **>
+    method getTimingInformation {
+        in {
+            AudioManagerTypes.am_mainConnectionID_t mainConnectionID
+        }
+        out {
+            AudioManagerTypes.am_timeSync_t delay
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+        @description : Retrieves the list of main notifications for a sink. Does not return the possible ones.
+    **>
+    method getListMainSinkNotificationConfigurations {
+        in {
+
+            <**
+                @description : The sink ID.
+            **>
+            AudioManagerTypes.am_sinkID_t sinkID
+        }
+        out {
+            AudioManagerTypes.am_NotificationConfiguration_L
+            listMainNotificationConfigurations
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+        @description : Retrieves the list of main notifications for a source. Does not return the possible ones.
+    **>
+    method getListMainSourceNotificationConfigurations {
+        in {
+
+            <**
+                @description : The source ID.
+            **>
+            AudioManagerTypes.am_sourceID_t sourceID
+        }
+        out {
+            AudioManagerTypes.am_NotificationConfiguration_L
+            listMainNotificationConfigurations
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Sets a MainNotificationConfiuration. This can be used to turn on an off notifications an to change the mode of the configuration.
+        (at)return E_OK on success, E_NON_EXISTENT if sink ID does not exists, E_DATABASE_ERROR on error
+    **>
+    method setMainSinkNotificationConfiguration {
+        in {
+
+            <**
+                @description : The sink ID of the main notification to be changed.
+            **>
+            AudioManagerTypes.am_sinkID_t sinkID
+
+            <**
+                @description : The main notifiication that needs to be set.
+            **>
+            AudioManagerTypes.am_NotificationConfiguration_s
+            mainNotificationConfiguration
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Sets a MainNotificationConfiuration. This can be used to turn on an off notifications an to change the mode of the configuration.
+        (at)return E_OK on success, E_NON_EXISTENT if source ID does not exists, E_DATABASE_ERROR on error
+    **>
+    method setMainSourceNotificationConfiguration {
+        in {
+
+            <**
+                @description : The source ID of the main notification to be changed.
+            **>
+            AudioManagerTypes.am_sourceID_t sourceID
+
+            <**
+                @description : The main notifiication that needs to be set.
+            **>
+            AudioManagerTypes.am_NotificationConfiguration_s
+            mainNotificationConfiguration
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        This attribute reflects the current State of all existing main connections. 
+        You can notify on this attribute in order to get always a consistent update of all main connections in case of a change.
+    **>
+    attribute AudioManagerTypes.am_MainConnection_L listOfMainConnections
+    readonly
+
+}

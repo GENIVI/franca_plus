@@ -1,0 +1,167 @@
+/* Copyright (C) 2017 BMW Group
+ * Author: Bernhard Hennlich (bernhard.hennlich@bmw.de)
+ * Author: Manfred Bathelt (manfred.bathelt@bmw.de)
+ * This Source Code Form is subject to the terms of the Eclipse Public
+ * License, v. 1.0. If a copy of the EPL was not distributed with this
+ * file, You can obtain one at https://www.eclipse.org/legal/epl-v10.html. 
+ */
+grammar org.franca.compmodel.dsl.FComp with org.eclipse.xtext.common.Terminals
+
+hidden(WS, ML_COMMENT, SL_COMMENT)
+
+// inlcude the Franca IDL ECore model as base
+import "http://core.franca.org" as fidl
+
+// still generate the ECore model from the Xtext
+generate fcomp "http://org.franca.compmodel.dsl"
+
+FCModel:
+	// the model name is the package, so we have 
+	// package names prefixed
+	'package' name=FQN
+	(imports+=Import)*
+	(
+		components+=FCComponent |
+		injects+=FCInjectedPrototype |
+		instances+=FCInstance |
+		device+=FCDevice
+		
+	)*;
+
+// **************************************************************
+// HOWTO: use a combination of URI global scopes and namespace aware local scope provider
+// this is configured in the work flow by
+//			fragment = scoping.ImportURIScopingFragment {}
+// and by overriding configureIScopeProviderDelegate in the runtime module with 
+//			ImportedNamespaceAwareLocalScopeProvider
+// the attribute 'importedNamespace' is picked up by the ImportedNamespaceAwareLocalScopeProvider
+// the attribute 'importURI' is picked up by the ImportUriGlobalScopeProvider
+Import: 'import' (importedNamespace=WildcardFQN 'from' | 'model') importURI=STRING;
+
+WildcardFQN: FQN ('.' '*')?;
+
+FQN: ID ('.' ID)*;
+	
+FCVersion: {FCVersion} 'version' '{' 'major' major=INT 'minor' minor=INT '}';
+	
+enum FCPortKind: provided|required;
+enum FCPortCardinality: MANDATORY='mandatory' | OPTIONAL='optionally';
+enum FCInjectionModifier: finally;
+
+FCRequiredPort returns FCPort:
+	{FCRequiredPort}
+	comment=FCAnnotationBlock?
+	kvLabels+=FCKeyValueLabel*
+	cardinality?=FCPortCardinality? 'requires' interface=[fidl::FInterface|FQN] ('as' name=ID)?;
+
+FCProvidedPort returns FCPort:
+	{FCProvidedPort}
+	comment=FCAnnotationBlock?
+	kvLabels+=FCKeyValueLabel*
+	'provides' interface=[fidl::FInterface|FQN] ('as' name=ID)?;	
+
+FCPrototypeInjection returns FCGenericPrototype:
+	{FCPrototypeInjection}
+	comment=FCAnnotationBlock?
+	kvLabels+=FCKeyValueLabel*
+	modifier=FCInjectionModifier? 'implement' ref=[FCPrototype|FQN] ('as' name=ID)? 'by' component=[FCComponent|FQN];
+
+FCComponent: 
+	{FCComponent}
+	comment=FCAnnotationBlock?
+	(labels+=FCLabel | kvLabels+=FCKeyValueLabel)*
+	'component' name=ID ('extends' superType=[FCComponent|FQN])?
+	'{'
+		version=FCVersion?
+		(
+		 requiredPorts+=FCRequiredPort | 
+		 providedPorts+=FCProvidedPort |
+		 prototypes+=FCPrototype |
+		 injections+=FCPrototypeInjection |
+		 assembles+=FCAssemblyConnector | 
+		 delegates+=FCDelegateConnector
+		)*
+	'}';
+
+FCPrototype returns FCGenericPrototype:
+	{FCPrototype}
+	comment=FCAnnotationBlock?
+	kvLabels+=FCKeyValueLabel*
+	'contains' component=[FCComponent|FQN] ('as' name=ID)?;
+	
+FCInjectedPrototype returns FCGenericPrototype:
+	{FCInjectedPrototype}
+	comment=FCAnnotationBlock?
+	kvLabels+=FCKeyValueLabel*
+	'inject' component=[FCComponent|FQN] ('as' name=ID)? 'into' ref=[FCPrototype|FQN] modifier=FCInjectionModifier?;
+
+FCDelegateConnector: 
+	comment=FCAnnotationBlock?
+	kvLabels+=FCKeyValueLabel*
+	'delegate' kind=FCPortKind outer=FCOuter 'to' inner=FCInner;
+	
+FCOuter: port=[FCPort];
+FCInner: prototype=[FCPrototype] '.' port=[FCPort];
+
+FCAssemblyConnector:
+	comment=FCAnnotationBlock?
+	kvLabels+=FCKeyValueLabel*
+	('connect'|'assemble') from=FCFrom 'to' to=FCTo;
+	
+FCFrom: prototype=[FCPrototype] '.' port=[FCRequiredPort];
+FCTo: prototype=[FCPrototype] '.' port=[FCProvidedPort];
+
+// ************************************************************************************
+// Partitioning of Components and Prototypes as Instances to Devices
+
+FCDevice:
+	comment=FCAnnotationBlock?
+	kvLabels+=FCKeyValueLabel*
+	'device' name=ID
+	'{' 
+		 instances+=FCContainedInstance*
+	'}';
+
+FCContainedInstance:
+	FCInstance |
+	FCHostedInstance
+;
+
+FCInstance:
+	comment=FCAnnotationBlock?
+	kvLabels+=FCKeyValueLabel*
+	'instance' component=[FCComponent] 
+	({FCPrototypeInstance.parent=current} '.' prototype=[FCGenericPrototype])* 
+	('as' name=ID)?;
+
+FCHostedInstance:
+	comment=FCAnnotationBlock?
+	kvLabels+=FCKeyValueLabel*
+	'hosts' instance=[FCInstance|FQN];
+
+// **************************************************************
+// annotations
+
+FCAnnotationBlock returns FCAnnotationBlock:
+	'<**' (elements+=FCAnnotation)+ '**>';
+
+FCAnnotation returns FCAnnotation:
+	rawText=ANNOTATION_STRING;
+	
+terminal ANNOTATION_STRING:
+	'@' (('a'..'z')|'-'|'_') + (' '|'\t')* (':'
+	( ('\\' ('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\')) | ('\\*'|'\\@') | !('\\'|'*'|'@') )*)?
+;
+
+// service architecture labels
+enum FCLabelKind: root='@root'|framework='@framework'|cluster='@cluster'|service='@service'|singleton='@singleton'|facade='@facade'|deployable='@deployable'|abstract='@abstract';
+FCLabel: kind=FCLabelKind;
+
+FCKeyValueLabelKey:
+	key=ID;
+
+enum FCKeyValueLabelKind:
+	property='@property';
+
+FCKeyValueLabel:
+	kind=FCKeyValueLabelKind '(' k=FCKeyValueLabelKey '=' v=STRING ')';

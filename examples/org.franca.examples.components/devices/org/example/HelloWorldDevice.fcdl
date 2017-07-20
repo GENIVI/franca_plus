@@ -1,0 +1,20 @@
+package org.example
+
+import org.example.* from "classpath:/org/example/HelloWorld.fcdl"
+
+
+instance MeetingPoint.Service
+
+instance MeetingPoint.Client1  
+instance MeetingPoint.Service
+
+device HelloServerECU {
+	hosts MeetingPoint.Service 
+}
+
+device HelloClientECU {
+	hosts MeetingPoint.Client1
+	instance MeetingPoint.Client2
+	hosts MeetingPoint.Service
+}
+

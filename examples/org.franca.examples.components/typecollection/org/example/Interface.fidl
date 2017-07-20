@@ -1,0 +1,27 @@
+package org.example
+
+import org.example.mytypes.* from "Types.fidl"
+
+interface myInterface {
+	version {
+		major 1
+		minor 0
+	}
+	
+	attribute VVehType attrib1 
+	
+	const VVehType attrib1_DEFAULT = {
+		dvcoVeh: DvcoVehType.INVALID, 
+		quVVehCog: QuVVehCogType.INVALID, 
+		vVehCog: 0xFFFF, 
+		stVVehNss: StVVehNssType.INVALID, 
+		alivVVeh: 0xF, 
+		crc: 0xFF
+	}
+	
+	attribute FieldOfInts attrib2
+	
+	const DvcoVehType dcoVeh_DEFAULT = DvcoVehType.INVALID
+	
+	const Integer Timeout_ms_DEFAULT = 100
+}

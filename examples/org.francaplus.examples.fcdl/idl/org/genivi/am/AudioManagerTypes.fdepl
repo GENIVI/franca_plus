@@ -1,0 +1,246 @@
+/*
+ * ##############################
+ * #####                    #####
+ * #####   Generated File   #####
+ * #####                    #####
+ * ##############################
+ * 
+ * Fibex origin: FBX410_SP2018_17KW13_Ethernet2_V10_MGU_SIs_lokal.xml
+ * Franca version: 0.9.1.201412191134
+ */
+import
+"platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "AudioManagerTypes.fidl"
+
+define org.genivi.commonapi.someip.deployment for typeCollection
+org.genivi.am.audiomanagertypes.AudioManagerTypes
+as org.genivi.am.audiomanagertypes.AudioManagerTypes {
+
+	enumeration am_Availability_e {
+		SomeIpEnumWidth = 1
+	}
+
+	enumeration am_ConnectionState_e {
+		SomeIpEnumWidth = 1
+	}
+
+	enumeration am_DomainState_e {
+		SomeIpEnumWidth = 1
+	}
+
+	enumeration am_EarlyDataType_e {
+		SomeIpEnumWidth = 1
+	}
+
+	enumeration am_Error_e {
+		SomeIpEnumWidth = 1
+	}
+
+	enumeration am_Handle_e {
+		SomeIpEnumWidth = 1
+	}
+
+	enumeration am_HotSink_e {
+		SomeIpEnumWidth = 1
+	}
+
+	enumeration am_InterruptState_e {
+		SomeIpEnumWidth = 1
+	}
+
+
+	enumeration am_MuteState_e {
+		SomeIpEnumWidth = 1
+	}
+
+	enumeration am_NotificationStatus_e {
+		SomeIpEnumWidth = 1
+	}
+
+
+	enumeration am_RoutingReady_e {
+		SomeIpEnumWidth = 1
+	}
+
+
+	enumeration am_SourceState_e {
+		SomeIpEnumWidth = 1
+	}
+
+	enumeration am_VolumeType_e {
+		SomeIpEnumWidth = 1
+	}
+
+	struct am_Availability_s {
+	}
+
+	struct am_ClassProperty_s {
+	}
+
+	struct am_Converter_s {
+		name {
+			SomeIpStringLength = 54
+		}
+	}
+
+	struct am_Crossfader_s {
+		name {
+			SomeIpStringLength = 36
+		}
+	}
+
+	struct am_Domain_s {
+		name {
+			SomeIpStringLength = 36
+		}
+		busname {
+			SomeIpStringLength = 36
+		}
+		nodename {
+			SomeIpStringLength = 36
+		}
+	}
+
+	struct am_EarlyData_s {
+	}
+
+	struct am_Gateway_s {
+		name {
+			SomeIpStringLength = 36
+		}
+	}
+
+	struct am_Handle_s {
+	}
+
+	struct am_MainConnectionType_s {
+	}
+
+	struct am_MainSoundProperty_s {
+	}
+
+	struct am_NotificationConfiguration_s {
+	}
+
+	struct am_NotificationPayload_s {
+	}
+
+	struct am_Sink_s {
+		name {
+			SomeIpStringLength = 36
+		}
+	}
+
+	struct am_SinkClass_s {
+		name {
+			SomeIpStringLength = 36
+		}
+	}
+
+	struct am_SinkType_s {
+		name {
+			SomeIpStringLength = 36
+		}
+	}
+
+	struct am_SoundProperty_s {
+	}
+
+	struct am_Source_s {
+		name {
+			SomeIpStringLength = 36
+		}
+	}
+
+	struct am_SourceClass_s {
+		name {
+			SomeIpStringLength = 36
+		}
+	}
+
+	struct am_SourceType_s {
+		name {
+			SomeIpStringLength = 36
+		}
+	}
+
+	struct am_SystemProperty_s {
+	}
+
+	struct am_Volumes_s {
+	}
+
+	union am_EarlyData_u {
+	}
+
+	array am_Volumes_L {
+		SomeIpArrayMaxLength = 50
+		SomeIpArrayMinLength = 0
+	}
+
+	array am_SoundProperty_L {
+		SomeIpArrayMaxLength = 30
+		SomeIpArrayMinLength = 0
+	}
+
+	array am_MainConnection_L {
+		SomeIpArrayMaxLength = 100
+		SomeIpArrayMinLength = 0
+	}
+
+	array am_MainSoundProperty_L {
+		SomeIpArrayMaxLength = 30
+		SomeIpArrayMinLength = 0
+	}
+
+	array am_SourceClass_L {
+		SomeIpArrayMaxLength = 100
+		SomeIpArrayMinLength = 0
+	}
+
+	array am_ClassProperty_L {
+		SomeIpArrayMaxLength = 100
+		SomeIpArrayMinLength = 0
+	}
+
+	array am_SystemProperty_L {
+		SomeIpArrayMaxLength = 100
+		SomeIpArrayMinLength = 0
+	}
+
+	array am_SinkType_L {
+		SomeIpArrayMaxLength = 100
+		SomeIpArrayMinLength = 0
+	}
+
+	array am_SinkClass_L {
+		SomeIpArrayMaxLength = 100
+		SomeIpArrayMinLength = 0
+	}
+
+	array am_NotificationConfiguration_L {
+		SomeIpArrayMaxLength = 10
+		SomeIpArrayMinLength = 0
+	}
+
+	array am_SourceType_L {
+		SomeIpArrayMaxLength = 100
+		SomeIpArrayMinLength = 0
+	}
+
+	array am_ConnectionFormat_L {
+		SomeIpArrayMaxLength = 10
+		SomeIpArrayMinLength = 1
+	}
+
+	array am_Convertion_L {
+		SomeIpArrayMaxLength = 10
+		SomeIpArrayMinLength = 0
+	}
+
+	array am_EarlyData_L {
+		SomeIpArrayMaxLength = 50
+		SomeIpArrayMinLength = 0
+	}
+
+}

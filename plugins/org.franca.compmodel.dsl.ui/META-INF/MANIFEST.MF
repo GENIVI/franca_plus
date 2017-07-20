@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.franca.compmodel.dsl.ui
+Bundle-Vendor: BMW Group
+Bundle-Version: 0.11.1.qualifier
+Bundle-SymbolicName: org.franca.compmodel.dsl.ui; singleton:=true
+Require-Bundle: org.franca.compmodel.dsl;bundle-version="0.11.1";visibility:=reexport,
+ org.eclipse.xtext.ui,
+ org.eclipse.ui.editors;bundle-version="3.5.0",
+ org.eclipse.ui.ide;bundle-version="3.5.0",
+ org.eclipse.xtext.ui.shared,
+ org.eclipse.ui,
+ org.eclipse.xtext.builder,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.xtext.common.types.ui,
+ org.eclipse.xtext.ui.codetemplates.ui,
+ org.eclipse.compare,
+ org.eclipse.jdt.core
+Import-Package: org.apache.log4j
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.franca.compmodel.dsl.ui,
+ org.franca.compmodel.dsl.ui.contentassist,
+ org.franca.compmodel.dsl.ui.labeling,
+ org.franca.compmodel.dsl.ui.outline,
+ org.franca.compmodel.dsl.ui.quickfix,
+ org.franca.compmodel.dsl.ui.internal,
+ org.franca.compmodel.dsl.ui.contentassist.antlr,
+ org.franca.compmodel.dsl.ui.contentassist.antlr.internal
+Bundle-Activator: org.franca.compmodel.dsl.ui.internal.FCompActivator
+Bundle-ActivationPolicy: lazy

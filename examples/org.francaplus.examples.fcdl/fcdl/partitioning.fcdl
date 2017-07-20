@@ -1,0 +1,31 @@
+package example.org
+
+import org.genivi.am.commandinterface.* from "../idl/org/genivi/am/CommandInterface.fidl" 
+
+
+component BasicComponent {
+	version { major 1 minor 0 }
+}
+
+component Component1 {
+	version { major 1 minor 0 }
+}
+
+component Component2 {
+	version { major 1 minor 0 }
+}
+
+
+instance example.org.BasicComponent Instance1
+instance example.org.Component1 Instance2
+instance example.org.Component2 Instance3
+
+
+device HeadUnit {
+	hosts example.org.Instance1
+	hosts example.org.Instance2
+}
+
+device Amplifier {
+	hosts example.org.Instance3
+}

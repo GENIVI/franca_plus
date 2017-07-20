@@ -1,0 +1,18 @@
+package example.org
+
+import org.genivi.am.commandinterface.* from "../idl/org/genivi/am/CommandInterface.fidl" 
+import org.genivi.am.routinginterface.* from "../idl/org/genivi/am/RoutingInterface.fidl" 
+
+
+component BasicComponent {
+	version { major 1 minor 0 }
+	
+	provides CommandControl as commandPort
+}
+
+component Component1 extends example.org.BasicComponent {
+	version { major 1 minor 0 }
+	
+	provides RoutingControl as routingPort 
+}
+

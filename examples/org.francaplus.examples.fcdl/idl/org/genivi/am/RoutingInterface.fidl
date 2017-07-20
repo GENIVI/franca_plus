@@ -1,0 +1,953 @@
+package org.genivi.am.routinginterface
+import org.genivi.am.audiomanagertypes.* from "AudioManagerTypes.fidl"
+
+<**
+    @description : This class implements everything from Audiomanager -&gt; RoutingAdapter
+    @author : Christian Linke (christian.linke(at)bmw.de)
+**>
+
+interface RoutingControl {
+    version {
+        major 1
+        minor 0
+    }
+
+    <**
+        @description : Acknowledges an asyncConnect.
+    **>
+    broadcast ackConnect {
+        out {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_connectionID_t connectionID
+
+            <**
+                @description : E_OK on success, E_ABORTED if action was aborted, E_UNKNOWN on error
+            **>
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+        @description : Acknowledges a asyncDisconnect.
+    **>
+    broadcast ackDisconnect {
+        out {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_connectionID_t connectionID
+
+            <**
+                @description : E_OK on success, E_ABORTED if action was aborted, E_UNKNOWN on error
+            **>
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+        @description : Acknowledges an asyncSetSinkVolumes.
+    **>
+    broadcast ackSetVolumes {
+        out {
+            AudioManagerTypes.am_Handle_s handle
+
+            <**
+                @description : The list of volumes that have been set. Ramp and time values have no meaning when the struct is used here.
+            **>
+            AudioManagerTypes.am_Volumes_L listVolumes
+
+            <**
+                @description : E_OK on success, E_ABORTED if action was aborted, E_UNKNOWN on error
+            **>
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+        @description : Acknowledges asyncCrossFade.
+    **>
+    broadcast ackCrossFading {
+        out {
+            AudioManagerTypes.am_Handle_s handle
+
+            <**
+                @description : This is the current hot sink. HS_INTERMEDIATE is here when a crossfading action did not reach the end.
+            **>
+            AudioManagerTypes.am_HotSink_e hotSink
+
+            <**
+                @description : E_OK on success, E_ABORTED if action was aborted, E_UNKNOWN on error
+            **>
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+        @description : Acknowledges a volume tick. This can be used to display volume changes during ramps.
+    **>
+    broadcast ackSinkVolumeTick {
+        out {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_sinkID_t sinkID
+            AudioManagerTypes.am_volume_t volume
+        }
+    }
+
+    <**
+        @description : Acknowledges a volume tick. This can be used to display volume changes during ramps.
+    **>
+    broadcast ackSourceVolumeTick {
+        out {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_sourceID_t sourceID
+            AudioManagerTypes.am_volume_t volume
+        }
+    }
+
+    <**
+        @description : Acknowledges a asyncSetSinkVolume.
+    **>
+    broadcast ackSetSinkVolumeChange {
+        out {
+            AudioManagerTypes.am_Handle_s handle
+
+            <**
+                @description : The current value that is set.
+            **>
+            AudioManagerTypes.am_volume_t volume
+
+            <**
+                @description : E_OK on success, E_ABORTED if action was aborted, E_UNKNOWN on error
+            **>
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+        @description : Acknowledges a asyncSetSourceVolume.
+    **>
+    broadcast ackSetSourceVolumeChange {
+        out {
+
+            <**
+                @description : Handle that belongs to the change.
+            **>
+            AudioManagerTypes.am_Handle_s handle
+
+            <**
+                @description : The current volume.
+            **>
+            AudioManagerTypes.am_volume_t volume
+
+            <**
+                @description : E_OK on success, E_ABORTED if action was aborted, E_UNKNOWN on error
+            **>
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+        @description : Acknowledges asyncSetSinkSoundProperty.
+    **>
+    broadcast ackSetSinkSoundProperty {
+        out {
+            AudioManagerTypes.am_Handle_s handle
+
+            <**
+                @description : E_OK on success, E_ABORTED if action was aborted, E_UNKNOWN on error
+            **>
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+        @description : Acknowledges asyncSetSinkSoundProperties.
+    **>
+    broadcast ackSetSinkSoundProperties {
+        out {
+            AudioManagerTypes.am_Handle_s handle
+
+            <**
+                @description : E_OK on success, E_ABORTED if action was aborted, E_UNKNOWN on error
+            **>
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+        @description : Acknowledges asyncSetSourceSoundProperty.
+    **>
+    broadcast ackSetSourceSoundProperty {
+        out {
+            AudioManagerTypes.am_Handle_s handle
+
+            <**
+                @description : E_OK on success, E_ABORTED if action was aborted, E_UNKNOWN on error
+            **>
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+        @description : Acknowledges asyncSetSourceSoundProperties.
+    **>
+    broadcast ackSetSourceSoundProperties {
+        out {
+            AudioManagerTypes.am_Handle_s handle
+
+            <**
+                @description : E_OK on success, E_ABORTED if action was aborted, E_UNKNOWN on error
+            **>
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+        @description : Acknowledges for asyncSetSourceState.
+    **>
+    broadcast ackSetSourceState {
+        out {
+            AudioManagerTypes.am_Handle_s handle
+
+            <**
+                @description : E_OK on success, E_ABORTED if action was aborted, E_UNKNOWN on error
+            **>
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+        @description : The acknowledge of the SinkNotificationConfiguration.
+    **>
+    broadcast ackSinkNotificationConfiguration {
+        out {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+        @description : The acknowledge of the SourceNotificationConfiguration.
+    **>
+    broadcast ackSourceNotificationConfiguration {
+        out {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Aborts an asynchronous action.
+        (at)return E_OK on success, E_UNKNOWN on error, E_NON_EXISTENT if handle was not found
+    **>
+    method asyncAbort {
+        in {
+            AudioManagerTypes.am_Handle_s handle
+        }
+    }
+
+    <**
+    @description : 
+        Connects a source to a sink.
+        (at)return E_OK on success, E_UNKNOWN on error, E_WRONG_FORMAT in case am_ConnectionFormat_e does not match
+    **>
+    method asyncConnect {
+        in {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_connectionID_t connectionID
+            AudioManagerTypes.am_sourceID_t sourceID
+            AudioManagerTypes.am_sinkID_t sinkID
+            AudioManagerTypes.am_ConnectionFormat_pe connectionFormat
+        }
+    }
+
+    <**
+    @description : 
+        Disconnects a connection with given connection ID.
+        (at)return E_OK on success, E_UNKNOWN on error, E_NON_EXISTENT if connection was not found
+    **>
+    method asyncDisconnect {
+        in {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_connectionID_t connectionID
+        }
+    }
+
+    <**
+    @description : 
+        This method is used to set several volumes at the same time. This function is used to drive ramps, to mute or unmute or directly set the value. The difference is made through the ramp type.
+        (at)return E_OK on success, E_UNKNOWN on error, E_OUT_OF_RANGE if new volume is out of range
+    **>
+    method asyncSetVolumes {
+        in {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_Volumes_L volumes
+        }
+    }
+
+    <**
+    @description : 
+        This function triggers crossfading.
+        (at)return E_OK on success, E_UNKNOWN on error
+    **>
+    method asyncCrossFade {
+        in {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_crossfaderID_t crossfaderID
+            AudioManagerTypes.am_HotSink_e hotSink
+            AudioManagerTypes.am_RampType_pe rampType
+            AudioManagerTypes.am_time_t time
+        }
+    }
+
+    <**
+    @description : 
+        This method is used to set the volume of a sink. This function is used to drive ramps, to mute or unmute or directly set the value. The difference is made through the ramp type.
+        (at)return E_OK on success, E_UNKNOWN on error, E_OUT_OF_RANGE if new volume is out of range
+    **>
+    method asyncSetSinkVolume {
+        in {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_sinkID_t sinkID
+            AudioManagerTypes.am_volume_t volume
+            AudioManagerTypes.am_RampType_pe ramp
+            AudioManagerTypes.am_time_t time
+        }
+    }
+
+    <**
+    @description : 
+        Sets the volume of a source. This function is used to drive ramps, to mute or unmute or directly set the value. The difference is made through the ramp type.
+        (at)return E_OK on success, E_UNKNOWN on error, E_OUT_OF_RANGE if volume is out of range.
+        Triggers the acknowledge ackSourceVolumeChange
+    **>
+    method asyncSetSourceVolume {
+        in {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_sourceID_t sourceID
+            AudioManagerTypes.am_volume_t volume
+            AudioManagerTypes.am_RampType_pe ramp
+            AudioManagerTypes.am_time_t time
+        }
+    }
+
+    <**
+    @description : 
+        This function sets a sink sound property.
+        (at)return E_OK on success, E_UNKNOWN on error, E_OUT_OF_RANGE in case the property value is out of range
+    **>
+    method asyncSetSinkSoundProperty {
+        in {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_sinkID_t sinkID
+            AudioManagerTypes.am_SoundProperty_s soundProperty
+        }
+    }
+
+    <**
+    @description : 
+        This function sets sink sound properties.
+        (at)return E_OK on success, E_UNKNOWN on error, E_OUT_OF_RANGE in case the property value is out of range
+    **>
+    method asyncSetSinkSoundProperties {
+        in {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_sinkID_t sinkID
+            AudioManagerTypes.am_SoundProperty_L listSoundProperties
+        }
+    }
+
+    <**
+    @description : 
+        This function sets a source sound property.
+        (at)return E_OK on success, E_UNKNOWN on error, E_OUT_OF_RANGE in case the property value is out of range
+    **>
+    method asyncSetSourceSoundProperty {
+        in {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_sourceID_t sourceID
+            AudioManagerTypes.am_SoundProperty_s soundProperty
+        }
+    }
+
+    <**
+    @description : 
+        This function sets the source sound properties.
+        (at)return E_OK on success, E_UNKNOWN on error, E_OUT_OF_RANGE in case the property value is out of range
+    **>
+    method asyncSetSourceSoundProperties {
+        in {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_sourceID_t sourceID
+            AudioManagerTypes.am_SoundProperty_L listSoundProperties
+        }
+    }
+
+    <**
+    @description : 
+        This function is used to set the source state of a particular source.
+        (at)return E_OK on success, E_UNKNOWN on error
+    **>
+    method asyncSetSourceState {
+        in {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_sourceID_t sourceID
+            AudioManagerTypes.am_SourceState_e ^state
+        }
+    }
+
+    <**
+    @description : 
+        This function is used to set the notification configuration a sink notification.
+        (at)return E_OK on success, E_UNKNOWN on error
+    **>
+    method asyncSetSinkNotificationConfiguration {
+        in {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_sinkID_t sinkID
+            AudioManagerTypes.am_NotificationConfiguration_s
+            notificationConfiguration
+        }
+    }
+
+    <**
+    @description : 
+        This function is used to set the notification configuration a source notification.
+        (at)return E_OK on success, E_UNKNOWN on error
+    **>
+    method asyncSetSourceNotificationConfiguration {
+        in {
+            AudioManagerTypes.am_Handle_s handle
+            AudioManagerTypes.am_sourceID_t sourceID
+            AudioManagerTypes.am_NotificationConfiguration_s
+            notificationConfiguration
+        }
+    }
+
+    <**
+    @description : 
+        This function is used for early and late audio functions to set the domain state.
+        (at)return E_OK on success, E_UNKNOWN on error
+    **>
+    method setDomainState {
+        in {
+            AudioManagerTypes.am_domainID_t domainID
+            AudioManagerTypes.am_DomainState_e domainState
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+}
+
+<**
+    @description : Routing Receive sendInterface description.
+    @author : Christian Linke (christian.linke(at)bmw.de)
+**>
+
+interface RoutingControlObserver {
+    version {
+        major 1
+        minor 0
+    }
+
+    <**
+    @description : 
+        Registers a domain.
+        (at)return E_OK on success, E_ALREADY_EXISTENT if already registered E_UNKNOWN on error
+    **>
+    method registerDomain {
+        in {
+
+            <**
+                @description : DomainID in am_Domain_s must be 0!
+            **>
+            AudioManagerTypes.am_Domain_s domainData
+            String returnBusname
+            String returnInterface
+        }
+        out {
+            AudioManagerTypes.am_domainID_t domainID
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Deregisters a domain. All sources, sinks, gateways and crossfaders from that domain will be removed as well.
+        (at)return E_OK on success, E_NON_EXISTENT if not found E_UNKNOWN on error
+    **>
+    method deregisterDomain {
+        in {
+            AudioManagerTypes.am_domainID_t domainID
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        This function returns the ID to the given domain name. If already a domain is registered with this name, it will return the corresponding ID, if not it will reserve an ID but not register the domain. The other parameters of the domain will be overwritten when the domain is registered.
+        (at)return E_OK on success, E_UNKNOWN on error
+    **>
+    method peekDomain {
+        in {
+            String name
+        }
+        out {
+            AudioManagerTypes.am_domainID_t domainID
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Registers a gateway.
+        (at)return E_OK on success, E_ALREADY_EXISTENT if already registered E_UNKNOWN on error
+    **>
+    method registerGateway {
+        in {
+
+            <**
+                @description : In a fixed setup, the gatewayID must be below 100. In a dynamic setup, the gatewayID shall be 0. listSourceFormats and listSinkFormats are empty at registration time. Values are taken over when sources and sinks are registered.
+            **>
+            AudioManagerTypes.am_Gateway_s gatewayData
+        }
+        out {
+            AudioManagerTypes.am_gatewayID_t gatewayID
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Deregisters a gateway. Also removes all sinks and sources of the controlling domain.
+        (at)return E_OK on success, E_NON_EXISTENT if not found E_UNKNOWN on error
+    **>
+    method deregisterGateway {
+        in {
+
+            <**
+                @description : Gateway ID.
+            **>
+            AudioManagerTypes.am_gatewayID_t gatewayID
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Updates data of a gateway.
+        (at)return E_OK on success, E_NON_EXISTENT if the gateway ID is not valid.
+    **>
+    method updateGateway {
+        in {
+
+            <**
+                @description : This is the new gateway data that has been updated. Please note that changing source and sink IDs,
+            **>
+            AudioManagerTypes.am_gatewayID_t gatewayID
+            AudioManagerTypes.am_ConnectionFormat_L listSourceFormats
+            AudioManagerTypes.am_ConnectionFormat_L listSinkFormats
+            AudioManagerTypes.am_Convertion_L convertionMatrix
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Registers a sink. If the sink is part of a gateway, the list connection formats are copied to the gateway information
+        (at)return E_OK on success, E_ALREADY_EXISTENT if already registered E_UNKNOWN on error
+    **>
+    method registerSink {
+        in {
+
+            <**
+                @description : In a fixed setup, the sinkID within am_Sink_s must be below 100. In a dynamic setup the sinkID must be 0 in am_Sink_s.
+            **>
+            AudioManagerTypes.am_Sink_s sinkData
+        }
+        out {
+            AudioManagerTypes.am_sinkID_t sinkID
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Deregisters a sink.
+        (at)return E_OK on success, E_NON_EXISTENT if not found E_UNKNOWN on error
+    **>
+    method deregisterSink {
+        in {
+            AudioManagerTypes.am_sinkID_t sinkID
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        This function returns the ID to the given sink name. If already a sink is registered with this name, it will return the corresponding ID, if not it will reserve an ID but not register the sink. The other parameters of the sink will be overwritten when the sink is registered.
+        (at)return E_OK on success, E_UNKNOWN on error
+    **>
+    method peekSink {
+        in {
+
+            <**
+                @description : ID is not valid since not created yet.
+            **>
+            String name
+        }
+        out {
+            AudioManagerTypes.am_sinkID_t sinkID
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        This function peeks a sink class ID. It is used by the RoutingPlugins to determine the sink class IDs of a sink class.
+        (at)return E_OK on success, E_DATABASE_ERROR on error
+    **>
+    method peekSinkClassID {
+        in {
+            String name
+        }
+        out {
+            AudioManagerTypes.am_sinkClass_t sinkClassID
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Updates data of a sink.
+        (at)return E_OK on success, E_NON_EXISTENT if the sink ID is not valid.
+    **>
+    method updateSink {
+        in {
+
+            <**
+                @description : The sinkID of the sink.
+            **>
+            AudioManagerTypes.am_sinkID_t sinkID
+            AudioManagerTypes.am_sinkClass_t sinkClassID
+            AudioManagerTypes.am_SoundProperty_L listSoundProperties
+            AudioManagerTypes.am_ConnectionFormat_L listConnectionFormats
+            AudioManagerTypes.am_MainSoundProperty_L listMainSoundProperties
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Registers a source.  If the source is part of a gateway, the list connection formats are copied to the gateway information
+        (at)return E_OK on success, E_UNKNOWN on error, E_ALREADY_EXIST if either name or source ID already exists
+    **>
+    method registerSource {
+        in {
+
+            <**
+                @description : In a fixed setup, the sourceID within am_Source_s must be below 100. In a dynamic setup the sourceID must be 0 in am_Source_s.
+            **>
+            AudioManagerTypes.am_Source_s sourceData
+        }
+        out {
+            AudioManagerTypes.am_sourceID_t sourceID
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Deregisters a source.
+        (at)return E_OK on success, E_NON_EXISTENT if not found E_UNKNOWN on error
+    **>
+    method deregisterSource {
+        in {
+            AudioManagerTypes.am_sourceID_t sourceID
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        This function returns the ID to the given source name. If already a source is registered with this name, it will return the corresponding ID, if not it will reserve an ID but not register the source. The other parameters of the source will be overwritten when the source is registered.
+        (at)return E_OK on success, E_UNKNOWN on error
+    **>
+    method peekSource {
+        in {
+            String name
+        }
+        out {
+            AudioManagerTypes.am_sourceID_t sourceID
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Peeks a source class ID. It is used by the RoutingPlugins to determine the source class IDs of a source class.
+        (at)return E_OK on success, E_DATABASE_ERROR on error
+    **>
+    method peekSourceClassID {
+        in {
+            String name
+        }
+        out {
+            AudioManagerTypes.am_sourceClass_t sourceClassID
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Updates data of a source.
+        (at)return E_OK on success, E_NON_EXISTENT if the source ID in the struct is not valid. 
+        Please note that only the following data out of am_Source_s have effect when they are changed:
+        sourceClassID,
+        listSoundProperties,
+        listConnectionFormats,
+        listMainSoundProperties
+    **>
+    method updateSource {
+        in {
+
+            <**
+                @description : The source ID of the source.
+            **>
+            AudioManagerTypes.am_sourceID_t sourceID
+            AudioManagerTypes.am_sourceClass_t sourceClassID
+            AudioManagerTypes.am_SoundProperty_L listSoundProperties
+            AudioManagerTypes.am_ConnectionFormat_L listConnectionFormats
+            AudioManagerTypes.am_MainSoundProperty_L listMainSoundProperties
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        This function registers a crossfader.
+        (at)return E_OK on success, E_ALREADY_EXISTENT if already registered E_UNKNOWN on error
+    **>
+    method registerCrossfader {
+        in {
+
+            <**
+                @description : In a fixed setup, the crossfaderID must be below 100. In a dynamic setup the crossfasderID shall be 0.
+            **>
+            AudioManagerTypes.am_Crossfader_s crossfaderData
+        }
+        out {
+            AudioManagerTypes.am_crossfaderID_t crossfaderID
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Deregisters a crossfader. Removes all sources and sinks assiated as well.
+        (at)return E_OK on success, E_NON_EXISTENT if not found E_UNKNOWN on error
+    **>
+    method deregisterCrossfader {
+        in {
+            AudioManagerTypes.am_crossfaderID_t crossfaderID
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+        @description : Is called when a low level interrupt changes it status.
+    **>
+    method hookInterruptStatusChange {
+        in {
+            AudioManagerTypes.am_sourceID_t sourceID
+            AudioManagerTypes.am_InterruptState_e interruptState
+        }
+    }
+
+    <**
+    @description : 
+        This hook is called when all elements from a domain are registered.
+        Is used by the Controller to know when all expected domains are finally registered.
+    **>
+    method hookDomainRegistrationComplete {
+        in {
+            AudioManagerTypes.am_domainID_t domainID
+        }
+    }
+
+    <**
+        @description : Is called when a sink changes its availability.
+    **>
+    method hookSinkAvailablityStatusChange {
+        in {
+            AudioManagerTypes.am_sinkID_t sinkID
+            AudioManagerTypes.am_Availability_s availability
+        }
+    }
+
+    <**
+        @description : Is called when a source changes its availability.
+    **>
+    method hookSourceAvailablityStatusChange {
+        in {
+            AudioManagerTypes.am_sourceID_t sourceID
+            AudioManagerTypes.am_Availability_s availability
+        }
+    }
+
+    <**
+        @description : Is called when a domain changes its status. This used for early domains only.
+    **>
+    method hookDomainStateChange {
+        in {
+            AudioManagerTypes.am_domainID_t domainID
+            AudioManagerTypes.am_DomainState_e domainState
+        }
+    }
+
+    <**
+        @description : Is called when the timing information (delay) changed for a connection.
+    **>
+    method hookTimingInformationChanged {
+        in {
+            AudioManagerTypes.am_connectionID_t connectionID
+            AudioManagerTypes.am_timeSync_t delay
+        }
+    }
+
+    <**
+        @description : Is called whenever a notified value needs to be send.
+    **>
+    method hookSinkNotificationDataChange {
+        in {
+
+            <**
+                @description : The sink ID of the sink where the data changed.
+            **>
+            AudioManagerTypes.am_sinkID_t sinkID
+
+            <**
+                @description : The payload.
+            **>
+            AudioManagerTypes.am_NotificationPayload_s payload
+        }
+    }
+
+    <**
+        @description : Is called whenever a notified value needs to be send.
+    **>
+    method hookSourceNotificationDataChange {
+        in {
+
+            <**
+                @description : The source ID of the source where the data changed.
+            **>
+            AudioManagerTypes.am_sourceID_t sourceID
+
+            <**
+                @description : The payload.
+            **>
+            AudioManagerTypes.am_NotificationPayload_s payload
+        }
+    }
+
+    <**
+        @description : This function is used to send out all data that has been changed in an early state.
+    **>
+    method sendChangedData {
+        in {
+            AudioManagerTypes.am_EarlyData_L earlyData
+        }
+    }
+
+    <**
+        @description : The routing rundown is confirmed. Must be called after set routing rundown was called and everything important to be done before rundown was done.
+    **>
+    method confirmRoutingRundown {
+        in {
+            String domainName
+        }
+    }
+
+    <**
+    @description : 
+        Registers a converter.
+        (at)return E_OK on success, E_ALREADY_EXISTENT if already registered E_UNKNOWN on error
+    **>
+    method registerConverter {
+        in {
+
+            <**
+            @description : In a fixed setup, the converterID must be below 100. In a dynamic setup, the gatewayID shall be 0. listSourceFormats and listSinkFormats are empty at registration time. Values are taken over when sources and sinks are registered.
+
+
+            **>
+            AudioManagerTypes.am_Converter_s converterData
+        }
+        out {
+            AudioManagerTypes.am_converterID_t converterID
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Deregisters a converter. Also removes all sinks and sources of the controlling domain.
+        (at)return E_OK on success, E_NON_EXISTENT if not found E_UNKNOWN on error
+    **>
+    method deregisterConverter {
+        in {
+            AudioManagerTypes.am_converterID_t converterID
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        Updates data of an converter.
+        (at)return E_OK on success, E_NON_EXISTENT if the gateway ID is not valid.
+    **>
+    method updateConverter {
+        in {
+
+            <**
+            @description : This is the new converter data that has been updated. Please note that changing source and sink IDs,
+
+            **>
+            AudioManagerTypes.am_converterID_t converterID
+            AudioManagerTypes.am_ConnectionFormat_L listSourceFormats
+            AudioManagerTypes.am_ConnectionFormat_L listSinkFormats
+            AudioManagerTypes.am_Convertion_L convertionMatrix
+        }
+        out {
+            AudioManagerTypes.am_Error_e amError
+        }
+    }
+
+    <**
+    @description : 
+        This attribute signals the current routing state to the clients.
+        A client should notify himself to this attribute in order to know the current state and act accordingly.
+    **>
+    attribute AudioManagerTypes.am_RoutingReady_e routingReady readonly
+
+}

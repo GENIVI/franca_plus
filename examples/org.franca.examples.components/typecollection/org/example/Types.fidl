@@ -1,0 +1,64 @@
+package org.example
+
+typeCollection mytypes {
+	version {
+		major 1
+		minor 0
+	}
+	
+	struct Answer {
+		String greeting
+		TimeOfDay timeOfDay 
+	}
+	
+	enumeration TimeOfDay {
+		Morning,
+		Noon,
+		Evening,
+		Night
+	}
+
+	enumeration QuVVehCogType {
+		// binary literals unsupported yet: replaced binary literals by decimal literals 
+		INITIALIZATION = 8
+		VALID_VERIFIED = 1
+		VALID_TEMPORARY = 10
+		REDUCED_TEMPORARY = 11
+		INVALID_TEMPORARY = 14
+		INVALID = 15
+	}
+
+	enumeration DvcoVehType {
+		VEH_STILL = 0
+		VEH_DRV_FWD = 1
+		VEH_DRV_BWD = 2
+		VEH_DRV = 3
+		VEH_STILL_REAR_DYNAMOMETER = 4
+		VEH_STILL_BOTH_DYNAMOMETER = 5
+		VEH_STILL_FRONT_DYNAMOMETER = 6
+		INVALID = 7
+	}
+
+	enumeration StVVehNssType {
+		VEH_STAND_STILL = 0
+		VEH_STAND_STILL_UNKNOWN = 1
+		INVALID = 15
+	}
+
+	// signal structure
+	struct VVehType {
+		DvcoVehType dvcoVeh
+		QuVVehCogType quVVehCog
+		UInt16 vVehCog
+		StVVehNssType stVVehNss
+		UInt8 alivVVeh
+		UInt8 crc
+	}
+	
+	const QuVVehCogType QuVVehCog_DEFAULT = QuVVehCogType.INITIALIZATION
+	const DvcoVehType DvcoVeh_DEFAULT = DvcoVehType.INVALID
+	
+	array FieldOfInts of Integer
+	const FieldOfInts Array_Default = [ 1, 2, 3, 4 ] 
+	
+}

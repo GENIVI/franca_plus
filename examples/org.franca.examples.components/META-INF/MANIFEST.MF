@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.franca.compmodel.dsl.examples
+Bundle-SymbolicName: org.franca.compmodel.dsl.examples
+Bundle-Version: 0.11.1.qualifier
+Bundle-Vendor: BMW Group

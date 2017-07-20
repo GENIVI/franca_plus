@@ -1,0 +1,42 @@
+package org.example
+
+import org.example.* from "HelloWorld.fidl"
+
+component HelloWorldServer {
+	provides HelloWorld2 as AskMePort
+}
+
+component ChatterClient {}
+
+component HelloWorldClient {
+	requires org.example.HelloWorld2 as AnswerMePort
+	contains ChatterClient as HyperActiveChatterClient
+	contains ChatterClient as BoringChatterClient
+}
+
+
+component MeetingPoint {
+	contains HelloWorldServer as Service
+	
+	contains HelloWorldClient as Client1
+	contains HelloWorldClient as Client2 
+	
+	connect Client1.AnswerMePort to Service.AskMePort
+	connect Client2.AnswerMePort to Service.AskMePort
+}
+
+// now implement in derived classes for derived types
+component DerivedChatterClient extends ChatterClient {}
+
+component DerivedHelloWorldClient extends HelloWorldClient {
+	provides HelloWorld2 as ChatterPort 
+	implement HyperActiveChatterClient by DerivedChatterClient  
+	finally implement BoringChatterClient by DerivedChatterClient 
+}
+
+component DerivedHelloWorldClient2 extends DerivedHelloWorldClient {
+	provides HelloWorld2 as ChatterPort2 
+}
+
+// or replace HelloWorldClient.BoringChatterClient with an implementation of DerivedChatterClient  
+inject DerivedChatterClient into HelloWorldClient.BoringChatterClient

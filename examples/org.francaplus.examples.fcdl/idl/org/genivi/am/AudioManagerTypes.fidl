@@ -1,0 +1,1248 @@
+package org.genivi.am.audiomanagertypes
+
+<**
+    @author : Christian Linke (christian.linke(at)bmw.de)
+**>
+typeCollection AudioManagerTypes {
+    version {
+        major 1
+        minor 0
+    }
+
+    <**
+        @description : List of mainconnections.
+    **>
+    array am_MainConnection_L of am_MainConnectionType_s
+
+    <**
+        @description : List of SinkClasses.
+    **>
+    array am_SinkClass_L of am_SinkClass_s
+
+    <**
+        @description : List of SinkTypes.
+    **>
+    array am_SinkType_L of am_SinkType_s
+
+    <**
+        @description : List of SourceClasses.
+    **>
+    array am_SourceClass_L of am_SourceClass_s
+
+    <**
+        @description : List of source types.
+    **>
+    array am_SourceType_L of am_SourceType_s
+
+    <**
+        @description : List of systemproperties.
+    **>
+    array am_SystemProperty_L of am_SystemProperty_s
+
+    <**
+        @description : List of class properties.
+    **>
+    array am_ClassProperty_L of am_ClassProperty_s
+
+    <**
+        @description : List of connection IDs.
+    **>
+    array am_ConnectionID_L of am_connectionID_t
+
+    <**
+        @description : Early Data list type.
+    **>
+    array am_EarlyData_L of am_EarlyData_s
+
+    <**
+        @description : List of mainsoundproperties.
+    **>
+    array am_MainSoundProperty_L of am_MainSoundProperty_s
+
+    <**
+        @description : List of notification configurations.
+    **>
+    array am_NotificationConfiguration_L of am_NotificationConfiguration_s
+
+    <**
+        @description : List of soundproperties.
+    **>
+    array am_SoundProperty_L of am_SoundProperty_s
+
+    <**
+        @description : List of volumes.
+    **>
+    array am_Volumes_L of am_Volumes_s
+
+    <**
+        @description : List of connectionformats.
+    **>
+    array am_ConnectionFormat_L of am_ConnectionFormat_pe
+
+    <**
+        @description : list of convertion matrixes.
+    **>
+    array am_Convertion_L of Boolean
+
+    <**
+        @description : A source ID.
+    **>
+    typedef am_sourceID_t is UInt16
+
+    <**
+        @description : A domain ID.
+    **>
+    typedef am_domainID_t is UInt16
+
+    <**
+        @description : A gateway ID.
+    **>
+    typedef am_gatewayID_t is UInt16
+
+    <**
+        @description : A connection ID.
+    **>
+    typedef am_connectionID_t is UInt16
+
+    <**
+        @description : A converter ID.
+    **>
+    typedef am_converterID_t is UInt16
+
+    <**
+        @description : A crossfader ID.
+    **>
+    typedef am_crossfaderID_t is UInt16
+
+    <**
+        @description : A mainConnection ID.
+    **>
+    typedef am_mainConnectionID_t is UInt16
+
+    <**
+    @description : 
+        This is the volume presented on the command interface. It is in the duty of the controller to change the volumes given here into meaningful values on the routing interface.
+        The range of this type is customer specific.
+    **>
+    typedef am_mainVolume_t is Int16
+
+    <**
+        @description : The unit is 0.1 db steps. The smallest value -3000 (=AM_MUTE). The minimum and maximum can be limited by actual project.
+    **>
+    typedef am_volume_t is Int16
+
+    <**
+        @description : Time in ms.
+    **>
+    typedef am_time_t is Int16
+
+    <**
+        @description : Offset time that is introduced in milliseconds.
+    **>
+    typedef am_timeSync_t is Int16
+
+    <**
+        @description : A Source class. 
+    **>
+    typedef am_sourceClass_t is UInt16
+
+    <**
+        @description : Speed.
+    **>
+    typedef am_speed_t is UInt16
+
+    <**
+        @description : A sink class.
+    **>
+    typedef am_sinkClass_t is UInt16
+
+    <**
+        @description : A sink ID.
+    **>
+    typedef am_sinkID_t is UInt16
+
+    <**
+        @description : This project specific value classifies the format in which data is exchanged within a connection.
+    **>
+    typedef am_ConnectionFormat_pe is UInt16
+
+    <**
+        @description : This project specific value gives the information about reason for source/sink change.
+    **>
+    typedef am_AvailabilityReason_pe is UInt16
+
+    <**
+        @description : Product specific identifier of property.
+    **>
+    typedef am_ClassProperty_pe is UInt16
+
+    <**
+    @description : 
+        For products, different ramp types can be defined here.
+        It is in the responsibility of the product to make sure that the routing plugins are aware of the ramp types used.
+    **>
+    typedef am_RampType_pe is UInt16
+
+    <**
+        @description : Project specific sound properties.
+    **>
+    typedef am_SoundPropertyType_pe is UInt16
+
+    <**
+        @description : Here are all sound properties that can be set via the CommandInterface. Product specific.
+    **>
+    typedef am_MainSoundPropertyType_pe is UInt16
+
+    <**
+        @description : Describes the different system properties. Project specific.
+    **>
+    typedef am_SystemPropertyType_pe is UInt16
+
+    <**
+        @description : Gives the type of the Notification.
+    **>
+    typedef am_NotificationType_pe is UInt16
+
+    <**
+    @description : 
+        Content of am_sinkSourceID_t depends of am_EarlyDataType_e in struct am_EarlyData_s:
+        sourceID in case of ED_SOURCE_VOLUME, ED_SOURCE_PROPERTY
+        sinkID in case of ED_SINK_VOLUME, ED_SINK_PROPERTY
+
+        Content of am_sinkSourceID_t depends of am_VolumeType_e in struct am_Volumes_s:
+        sourceID in case of VT_SOURCE
+        sinkID in case of VT_SINK
+    **>
+    typedef am_SinkSourceID_t is UInt16
+
+    <**
+    @description : 
+        Data type depends of am_EarlyDataType_e:
+        am_volume_t in case of ED_SOURCE_VOLUME, ED_SINK_VOLUME 
+        am_soundProperty_t in case of ED_SOURCE_PROPERTY, ED_SINK_PROPERTY 
+    **>
+    union am_EarlyData_u {
+        am_volume_t volume
+        am_SoundProperty_s soundProperty
+    }
+
+    <**
+        @description : This types describe a mixed description for source and sinks volumes.
+    **>
+    struct am_Volumes_s {
+
+        <**
+            @description : Describes the type of the volume: source or sink.
+        **>
+        am_VolumeType_e volumeType
+
+        <**
+            @description : Either source ID or sink ID.
+        **>
+        am_SinkSourceID_t volumeID
+
+        <**
+            @description : The volume.
+        **>
+        am_volume_t volume
+
+        <**
+            @description : The ramp that shall be driven.
+        **>
+        am_RampType_pe ramp
+
+        <**
+            @description : The time for the ramp.
+        **>
+        am_time_t time
+    }
+
+    <**
+        @description : This describes the availability of a sink or a source together with the latest change.
+    **>
+    struct am_Availability_s {
+
+        <**
+            @description : The current availability state.
+        **>
+        am_Availability_e availability
+
+        <**
+            @description : The reason for the last change. This can be used to trigger events that deal with state changes.
+        **>
+        am_AvailabilityReason_pe availabilityReason
+    }
+
+    <**
+        @description : Describes class properties.
+    **>
+    struct am_ClassProperty_s {
+
+        <**
+            @description : The property as enum.
+        **>
+        am_ClassProperty_pe classProperty
+
+        <**
+            @description : The value of the property.
+        **>
+        Int16 value
+    }
+
+    <**
+        @description : This struct describes the attributes of a crossfader.
+    **>
+    struct am_Crossfader_s {
+
+        <**
+            @description : This is the ID of the crossfader, it is unique in the system. There are 2 ways, ID can be created: either it is assigned during the registration process (in a dynamic context, uniqueness will be ensured by the AudioManager daemon), or it is a fixed (the project has to ensure the uniqueness of the ID).
+        **>
+        am_crossfaderID_t crossfaderID
+
+        <**
+            @description : The name of the crossfader. Must be unique in the whole system. 
+        **>
+        String name
+
+        <**
+            @description : The sink ID of the sink A. Sinks shall be registered before registering the crossfader.
+        **>
+        am_sinkID_t sinkIDA
+
+        <**
+            @description : The sink ID of the sink B. Sinks shall be registered before registering the crossfader.
+        **>
+        am_sinkID_t sinkIDB
+
+        <**
+            @description : The source ID of the crossfader source. The source shall be registered before the crossfader.
+        **>
+        am_sourceID_t sourceID
+
+        <**
+        @description : 
+            This enum can have 3 states:
+                HS_SINKA sink A is the current hot one, sink B is not audible
+                HS_SINKB sink B is the current hot one, sink B is not audible
+                HS_INTERMEDIATE the fader is stuck in between a cross-fading action. This could be due to an abort or an error. Before using the crossfader, it must be set to either HS_SINKA or HS_SINKB.
+        **>
+        am_HotSink_e hotSink
+    }
+
+    <**
+        @description : This struct describes the attributes of a gateway.
+    **>
+    struct am_Gateway_s {
+
+        <**
+            @description : This is the ID of the gateway, it is unique in the system. There are 2 ways, ID can be created: either it is assigned during the registration process (in a dynamic context, uniqueness will be ensured by the AudioManagerDaemon), or it is a fixed (the project has to ensure the uniqueness of the ID).
+        **>
+        am_gatewayID_t gatewayID
+
+        <**
+            @description : The name of the gateway. Must be unique in the whole system.
+        **>
+        String name
+
+        <**
+            @description : The sinkID of the gateway sink-end. The sink is a full blown sink with connectionFormats, sinkClassIDs etc... It makes sense to register the sinks of a gateway as non-visible. Care needs to be taken that the connectionsFormats match with the ones in the conversionMatrix. If the sink is located in the controllingDomain, the ID needs to be retrieved by registering the sink before registering the gateway. In case the sink is in a different domain, the ID needs to be retrieved via peeking.
+        **>
+        am_sinkID_t sinkID
+
+        <**
+            @description : The sourceID of the gateway sink-end. The sink is a full blown source with connectionFormats, sinkClassIDs etc... It makes sense to register the sources of a gateway as non-visible. Care needs to be taken that the connectionsFormats match with the ones in the conversionMatrix. If the source is located in the controllingDomain, the ID needs to be retrieved by registering the source before registering the gateway. In case the source is in a different domain, the ID needs to be retrieved via peeking.
+        **>
+        am_sourceID_t sourceID
+
+        <**
+            @description : The ID of the sink. If the domain is the same like the controlling domain, the ID is known due to registration. If the domain is different, the ID needs to be retrieved via peeking.
+        **>
+        am_domainID_t domainSinkID
+
+        <**
+            @description : The ID of the source. If the domain is the same like the controlling domain, the ID is known due to registration. If the domain is different, the ID needs to be retrieved via peeking.
+        **>
+        am_domainID_t domainSourceID
+
+        <**
+            @description : This is the ID of the domain that registers the gateway.
+        **>
+        am_domainID_t controlDomainID
+
+        <**
+            @description : This is the list of available formats on the source side of the gateway. It is not defined during the gateway registration but copied from the source registration.
+        **>
+        am_ConnectionFormat_L listSourceFormats
+
+        <**
+            @description : This is the list of available formats on the sink side of the gateway. It is not defined during the gateway registration but copied from the sink registration.
+        **>
+        am_ConnectionFormat_L listSinkFormats
+
+        <**
+        @description : 
+            This is matrix holding information about the conversion capability of the gateway, it's length is defined by the length(listSinkFormats) x length(listSourceFormats).
+            If a SinkFormat can be converted into a SourceFormat, the vector will hold a 1, if no conversion is possible, a 0.
+            The data is stored row orientated, where the rows are related to the sinksFormats and the columns to the sourceFormats. The first value will hold the conversion information from the first sourceFormat to the first sinkFormat for example and the seventh value the information about the 3rd sinkFormat to the 1st sourceFormat in case we would have 3 sourceFormats.
+        **>
+        am_Convertion_L convertionMatrix
+    }
+
+    <**
+        @description : Struct describing the sound property.
+    **>
+    struct am_SoundProperty_s {
+
+        <**
+            @description : The type of the property - a project specific enum.
+        **>
+        am_SoundPropertyType_pe type
+
+        <**
+            @description : The current value of the property.
+        **>
+        Int16 value
+    }
+
+    <**
+        @description : Struct describing system properties.
+    **>
+    struct am_SystemProperty_s {
+
+        <**
+            @description : The type that is set.
+        **>
+        am_SystemPropertyType_pe type
+
+        <**
+            @description : The value.
+        **>
+        Int16 value
+    }
+
+    <**
+        @description : Struct describing sink classes.
+    **>
+    struct am_SinkClass_s {
+
+        <**
+            @description : The ID of the sink class.
+        **>
+        am_sinkClass_t sinkClassID
+
+        <**
+            @description : The name of the sink class - must be unique in the system.
+        **>
+        String name
+
+        <**
+            @description : The list of the class properties. These are pairs of a project specific enum describing the type of the value and an integer holding the value.
+        **>
+        am_ClassProperty_L listClassProperties
+    }
+
+    <**
+        @description : Struct describing source classes.
+    **>
+    struct am_SourceClass_s {
+
+        <**
+            @description : The source ID.
+        **>
+        am_sourceClass_t sourceClassID
+
+        <**
+            @description : The name of the source class - must be unique in the system.
+        **>
+        String name
+
+        <**
+            @description : The list of the class properties. These are pairs of a project specific enum describing the type of the value and an integer holding the value.
+        **>
+        am_ClassProperty_L listClassProperties
+    }
+
+    <**
+        @description : This type holds all information of sources relevant to the HMI.
+    **>
+    struct am_SourceType_s {
+
+        <**
+            @description : This is the ID of the source, it is unique in the system. There are 2 ways, ID can be created: either it is assigned during the registration process (in a dynamic context, uniqueness will be ensured by the AudioManagerDaemon), or it is a fixed (the project has to ensure the uniqueness of the ID).
+        **>
+        am_sourceID_t sourceID
+
+        <**
+            @description : The name of the source. Must be unique in the whole system.
+        **>
+        String name
+
+        <**
+            @description : The availability of the source.
+        **>
+        am_Availability_s availability
+
+        <**
+            @description : The source class ID, indicates the class the source is in. This information can be used by the Controller to implement different behavior for different classes.
+        **>
+        am_sourceClass_t sourceClassID
+    }
+
+    <**
+        @description : This type holds all information of sinks relevant to the HMI.
+    **>
+    struct am_SinkType_s {
+
+        <**
+            @description : This is the ID of the sink, it is unique in the system. There are 2 ways, ID can be created: either it is assigned during the registration process (in a dynamic context, uniqueness will be ensured by the AudioManagerDaemon), or it is a fixed (the project has to ensure the uniqueness of the ID).
+        **>
+        am_sinkID_t sinkID
+
+        <**
+            @description : The name of the sink. Must be unique in the whole system. 
+        **>
+        String name
+
+        <**
+        @description : 
+            This attribute reflects the availability of the sink. There are several reasons why a sink could be not available for the moment: for example the shutdown of a sink because of overtemperature or over- &amp; undervoltage. The availability consists of two pieces of information:
+            - Availablility: the status itself, can be A_AVAILABLE, A_UNAVAILABLE or A_UNKNOWN
+            - AvailabilityReason: this informs about the last reason for a change in availability. The reasons itself are product specific.
+        **>
+        am_Availability_s availability
+
+        <**
+            @description : This is the representation of the Volume for the commandInterface. It is used by the HMI to set the volume of a sink, the AudioManagerController has to transform this into real source and sink volumes.
+        **>
+        am_mainVolume_t volume
+        am_MuteState_e muteState
+
+        <**
+            @description : The sink class ID references to a sink class. With the help of classification, rules can be setup to define the system behavior.
+        **>
+        am_sinkClass_t sinkClassID
+    }
+
+    <**
+        @description : A handle is used for asynchronous operations and is uniquely assigned for each of this operations.
+    **>
+    struct am_Handle_s {
+
+        <**
+            @description : The handle type.
+        **>
+        am_Handle_e handleType
+
+        <**
+            @description : The handle as value.
+        **>
+        UInt16 handle
+    }
+
+    <**
+        @description : Struct describing main sound property.
+    **>
+    struct am_MainSoundProperty_s {
+
+        <**
+            @description : The type of the property.
+        **>
+        am_MainSoundPropertyType_pe type
+
+        <**
+            @description : The current value.
+        **>
+        Int16 value
+    }
+
+    <**
+        @description : This type holds all information of connections relevant to the HMI.
+    **>
+    struct am_MainConnectionType_s {
+
+        <**
+            @description : The ID of the main connection.
+        **>
+        am_mainConnectionID_t mainConnectionID
+
+        <**
+            @description : The source ID where the connection starts.
+        **>
+        am_sourceID_t sourceID
+
+        <**
+            @description : The sink ID where the connection ends.
+        **>
+        am_sinkID_t sinkID
+
+        <**
+            @description : The delay of the main connection.
+        **>
+        am_timeSync_t delay
+
+        <**
+            @description : The current connection state.
+        **>
+        am_ConnectionState_e connectionState
+    }
+
+    <**
+        @description : This struct holds the payload of a notification.
+    **>
+    struct am_NotificationPayload_s {
+
+        <**
+            @description : This defines the notification type.
+        **>
+        am_NotificationType_pe type
+
+        <**
+            @description : This is the value of the notification. It's meaning depends on the notification type.
+        **>
+        Int16 value
+    }
+
+    <**
+        @description : This struct holds information about the configuration for notifications.
+    **>
+    struct am_NotificationConfiguration_s {
+
+        <**
+            @description : The notification type of the notification.
+        **>
+        am_NotificationType_pe type
+
+        <**
+            @description : The Notification status. This can be periodic, min/max value based or even off for example.
+        **>
+        am_NotificationStatus_e status
+
+        <**
+        @description : 
+            This gives additional information to the notification status.
+
+            Relation between notification status and the value:
+            NS_PERIODIC - the period in ms
+            NS_MINIMUM - the minimum value that triggers the notification
+            NS_MAXIMUM - the maximum value that triggers the notification
+            NS_CHANGE - the resolution of the change value
+        **>
+        Int16 parameter
+    }
+
+    <**
+        @description : This struct describes the attributes of a sink.
+    **>
+    struct am_Sink_s {
+
+        <**
+            @description : This is the ID of the sink, it is unique in the system. There are 2 ways, ID can be created: either it is assigned during the registration process (in a dynamic context, uniqueness will be ensured by the AudioManagerDaemon), or it is a fixed (the project has to ensure the uniqueness of the ID).
+        **>
+        am_sinkID_t sinkID
+
+        <**
+            @description : The name of the sink. Must be unique in the whole system.
+        **>
+        String name
+
+        <**
+            @description : The domain ID is the domain the sink belongs to. A sink can only be in one domain.
+        **>
+        am_domainID_t domainID
+
+        <**
+            @description : The sink class ID references to a sink class. With the help of classification, rules can be setup to define the system behavior.
+        **>
+        am_sinkClass_t sinkClassID
+
+        <**
+            @description : This is the volume of the sink. It is set by the AudioManagerController.
+        **>
+        am_volume_t volume
+
+        <**
+            @description : This Boolean flag indicates whether a sink is visible to the commandInterface or not. If the User must have the possibility to choose the source in the HMI, it must be visible. But there are also good reasons for invisible sinks, for example if the sink is part of a crossfader or gateway. HMI relevant changes in visible sinks will be automatically reported by the daemon to the commandInterface.
+        **>
+        Boolean visible
+
+        <**
+        @description : 
+            This attribute reflects the availability of the sink. There are several reasons why a sink could be not available for the moment: for example the shutdown of a sink because of overtemperature or over- &amp; undervoltage. The availability consists of two pieces of information:
+                Availablility: the status itself, can be A_AVAILABLE, A_UNAVAILABLE or A_UNKNOWN
+                AvailabilityReason: this informs about the last reason for a change in availability. The reasons itself are product specific.
+        **>
+        am_Availability_s available
+
+        <**
+            @description : This attribute reflects the mute state of the sink. The information is not the "real" state of the sink, but the HMI representation for he commandInterface controlled by the AudioManagerController.
+        **>
+        am_MuteState_e muteState
+
+        <**
+            @description : This is the representation of the Volume for the commandInterface. It is used by the HMI to set the volume of a sink, the AudioManagerController has to transform this into real source and sink volumes.
+        **>
+        am_mainVolume_t mainVolume
+
+        <**
+            @description : This is the list of sound properties, that the sink is capable of. The sound properties itself are project specific. For sinks, a possible sound property could be for example settings.
+        **>
+        am_SoundProperty_L listSoundProperties
+
+        <**
+            @description : This list holds information about the formats that the Source is capable of supporting when delivering audio.
+        **>
+        am_ConnectionFormat_L listConnectionFormats
+
+        <**
+            @description : This is the list of the available mainsound properties. The principle is the same than with sound properties, but they are only visible to the CommandInterface.
+        **>
+        am_MainSoundProperty_L listMainSoundProperties
+
+        <**
+            @description : This is the list of the MainNotificationConfigurations. These notifications work on the level of command interface.
+        **>
+        am_NotificationConfiguration_L listMainNotificationConfigurations
+
+        <**
+            @description : This is the list of the NotificationConfigurations. These notifications work on the level of RoutingPlugins.
+        **>
+        am_NotificationConfiguration_L listNotificationConfigurations
+    }
+
+    <**
+        @description : This struct describes the attributes of a source.
+    **>
+    struct am_Source_s {
+
+        <**
+            @description : This is the ID of the source, it is unique in the system. There are 2 ways, ID can be created: either it is assigned during the registration process (in a dynamic context, uniqueness will be ensured by the AudioManagerDaemon), or it is a fixed (the project has to ensure the uniqueness of the ID).
+        **>
+        am_sourceID_t sourceID
+
+        <**
+            @description : The domain ID is the domain the source belongs to. A source can only be in one domain.
+        **>
+        am_domainID_t domainID
+
+        <**
+            @description : The name of the source. Must be unique in the whole system.
+        **>
+        String name
+
+        <**
+            @description : The source class ID, indicates the class the source is in. This information can be used by the Controller to implement different behavior for different classes.
+        **>
+        am_sourceClass_t sourceClassID
+
+        <**
+        @description : 
+            The source state is an indication towards the source if it is actively heard or not. The source can use this information to implement features like automatic spin down of CD's in case the CD is not the active source or AF following of a tuner that is not actively heard. The source state is set by the AudioManagerController.There are 3 possible states:
+                SS_ON: the source is active
+                SS_OFF: the source is off
+                SS_PAUSED: the source is paused and not active.
+        **>
+        am_SourceState_e sourceState
+
+        <**
+            @description : This is the volume of the source. It is set by the AudioManagerController. It is used to adopt different audio levels in a system and mixing of sources (e.g. navigation hints &amp; music).
+        **>
+        am_volume_t volume
+
+        <**
+            @description : This Boolean flag indicates whether a source is visible to the commandInterface or not. If the User must have the possibility to choose the source in the HMI, it must be visible. But there are also good reasons for invisible sources, for example if the source is part of a crossfader or gateway. HMI relevant changes in visible sources will be automatically reported by the daemon to the commandInterface.
+        **>
+        Boolean visible
+
+        <**
+        @description : 
+            This attribute reflects the availability of the source. There are several reasons why a source could be not available for the moment. For example a CD player which has no CD entered in the slot can be unavailable, or a USB player with no or unreadable stick attached. Other scenarios involve the shutdown of a source because of overtemperature or over- &amp; undervoltage. The availability consists of two information:
+                Availablility: the status itself, can be A_AVAILABLE, A_UNAVAILABLE or A_UNKNOWN
+                AvailabilityReason: this informs about the last reason for a change in availability. The reasons itself are product specific.
+        **>
+        am_Availability_s available
+
+        <**
+        @description : 
+            Some special sources can have special behaviors, the are so called "Low Level Interrupts". Here the current status is documented. The information can be used by the AudioManagerController to react to the changes by for example lowering the volume of the main sources. The two states are
+                IS_OFF: the interrupt is not active at the moment
+                IS_INTERRUPTED: the interrupt is playing at the moment.
+        **>
+        am_InterruptState_e interruptState
+
+        <**
+            @description : This is the list of sound properties, that the source is capable of. The sound properties itself are project specific. For sources, a possible sound property could be navigation volume offset, for example.
+        **>
+        am_SoundProperty_L listSoundProperties
+
+        <**
+            @description : This list holds information about the formats that the Source is capable of supporting when delivering audio.
+        **>
+        am_ConnectionFormat_L listConnectionFormats
+
+        <**
+            @description : This is the list of the available main sound properties. The principle is the same than with sound properties, but they are only visible to the CommandInterface.
+        **>
+        am_MainSoundProperty_L listMainSoundProperties
+
+        <**
+            @description : The list of MainNotificationConfigurations. These notifications work on the level of CommandInterface.
+        **>
+        am_NotificationConfiguration_L listMainNotificationConfigurations
+
+        <**
+            @description : The list of MainNotificationConfigurations. These notifications work on the level of RoutingInterface.
+        **>
+        am_NotificationConfiguration_L listNotificationConfigurations
+    }
+
+    <**
+        @description : This struct describes the attributes of a domain.
+    **>
+    struct am_Domain_s {
+
+        <**
+            @description : The domain ID.
+        **>
+        am_domainID_t domainID
+
+        <**
+            @description : The name of the domain.
+        **>
+        String name
+
+        <**
+            @description : The busname. This is equal to a plugin name and is used to dispatch messages to the elements of a plugin.
+        **>
+        String busname
+
+        <**
+            @description : The name of the node.
+        **>
+        String nodename
+
+        <**
+            @description : Indicates if the domain is independent at startup or not.
+        **>
+        Boolean early
+
+        <**
+            @description : Indicates if the domain registration is complete or not.
+        **>
+        Boolean complete
+
+        <**
+            @description : The current domain state.
+        **>
+        am_DomainState_e ^state
+    }
+
+    <**
+        @description : this struct holds early data.
+    **>
+    struct am_EarlyData_s {
+        am_EarlyDataType_e type
+        am_SinkSourceID_t sinksource
+        am_EarlyData_u data
+    }
+
+    <**
+        @description : This struct describes the attributes of a converter.
+    **>
+    struct am_Converter_s {
+
+        <**
+            @description : This is the ID of the converter, it is unique in the system. There are 2 ways, ID can be created: either it is assigned during the registration process (in a dynamic context, uniqueness will be ensured by the AudioManagerDaemon), or it is a fixed (the project has to ensure the uniqueness of the ID).
+        **>
+        am_converterID_t converterID
+
+        <**
+            @description : The name of the converter. Must be unique in the whole system.
+        **>
+        String name
+
+        <**
+            @description : The sink ID of the converter sink-end. The sink is a full blown sink with connection formats, sink class IDs etc... It makes sense to register the sinks of a gateway as non-visible. Care needs to be taken that the connection formats match with the ones in the conversion matrix. If the sink is located in the controlling domain, the ID needs to be retrieved by registering the sink before registering the gateway. In case the sink is in a different domain, the ID needs to be retrieved via peeking.
+        **>
+        am_sinkID_t sinkID
+
+        <**
+            @description : The source ID of the converter sink-end. The sink is a full blown source with connection formats, source class IDs etc... It makes sense to register the sources of a gateway as non-visible. Care needs to be taken that the connection formats match with the ones in the conversion matrix. If the source is located in the controlling domain, the ID needs to be retrieved by registering the source before registering the gateway. In case the source is in a different domain, the ID needs to be retrieved via peeking.
+        **>
+        am_sourceID_t sourceID
+
+        <**
+            @description : This is the ID of the domain that registers the converter.
+        **>
+        am_domainID_t domainID
+
+        <**
+            @description : This is the list of available formats on the source side of the converter. It is not defined during the gateway registration but copied from the source registration.
+        **>
+        am_ConnectionFormat_L listSourceFormats
+
+        <**
+            @description : This is the list of available formats on the sink side of the gateway. It is not defined during the converter registration but copied from the sink registration.
+        **>
+        am_ConnectionFormat_L listSinkFormats
+
+        <**
+        @description : 
+            This is matrix holding information about the conversion capability of the converter, it's length is defined by the length(listSinkFormats) x length(listSourceFormats).
+            If a sink format can be converted into a source format, the vector will hold a 1, if no conversion is possible, a 0.
+            The data is stored row orientated, where the rows are related to the sink formats and the columns to the source formats. The first value will hold the conversion information from the first source format to the first sink format for example and the seventh value the information about the 3rd sink format to the 1st source format in case we would have 3 source formats.
+        **>
+        am_Convertion_L convertionMatrix
+    }
+
+    <**
+        @description : With the help of this enum, sinks and sources can report their availability state.
+    **>
+    enumeration am_Availability_e {
+
+        <**
+            @description : default
+        **>
+        A_UNKNOWN = 0
+
+        <**
+            @description : The source / sink is available.
+        **>
+        A_AVAILABLE = 1
+
+        <**
+            @description : The source / sink is not available.
+        **>
+        A_UNAVAILABLE = 2
+        A_MAX
+    }
+
+    <**
+        @description : Describes the active sink of a crossfader.
+    **>
+    enumeration am_ConnectionState_e {
+        CS_UNKNOWN = 0
+
+        <**
+            @description : This means the connection is just building up.
+        **>
+        CS_CONNECTING = 1
+
+        <**
+            @description : The connection is ready to be used.
+        **>
+        CS_CONNECTED = 2
+
+        <**
+            @description : The connection is in the course to be knocked down.
+        **>
+        CS_DISCONNECTING = 3
+
+        <**
+            @description : Only relevant for connectionStatechanged. Is send after the connection was removed.
+        **>
+        CS_DISCONNECTED = 4
+
+        <**
+            @description : This means the connection is still build up but unused at the moment.
+        **>
+        CS_SUSPENDED = 5
+        CS_MAX = 6
+    }
+
+    <**
+        @description : Describes the active sink of a crossfader.
+    **>
+    enumeration am_HotSink_e {
+
+        <**
+            @description : default
+        **>
+        HS_UNKNOWN = 0
+
+        <**
+            @description : Sink A is active.
+        **>
+        HS_SINKA = 1
+
+        <**
+            @description : Sink B is active.
+        **>
+        HS_SINKB = 2
+
+        <**
+            @description : The crossfader is in the transition state.
+        **>
+        HS_INTERMEDIATE = 3
+        HS_MAX = 4
+    }
+
+    <**
+        @description : The domain state.
+    **>
+    enumeration am_DomainState_e {
+
+        <**
+            @description : default
+        **>
+        DS_UNKNOWN = 0
+
+        <**
+            @description : The domain is controlled by the daemon.
+        **>
+        DS_CONTROLLED = 1
+
+        <**
+            @description : The domain is independent starting up.
+        **>
+        DS_INDEPENDENT_STARTUP = 2
+
+        <**
+            @description : The domain is independent running down.
+        **>
+        DS_INDEPENDENT_RUNDOWN = 3
+        DS_MAX = 4
+    }
+
+    <**
+        @description : This enum characterizes the data of the am_EarlyData_u.
+    **>
+    enumeration am_EarlyDataType_e {
+
+        <**
+            @description : default
+        **>
+        ES_UNKNOWN = 0
+
+        <**
+            @description : The source volume.
+        **>
+        ED_SOURCE_VOLUME = 1
+
+        <**
+            @description : The sink volume.
+        **>
+        ED_SINK_VOLUME = 2
+
+        <**
+            @description : A source property.
+        **>
+        ED_SOURCE_PROPERTY = 3
+
+        <**
+            @description : A sink property.
+        **>
+        ED_SINK_PROPERTY = 4
+        ED_MAX = 5
+    }
+
+    <**
+        @description : The errors of the audio manager. All possible errors are in here. This enum is used widely as return parameter.
+    **>
+    enumeration am_Error_e {
+
+        <**
+            @description : no error - positive reply
+        **>
+        E_OK = 0
+
+        <**
+            @description : default
+        **>
+        E_UNKNOWN = 1
+
+        <**
+            @description : Value out of range.
+        **>
+        E_OUT_OF_RANGE = 2
+
+        <**
+            @description : Not used.
+        **>
+        E_NOT_USED = 3
+
+        <**
+            @description : A database error occurred.
+        **>
+        E_DATABASE_ERROR = 4
+
+        <**
+            @description : The desired object already exists.
+        **>
+        E_ALREADY_EXISTS = 5
+
+        <**
+            @description : There is no change.
+        **>
+        E_NO_CHANGE = 6
+
+        <**
+            @description : The desired action is not possible.
+        **>
+        E_NOT_POSSIBLE = 7
+
+        <**
+            @description : The desired object is non existent.
+        **>
+        E_NON_EXISTENT = 8
+
+        <**
+            @description : The asynchronous action was aborted.
+        **>
+        E_ABORTED = 9
+
+        <**
+            @description : This error is returned in case a connect is issued with a connection format that cannot be selected for the connection. This could be either due to the capabilities of a source or a sink or gateway compatibilities for example.
+        **>
+        E_WRONG_FORMAT = 10
+        E_MAX = 11
+    }
+
+    <**
+        @description : The Mute State.
+    **>
+    enumeration am_MuteState_e {
+
+        <**
+            @description : default
+        **>
+        MS_UNKNOWN = 0
+
+        <**
+            @description : The source / sink is muted.
+        **>
+        MS_MUTED = 1
+
+        <**
+            @description : The source / sink is unmuted.
+        **>
+        MS_UNMUTED = 2
+        MS_MAX = 3
+    }
+
+    <**
+        @description : The interrupt state.
+    **>
+    enumeration am_InterruptState_e {
+
+        <**
+            @description : default
+        **>
+        IS_UNKNOWN = 0
+
+        <**
+            @description : The interrupt state is off - no interrupt.
+        **>
+        IS_OFF = 1
+
+        <**
+            @description : The interrupt state is interrupted - the interrupt is active.
+        **>
+        IS_INTERRUPTED = 2
+        IS_MAX = 3
+    }
+
+    <**
+        @description : This datatype determines if a sourceID or a sinkID is used in the union following.
+    **>
+    enumeration am_VolumeType_e {
+        VT_UNKNOWN = 0
+
+        <**
+            @description : The following type is a sink.
+        **>
+        VT_SINK = 1
+
+        <**
+            @description : The following type is a source.
+        **>
+        VT_SOURCE = 2
+        VT_MAX = 3
+    }
+
+    <**
+        @description : The notification status of a notification.
+    **>
+    enumeration am_NotificationStatus_e {
+        NS_UNKNOWN = 0
+
+        <**
+            @description : No notification, the function is turned off.
+        **>
+        NS_OFF = 1
+
+        <**
+            @description : Periodic notifications are sent out. The period in ms is given by am_NotificationParameter.
+        **>
+        NS_PERIODIC = 2
+
+        <**
+            @description : The notification is sent out when the minimum given by am_NotificationParameter is reached.
+        **>
+        NS_MINIMUM = 3
+
+        <**
+            @description : The notification is sent out when the maximum given by am_NotificationParameter is reached.
+        **>
+        NS_MAXIMUM = 4
+
+        <**
+            @description : The notification is sent out when a change happened. The Resolution of the change is defined by am_NotificationParameter.
+        **>
+        NS_CHANGE = 5
+        NS_MAX = 6
+    }
+
+    <**
+        @description : This enumeration is used to define the type of the action that is correlated to a handle.
+    **>
+    enumeration am_Handle_e {
+        H_UNKNOWN = 0
+        H_CONNECT = 1
+        H_DISCONNECT = 2
+        H_SETSOURCESTATE = 3
+        H_SETSINKVOLUME = 4
+        H_SETSOURCEVOLUME = 5
+        H_SETSINKSOUNDPROPERTY = 6
+        H_SETSOURCESOUNDPROPERTY = 7
+        H_SETSINKSOUNDPROPERTIES = 8
+        H_SETSOURCESOUNDPROPERTIES = 9
+        H_CROSSFADE = 10
+        H_SETVOLUMES = 11
+        H_SETSINKNOTIFICATION = 12
+        H_SETSOURCENOTIFICATION = 13
+        H_MAX = 14
+    }
+
+    <**
+        @description : The source state reflects the state of the source.
+    **>
+    enumeration am_SourceState_e {
+        SS_UNKNNOWN = 0
+
+        <**
+            @description : The source can be actively heard.
+        **>
+        SS_ON = 1
+
+        <**
+            @description : The source cannot be heard.
+        **>
+        SS_OFF = 2
+
+        <**
+            @description : The source is paused. Meaning it cannot be heard but should be prepared to play again soon.
+        **>
+        SS_PAUSED = 3
+        SS_MAX = 4
+    }
+
+    <**
+        @description : This enum describes the ready state of the routing part.
+    **>
+    enumeration am_RoutingReady_e {
+        RR_UNKNOWN = 0
+        RR_READY = 1
+        RR_RUNDOWN = 2
+    }
+
+}

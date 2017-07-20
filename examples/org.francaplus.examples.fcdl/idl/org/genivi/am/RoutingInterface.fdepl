@@ -1,0 +1,426 @@
+/*
+ * ##############################
+ * #####                    #####
+ * #####   Generated File   #####
+ * #####                    #####
+ * ##############################
+ * 
+ * Fibex origin: FBX410_SP2018_17KW13_Ethernet2_V10_MGU_SIs_lokal.xml
+ * Franca version: 0.9.1.201412191134
+ */
+import
+"platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "RoutingInterface.fidl"
+import "AudioManagerTypes.fdepl"
+
+define org.genivi.commonapi.someip.deployment for interface
+org.genivi.am.routinginterface.RoutingControl {
+	use org.genivi.am.audiomanagertypes.AudioManagerTypes
+	SomeIpServiceID = 45089
+
+	method asyncAbort {
+		SomeIpMethodID = 1
+		SomeIpReliable = false
+	}
+
+	method asyncConnect {
+		SomeIpMethodID = 2
+		SomeIpReliable = false
+	}
+
+	method asyncCrossFade {
+		SomeIpMethodID = 5
+		SomeIpReliable = false
+	}
+
+	method asyncDisconnect {
+		SomeIpMethodID = 3
+		SomeIpReliable = false
+	}
+
+	method asyncSetSinkNotificationConfiguration {
+		SomeIpMethodID = 13
+		SomeIpReliable = false
+	}
+
+	method asyncSetSinkSoundProperties {
+		SomeIpMethodID = 9
+		SomeIpReliable = false
+	}
+
+	method asyncSetSinkSoundProperty {
+		SomeIpMethodID = 8
+		SomeIpReliable = false
+	}
+
+	method asyncSetSinkVolume {
+		SomeIpMethodID = 6
+		SomeIpReliable = false
+	}
+
+	method asyncSetSourceNotificationConfiguration {
+		SomeIpMethodID = 14
+		SomeIpReliable = false
+	}
+
+	method asyncSetSourceSoundProperties {
+		SomeIpMethodID = 11
+		SomeIpReliable = false
+	}
+
+	method asyncSetSourceSoundProperty {
+		SomeIpMethodID = 10
+		SomeIpReliable = false
+	}
+
+	method asyncSetSourceState {
+		SomeIpMethodID = 12
+		SomeIpReliable = false
+	}
+
+	method asyncSetSourceVolume {
+		SomeIpMethodID = 7
+		SomeIpReliable = false
+	}
+
+	method asyncSetVolumes {
+		SomeIpMethodID = 4
+		SomeIpReliable = false
+	}
+
+	method setDomainState {
+		SomeIpMethodID = 15
+		SomeIpReliable = false
+	}
+
+	broadcast ackConnect {
+		SomeIpEventID = 32769
+		SomeIpReliable = false
+		SomeIpEventGroups = {
+			1
+		}
+	}
+
+	broadcast ackCrossFading {
+		SomeIpEventID = 32772
+		SomeIpReliable = false
+		SomeIpEventGroups = {
+			1
+		}
+	}
+
+	broadcast ackDisconnect {
+		SomeIpEventID = 32770
+		SomeIpReliable = false
+		SomeIpEventGroups = {
+			1
+		}
+	}
+
+	broadcast ackSetSinkSoundProperties {
+		SomeIpEventID = 32778
+		SomeIpReliable = false
+		SomeIpEventGroups = {
+			1
+		}
+	}
+
+	broadcast ackSetSinkSoundProperty {
+		SomeIpEventID = 32777
+		SomeIpReliable = false
+		SomeIpEventGroups = {
+			1
+		}
+	}
+
+	broadcast ackSetSinkVolumeChange {
+		SomeIpEventID = 32775
+		SomeIpReliable = false
+		SomeIpEventGroups = {
+			1
+		}
+	}
+
+	broadcast ackSetSourceSoundProperties {
+		SomeIpEventID = 32780
+		SomeIpReliable = false
+		SomeIpEventGroups = {
+			1
+		}
+	}
+
+	broadcast ackSetSourceSoundProperty {
+		SomeIpEventID = 32779
+		SomeIpReliable = false
+		SomeIpEventGroups = {
+			1
+		}
+	}
+
+	broadcast ackSetSourceState {
+		SomeIpEventID = 32781
+		SomeIpReliable = false
+		SomeIpEventGroups = {
+			1
+		}
+	}
+
+	broadcast ackSetSourceVolumeChange {
+		SomeIpEventID = 32776
+		SomeIpReliable = false
+		SomeIpEventGroups = {
+			1
+		}
+	}
+
+	broadcast ackSetVolumes {
+		SomeIpEventID = 32771
+		SomeIpReliable = false
+		SomeIpEventGroups = {
+			1
+		}
+	}
+
+	broadcast ackSinkNotificationConfiguration {
+		SomeIpEventID = 32782
+		SomeIpReliable = false
+		SomeIpEventGroups = {
+			1
+		}
+	}
+
+	broadcast ackSinkVolumeTick {
+		SomeIpEventID = 32773
+		SomeIpReliable = false
+		SomeIpEventGroups = {
+			1
+		}
+	}
+
+	broadcast ackSourceNotificationConfiguration {
+		SomeIpEventID = 32783
+		SomeIpReliable = false
+		SomeIpEventGroups = {
+			1
+		}
+	}
+
+	broadcast ackSourceVolumeTick {
+		SomeIpEventID = 32774
+		SomeIpReliable = false
+		SomeIpEventGroups = {
+			1
+		}
+	}
+
+}
+
+define org.genivi.commonapi.someip.deployment for interface
+org.genivi.am.routinginterface.RoutingControlObserver {
+	use org.genivi.am.audiomanagertypes.AudioManagerTypes
+	SomeIpServiceID = 45090
+
+	attribute routingReady {
+		SomeIpGetterID = 29
+		SomeIpGetterReliable = false
+		SomeIpNotifierID = 32769
+		SomeIpNotifierReliable = false
+		SomeIpEventGroups = {
+			1
+		}
+	}
+
+	method confirmRoutingRundown {
+		SomeIpMethodID = 28
+		SomeIpReliable = false
+		in {
+			domainName {
+				SomeIpStringLength = 54
+			}
+		}
+	}
+
+	method deregisterConverter {
+		SomeIpMethodID = 31
+		SomeIpReliable = false
+	}
+
+	method deregisterCrossfader {
+		SomeIpMethodID = 18
+		SomeIpReliable = false
+	}
+
+	method deregisterDomain {
+		SomeIpMethodID = 2
+		SomeIpReliable = false
+	}
+
+	method deregisterGateway {
+		SomeIpMethodID = 5
+		SomeIpReliable = false
+	}
+
+	method deregisterSink {
+		SomeIpMethodID = 8
+		SomeIpReliable = false
+	}
+
+	method deregisterSource {
+		SomeIpMethodID = 13
+		SomeIpReliable = false
+	}
+
+	method hookDomainRegistrationComplete {
+		SomeIpMethodID = 20
+		SomeIpReliable = false
+	}
+
+	method hookDomainStateChange {
+		SomeIpMethodID = 23
+		SomeIpReliable = false
+	}
+
+	method hookInterruptStatusChange {
+		SomeIpMethodID = 19
+		SomeIpReliable = false
+	}
+
+	method hookSinkAvailablityStatusChange {
+		SomeIpMethodID = 21
+		SomeIpReliable = false
+	}
+
+	method hookSinkNotificationDataChange {
+		SomeIpMethodID = 25
+		SomeIpReliable = false
+	}
+
+	method hookSourceAvailablityStatusChange {
+		SomeIpMethodID = 22
+		SomeIpReliable = false
+	}
+
+	method hookSourceNotificationDataChange {
+		SomeIpMethodID = 26
+		SomeIpReliable = false
+	}
+
+	method hookTimingInformationChanged {
+		SomeIpMethodID = 24
+		SomeIpReliable = false
+	}
+
+	method peekDomain {
+		SomeIpMethodID = 3
+		SomeIpReliable = false
+		in {
+			name {
+				SomeIpStringLength = 54
+			}
+		}
+	}
+
+	method peekSink {
+		SomeIpMethodID = 9
+		SomeIpReliable = false
+		in {
+			name {
+				SomeIpStringLength = 54
+			}
+		}
+	}
+
+	method peekSinkClassID {
+		SomeIpMethodID = 10
+		SomeIpReliable = false
+		in {
+			name {
+				SomeIpStringLength = 54
+			}
+		}
+	}
+
+	method peekSource {
+		SomeIpMethodID = 14
+		SomeIpReliable = false
+		in {
+			name {
+				SomeIpStringLength = 54
+			}
+		}
+	}
+
+	method peekSourceClassID {
+		SomeIpMethodID = 15
+		SomeIpReliable = false
+		in {
+			name {
+				SomeIpStringLength = 54
+			}
+		}
+	}
+
+	method registerConverter {
+		SomeIpMethodID = 30
+		SomeIpReliable = false
+	}
+
+	method registerCrossfader {
+		SomeIpMethodID = 17
+		SomeIpReliable = false
+	}
+
+	method registerDomain {
+		SomeIpMethodID = 1
+		SomeIpReliable = false
+		in {
+			returnBusname {
+				SomeIpStringLength = 54
+			}
+			returnInterface {
+				SomeIpStringLength = 54
+			}
+		}
+	}
+
+	method registerGateway {
+		SomeIpMethodID = 4
+		SomeIpReliable = false
+	}
+
+	method registerSink {
+		SomeIpMethodID = 7
+		SomeIpReliable = false
+	}
+
+	method registerSource {
+		SomeIpMethodID = 12
+		SomeIpReliable = false
+	}
+
+	method sendChangedData {
+		SomeIpMethodID = 27
+		SomeIpReliable = false
+	}
+
+	method updateConverter {
+		SomeIpMethodID = 32
+		SomeIpReliable = false
+	}
+
+	method updateGateway {
+		SomeIpMethodID = 6
+		SomeIpReliable = false
+	}
+
+	method updateSink {
+		SomeIpMethodID = 11
+		SomeIpReliable = false
+	}
+
+	method updateSource {
+		SomeIpMethodID = 16
+		SomeIpReliable = false
+	}
+
+}

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package 
+       uri = "http://org.franca.FComp" 
+       class = "org.franca.fComp.FCompPackage"
+       genModel = "model/generated/FComp.genmodel" /> 
+	
+  </extension>
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated FComp -->
+      <package
+            uri="http://org.franca.compmodel.dsl"
+            class="org.franca.compmodel.dsl.fcomp.FcompPackage"
+            genModel="model/generated/FComp.genmodel"/>
+   </extension>
+   <extension
+         id="FComp"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.ui.ide.workbench"
+            name="Franca Component Editor with Extensions">
+         <property
+               name="appName"
+               value="Franca Component Editor with Extensions">
+         </property>
+      </product>
+   </extension>
+   <extension
+         id="FDev"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.ui.ide.workbench"
+            name="Franca Device Editor">
+      </product>
+   </extension>
+   <extension
+         id="CompEditor"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.ui.ide.workbench"
+            name="Franca Component Editor with Extensions">
+      </product>
+   </extension>
+
+</plugin>
