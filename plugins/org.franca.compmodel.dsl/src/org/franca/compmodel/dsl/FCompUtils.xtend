@@ -9,13 +9,10 @@ package org.franca.compmodel.dsl
 
 import java.util.List
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.xtext.EcoreUtil2
 import org.franca.compmodel.dsl.fcomp.FCComponent
-import org.franca.compmodel.dsl.fcomp.FCLabelKind
 import org.franca.compmodel.dsl.fcomp.FCModel
 import org.franca.compmodel.dsl.fcomp.FCPort
 import org.franca.compmodel.dsl.fcomp.FCPortKind
-import org.franca.compmodel.dsl.fcomp.FCPrototype
 
 class FCompUtils {
 
@@ -60,48 +57,5 @@ class FCompUtils {
 			}
 		}
 		return null
-	}
-	
-	/*
-	 * get all component prototypes that refer to the component provided as argument
-	 */
-	public def static List<FCPrototype> findParentComponentRefs(FCPrototype proto) {
-		val FCComponent currentComp = FCompUtils.getComponentForObject(proto)
-		if(currentComp === null)
-			return #[]
-		
-		val root = EcoreUtil2.getRootContainer(currentComp)
-		if(root === null)
-			return #[]
-		EcoreUtil2.getAllContentsOfType(root, FCPrototype).filter[
-			if(it === null)
-				return false
-			it.component === currentComp
-		].toList
-	}
-	
-	// return the toplevel component marked with annotation @root
-	public def static FCComponent getSystemRootComponent(FCPrototype prototype) {
-		val root = EcoreUtil2.getRootContainer(prototype)
-		if(root === null)
-			return null
-
-		val allPrototypes = EcoreUtil2.getAllContentsOfType(root, FCPrototype)
-		var FCComponent currentcomp = prototype.eContainer as FCComponent
-		while(currentcomp !== null) {
-			if(currentcomp.labels.map[kind].contains(FCLabelKind.ROOT))
-				return currentcomp
-			else {
-				val FCComponent comp = currentcomp
-				val superprototypes = allPrototypes.filter[
-					it.component === comp
-				].toList
-				if(superprototypes.length > 0)
-					currentcomp = superprototypes.head.eContainer as FCComponent
-				else
-					return null
-			}
-		}
-		return null;
 	}
 }

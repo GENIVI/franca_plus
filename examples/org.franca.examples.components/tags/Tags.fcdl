@@ -1,0 +1,19 @@
+package tags
+
+// organization
+tag String @org mandatory
+tag String @responsible
+
+// architecture
+tag String @root
+tag String @framework
+tag String @cluster
+tag String @dienst
+
+// details
+tag String @level
+tag String @facade
+tag String @subselect
+
+// tooling
+tag String @eaguid

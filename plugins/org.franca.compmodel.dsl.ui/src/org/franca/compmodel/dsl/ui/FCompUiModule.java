@@ -5,12 +5,19 @@
  * License, v. 1.0. If a copy of the EPL was not distributed with this
  * file, You can obtain one at https://www.eclipse.org/legal/epl-v10.html. 
  */
+
 package org.franca.compmodel.dsl.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.ui.editor.autoedit.AbstractEditStrategyProvider;
 import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher;
 import org.eclipse.xtext.ui.editor.contentassist.XtextContentAssistProcessor;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.ISemanticHighlightingCalculator;
+import org.franca.compmodel.dsl.ui.contentassist.FCompAutoEditStrategyProvider;
 import org.franca.compmodel.dsl.ui.contentassist.FCompProposalPrefixMatcher;
+import org.franca.compmodel.dsl.ui.highlighting.FCompHighlightingConfiguration;
+import org.franca.compmodel.dsl.ui.highlighting.FCompSemanticHighlightCalculator;
 
 import com.google.inject.Binder;
 
@@ -35,5 +42,19 @@ public class FCompUiModule extends org.franca.compmodel.dsl.ui.AbstractFCompUiMo
 	@Override
 	public Class<? extends PrefixMatcher> bindPrefixMatcher() {
 		return FCompProposalPrefixMatcher.class;
+	}
+	
+	// inject own highlighting configuration
+	public Class<? extends IHighlightingConfiguration> bindSemanticConfig() {
+		return FCompHighlightingConfiguration.class;
+	}
+
+	// inject own semantic highlighting
+	public Class<? extends ISemanticHighlightingCalculator> bindSemanticHighlightingCalculator() {
+		return FCompSemanticHighlightCalculator.class;
+	}
+	
+	public Class<? extends AbstractEditStrategyProvider> bindAbstractEditStrategyProvider() {
+		return FCompAutoEditStrategyProvider.class;
 	}
 }

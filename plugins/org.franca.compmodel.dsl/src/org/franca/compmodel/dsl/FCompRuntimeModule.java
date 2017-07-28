@@ -7,11 +7,10 @@
  */
 package org.franca.compmodel.dsl;
 
+import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
-import org.franca.compmodel.dsl.scoping.FCompDeclarativeNameProvider;
 
 import com.google.inject.Binder;
-
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
@@ -31,6 +30,12 @@ public class FCompRuntimeModule extends org.franca.compmodel.dsl.AbstractFCompRu
 	
 	@Override
     public Class<? extends IQualifiedNameProvider> bindIQualifiedNameProvider() {
-        return FCompDeclarativeNameProvider.class;
+        return org.franca.compmodel.dsl.scoping.FCompDeclarativeNameProvider.class;
     }
+	
+	@Override
+	public Class<? extends IValueConverterService> bindIValueConverterService() {
+		return org.franca.compmodel.dsl.valueconverter.FCompValueConverters.class;
+	}
+	
 }

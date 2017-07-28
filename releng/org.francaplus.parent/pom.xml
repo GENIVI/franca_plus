@@ -32,19 +32,18 @@
             <module>../../releng/org.francaplus.targetplatform</module>
     		<!-- actual code modules -->
             <module>../../plugins/org.franca.compmodel.dsl</module>
-            <module>../../plugins/org.franca.compmodel.dsl.ui</module>
-<!--             <module>../../plugins/org.franca.compmodel.dsl.edit</module>
-            <module>../../plugins/org.franca.compmodel.dsl.editor</module> 
-            
+            <module>../../plugins/org.franca.compmodel.dsl.ui</module>            
             <module>../../plugins/org.franca.compdeploymodel.dsl</module>
             <module>../../plugins/org.franca.compdeploymodel.dsl.ui</module>
--->
-            
             
     		<!-- test modules -->
            
 			<!-- product modules -->	
-			<module>../../releng/org.francaplus.product</module>	
+			<module>../../releng/org.francaplus.product</module>
+			
+			<!-- feature modules -->	
+			<module>../../features/org.francaplus.feature</module>
+			
     </modules>
 
 	<build>

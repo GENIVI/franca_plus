@@ -28,6 +28,8 @@ import org.franca.compmodel.dsl.fcomp.Import
 import org.franca.core.utils.FrancaIDLUtils
 import org.eclipse.xtext.GrammarUtil
 import org.eclipse.xtext.RuleCall
+import org.franca.compmodel.dsl.fcomp.FCTagDecl
+import org.franca.compmodel.dsl.fcomp.FCAnnotationType
 
 class FCompProposalProvider extends AbstractFCompProposalProvider {
 	
@@ -117,12 +119,11 @@ class FCompProposalProvider extends AbstractFCompProposalProvider {
 		sublist
 	} 
 
-	def createProposal(String name,String display, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+	def createProposal(String name, String display, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		var proposal = createCompletionProposal('''«name.toString»''',display,null, context)
 
 		if (proposal instanceof ConfigurableCompletionProposal) {
-			var c = proposal as ConfigurableCompletionProposal
-			c.textApplier = new ReplacementTextApplier() {
+			proposal.textApplier = new ReplacementTextApplier() {
 				override getActualReplacementString(ConfigurableCompletionProposal proposal) {
 					proposal.replacementLength = proposal.replaceContextLength
 					'''"«name.toString»"'''
@@ -139,6 +140,25 @@ class FCompProposalProvider extends AbstractFCompProposalProvider {
 		if (ass === null || !"importURI".equals(ass.getFeature())) {
 			super.complete_STRING(model, ruleCall, context, acceptor);
 		}
+	}
+	
+	/** Combine proposals for custom annotation tags with default built-in annotations */
+	public override complete_FCAnnotation(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		val tagDecls = model.eResource.resourceSet.allContents.filter(FCTagDecl).toList
+		for (tag: tagDecls ) {
+			val text = tag.name
+			val proposal = createCompletionProposal('''«text»''', text, null, context)
+			acceptor.accept(proposal)
+		}
+		
+		for (annoType: FCAnnotationType.VALUES ) {
+			if (annoType != FCAnnotationType.CUSTOM_VALUE) {
+				val proposal = createCompletionProposal('''«annoType.literal»''', annoType.literal, null, context)
+				acceptor.accept(proposal)
+			}
+		}
+		
+		super.complete_FCAnnotation(model, ruleCall, context, acceptor)
 	}
 	
 }

@@ -23,6 +23,9 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.franca.compmodel.dsl,
+ org.franca.compmodel.dsl.fcomp,
+ org.franca.compmodel.dsl.fcomp.impl,
+ org.franca.compmodel.dsl.fcomp.util,
  org.franca.compmodel.dsl.formatting,
  org.franca.compmodel.dsl.generator,
  org.franca.compmodel.dsl.parser.antlr,
@@ -31,7 +34,5 @@ Export-Package: org.franca.compmodel.dsl,
  org.franca.compmodel.dsl.serializer,
  org.franca.compmodel.dsl.services,
  org.franca.compmodel.dsl.validation,
- org.franca.compmodel.dsl.fcomp,
- org.franca.compmodel.dsl.fcomp.impl,
- org.franca.compmodel.dsl.fcomp.util
+ org.franca.compmodel.dsl.valueconverter
 

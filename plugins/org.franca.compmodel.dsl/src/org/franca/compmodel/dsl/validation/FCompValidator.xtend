@@ -13,13 +13,12 @@ import org.franca.compmodel.dsl.FCompUtils
 import org.franca.compmodel.dsl.fcomp.FCAssemblyConnector
 import org.franca.compmodel.dsl.fcomp.FCComponent
 import org.franca.compmodel.dsl.fcomp.FCDelegateConnector
-import org.franca.compmodel.dsl.fcomp.FCLabelKind
+import org.franca.compmodel.dsl.fcomp.FCGenericPrototype
 import org.franca.compmodel.dsl.fcomp.FCPort
 import org.franca.compmodel.dsl.fcomp.FCPortKind
 import org.franca.compmodel.dsl.fcomp.FCPrototype
 
 import static org.franca.compmodel.dsl.fcomp.FcompPackage.Literals.*
-import org.franca.compmodel.dsl.fcomp.FCGenericPrototype
 
 /**
  * This class contains custom validation rules. 
@@ -109,7 +108,7 @@ class FCompValidator extends AbstractFCompValidator {
 	
 	@Check
 	def isSingleton(FCPrototype proto) {
-		if (true == proto.component.labels.map[kind].contains(FCLabelKind.SINGLETON.value)) {
+		if (true == proto.component.singleton == true) {
 			val allCompRefs = EcoreUtil2.getRootContainer(proto).eAllContents.filter(FCPrototype)
 			if (allCompRefs.exists[it != proto && it.component == proto.component]) {
 				error('Duplicate containment for singleton \'' + proto.component.name + '\'', proto, 

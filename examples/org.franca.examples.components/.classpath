@@ -2,8 +2,12 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="src" path="typecollection"/>
-	<classpathentry kind="src" path="deployment"/>
+	<classpathentry kind="src" path="helloworld"/>
+	<classpathentry kind="src" path="windowlifter"/>
 	<classpathentry kind="src" path="devices"/>
+	<classpathentry kind="src" path="deployment"/>
+	<classpathentry kind="src" path="defaults"/>
+	<classpathentry kind="src" path="tags"/>
+	<classpathentry kind="src" path="misc"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

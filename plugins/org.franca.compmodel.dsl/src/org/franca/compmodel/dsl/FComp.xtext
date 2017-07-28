@@ -9,24 +9,29 @@ grammar org.franca.compmodel.dsl.FComp with org.eclipse.xtext.common.Terminals
 
 hidden(WS, ML_COMMENT, SL_COMMENT)
 
-// inlcude the Franca IDL ECore model as base
+// include the Franca IDL ECore model as base
 import "http://core.franca.org" as fidl
 
 // still generate the ECore model from the Xtext
 generate fcomp "http://org.franca.compmodel.dsl"
+
+// the Ecore ecore model
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
 FCModel:
 	// the model name is the package, so we have 
 	// package names prefixed
 	'package' name=FQN
 	(imports+=Import)*
-	(
-		components+=FCComponent |
-		injects+=FCInjectedPrototype |
-		instances+=FCInstance |
-		device+=FCDevice
-		
-	)*;
+    (
+    	(declaredTags+=FCTagDecl)* 
+	    (
+			components+=FCComponent |
+			injects+=FCInjectedPrototype |
+			instances+=FCInstance |
+			device+=FCDevice
+		)*
+	);
 
 // **************************************************************
 // HOWTO: use a combination of URI global scopes and namespace aware local scope provider
@@ -38,38 +43,34 @@ FCModel:
 // the attribute 'importURI' is picked up by the ImportUriGlobalScopeProvider
 Import: 'import' (importedNamespace=WildcardFQN 'from' | 'model') importURI=STRING;
 
-WildcardFQN: FQN ('.' '*')?;
-
 FQN: ID ('.' ID)*;
+WildcardFQN: FQN ('.' '*')?;
 	
 FCVersion: {FCVersion} 'version' '{' 'major' major=INT 'minor' minor=INT '}';
 	
 enum FCPortKind: provided|required;
-enum FCPortCardinality: MANDATORY='mandatory' | OPTIONAL='optionally';
+enum FCPortCardinality: MANDATORY='mandatory' | OPTIONAL='optional';
 enum FCInjectionModifier: finally;
 
 FCRequiredPort returns FCPort:
 	{FCRequiredPort}
 	comment=FCAnnotationBlock?
-	kvLabels+=FCKeyValueLabel*
 	cardinality?=FCPortCardinality? 'requires' interface=[fidl::FInterface|FQN] ('as' name=ID)?;
 
 FCProvidedPort returns FCPort:
 	{FCProvidedPort}
 	comment=FCAnnotationBlock?
-	kvLabels+=FCKeyValueLabel*
 	'provides' interface=[fidl::FInterface|FQN] ('as' name=ID)?;	
 
 FCPrototypeInjection returns FCGenericPrototype:
 	{FCPrototypeInjection}
 	comment=FCAnnotationBlock?
-	kvLabels+=FCKeyValueLabel*
 	modifier=FCInjectionModifier? 'implement' ref=[FCPrototype|FQN] ('as' name=ID)? 'by' component=[FCComponent|FQN];
 
 FCComponent: 
 	{FCComponent}
 	comment=FCAnnotationBlock?
-	(labels+=FCLabel | kvLabels+=FCKeyValueLabel)*
+	(abstract?='abstract'? & root?='root'? & singleton?='singleton'? & service?='service'?)
 	'component' name=ID ('extends' superType=[FCComponent|FQN])?
 	'{'
 		version=FCVersion?
@@ -86,18 +87,15 @@ FCComponent:
 FCPrototype returns FCGenericPrototype:
 	{FCPrototype}
 	comment=FCAnnotationBlock?
-	kvLabels+=FCKeyValueLabel*
 	'contains' component=[FCComponent|FQN] ('as' name=ID)?;
 	
 FCInjectedPrototype returns FCGenericPrototype:
 	{FCInjectedPrototype}
 	comment=FCAnnotationBlock?
-	kvLabels+=FCKeyValueLabel*
 	'inject' component=[FCComponent|FQN] ('as' name=ID)? 'into' ref=[FCPrototype|FQN] modifier=FCInjectionModifier?;
 
 FCDelegateConnector: 
 	comment=FCAnnotationBlock?
-	kvLabels+=FCKeyValueLabel*
 	'delegate' kind=FCPortKind outer=FCOuter 'to' inner=FCInner;
 	
 FCOuter: port=[FCPort];
@@ -105,7 +103,6 @@ FCInner: prototype=[FCPrototype] '.' port=[FCPort];
 
 FCAssemblyConnector:
 	comment=FCAnnotationBlock?
-	kvLabels+=FCKeyValueLabel*
 	('connect'|'assemble') from=FCFrom 'to' to=FCTo;
 	
 FCFrom: prototype=[FCPrototype] '.' port=[FCRequiredPort];
@@ -116,7 +113,6 @@ FCTo: prototype=[FCPrototype] '.' port=[FCProvidedPort];
 
 FCDevice:
 	comment=FCAnnotationBlock?
-	kvLabels+=FCKeyValueLabel*
 	'device' name=ID
 	'{' 
 		 instances+=FCContainedInstance*
@@ -129,39 +125,47 @@ FCContainedInstance:
 
 FCInstance:
 	comment=FCAnnotationBlock?
-	kvLabels+=FCKeyValueLabel*
 	'instance' component=[FCComponent] 
 	({FCPrototypeInstance.parent=current} '.' prototype=[FCGenericPrototype])* 
 	('as' name=ID)?;
 
 FCHostedInstance:
 	comment=FCAnnotationBlock?
-	kvLabels+=FCKeyValueLabel*
 	'hosts' instance=[FCInstance|FQN];
 
 // **************************************************************
-// annotations
+// annotations with built-in and custom defined tags
 
-FCAnnotationBlock returns FCAnnotationBlock:
-	'<**' (elements+=FCAnnotation)+ '**>';
-
-FCAnnotation returns FCAnnotation:
-	rawText=ANNOTATION_STRING;
+FCAnnotationBlock:
+	{FCAnnotationBlock}
+	'<**' (elements+=FCAnnotation|ANNO_CONTINUED)* '**>';
 	
-terminal ANNOTATION_STRING:
-	'@' (('a'..'z')|'-'|'_') + (' '|'\t')* (':'
-	( ('\\' ('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\')) | ('\\*'|'\\@') | !('\\'|'*'|'@') )*)?
+terminal ANNOTATION_VALUE returns ecore::EString:
+	':' ( ('\\' ('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\')) | ('\\*'|'\\@') | !('\\'|'*'|'@') )*;
+
+ 	
+// Structured Comments can contain custom defined tags
+terminal AT_ALPHA_NUMERIC_ID returns ecore::EString:
+	'@' ('a'..'z'|'A'..'Z') ('a'..'z'|'A'..'Z'|'0'..'9')*
 ;
+TAG_ID: AT_ALPHA_NUMERIC_ID;
+	
+terminal ANNO_CONTINUED: '**';
 
-// service architecture labels
-enum FCLabelKind: root='@root'|framework='@framework'|cluster='@cluster'|service='@service'|singleton='@singleton'|facade='@facade'|deployable='@deployable'|abstract='@abstract';
-FCLabel: kind=FCLabelKind;
+// annotation are by default custom (=0)
+enum FCCustomAnnotationType returns FCAnnotationType: custom;
+enum FCBuiltinAnnotationType returns FCAnnotationType: 
+	deprecated='@deprecated'|
+	description='@description'|
+	experimental='@experimental'|
+	author='@author'|
+	see='@see' |
+	details='@details';
 
-FCKeyValueLabelKey:
-	key=ID;
+enum FCPredefinedTypeId: String;
+FCTagDecl:
+	'tag' type=FCPredefinedTypeId name=TAG_ID (mandatory?='mandatory')?;
 
-enum FCKeyValueLabelKind:
-	property='@property';
-
-FCKeyValueLabel:
-	kind=FCKeyValueLabelKind '(' k=FCKeyValueLabelKey '=' v=STRING ')';
+FCAnnotation returns FCAnnotation: 
+	(kind=FCBuiltinAnnotationType | tag=[FCTagDecl|TAG_ID])
+	value=ANNOTATION_VALUE?;

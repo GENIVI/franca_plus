@@ -8,66 +8,71 @@
 package org.franca.compmodel.dsl.ui.labeling
 
 import com.google.inject.Inject
-import org.franca.compmodel.dsl.fcomp.FCInstance
-import org.franca.compmodel.dsl.fcomp.FCComponent
-import org.franca.compmodel.dsl.fcomp.FCPrototype
-import org.franca.compmodel.dsl.fcomp.FCLabel
-import org.franca.compmodel.dsl.fcomp.FCRequiredPort
-import org.franca.compmodel.dsl.fcomp.FCProvidedPort
-import org.franca.compmodel.dsl.fcomp.FCAssemblyConnector
-import org.franca.compmodel.dsl.fcomp.FCDelegateConnector
-import org.franca.compmodel.dsl.fcomp.Import
-import org.franca.compmodel.dsl.fcomp.FCPrototypeInstance
-import org.franca.compmodel.dsl.fcomp.FCLabelKind
-import org.franca.compmodel.dsl.fcomp.FCDevice
-import org.franca.compmodel.dsl.fcomp.FCAnnotation
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
+import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider
 import org.franca.compmodel.dsl.fcomp.FCAnnotationBlock
-import org.franca.compmodel.dsl.fcomp.FCVersion
+import org.franca.compmodel.dsl.fcomp.FCAssemblyConnector
+import org.franca.compmodel.dsl.fcomp.FCComponent
 import org.franca.compmodel.dsl.fcomp.FCContainedInstance
+import org.franca.compmodel.dsl.fcomp.FCDelegateConnector
+import org.franca.compmodel.dsl.fcomp.FCDevice
 import org.franca.compmodel.dsl.fcomp.FCHostedInstance
 import org.franca.compmodel.dsl.fcomp.FCInjectedPrototype
+import org.franca.compmodel.dsl.fcomp.FCInstance
+import org.franca.compmodel.dsl.fcomp.FCPrototype
 import org.franca.compmodel.dsl.fcomp.FCPrototypeInjection
+import org.franca.compmodel.dsl.fcomp.FCPrototypeInstance
+import org.franca.compmodel.dsl.fcomp.FCProvidedPort
+import org.franca.compmodel.dsl.fcomp.FCRequiredPort
+import org.franca.compmodel.dsl.fcomp.FCVersion
+import org.franca.compmodel.dsl.fcomp.Import
+import org.franca.compmodel.dsl.scoping.FCompDeclarativeNameProvider
+import org.franca.compmodel.dsl.fcomp.FCAnnotation
+import org.franca.compmodel.dsl.fcomp.FCAnnotationType
 
 /**
  * Provides labels for EObjects.
  * 
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#label-provider
  */
-class FCompLabelProvider extends org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider {
+class FCompLabelProvider extends DefaultEObjectLabelProvider {
 
 	@Inject
-	new(org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider delegate) {
+	new(AdapterFactoryLabelProvider delegate) {
 		super(delegate);
 	}
 	
 	@Inject
-	org.franca.compmodel.dsl.scoping.FCompDeclarativeNameProvider fqnProvider
+	FCompDeclarativeNameProvider fqnProvider
 
 	// labels
 	public def String text(FCInstance element) {
 		if (element.name === null)
 			element.component.name
 		else
-			element.name
+			element.name.split('\\.').last
 	}
 
 	public def String text(FCPrototypeInstance element) {
-		fqnProvider.getFullyQualifiedName(element).toString
+		fqnProvider.getFullyQualifiedName(element).toString.split('\\.').last
 	}
 	
 	public def String text(FCHostedInstance element) {
-		fqnProvider.getFullyQualifiedName(element.instance).toString
-	}
-
-	public def String text(FCLabel element) {
-		element.kind.toString.replaceFirst('@', '')
+		fqnProvider.getFullyQualifiedName(element.instance).toString.split('\\.').last
 	}
 
 	public def String text(FCComponent element) {
-		if (element.labels.exists[kind == FCLabelKind.ABSTRACT])
-			"\u00ABabstract\u00BB " + element.name
-		else
-			element.name
+		var String text = ''
+		if (element.abstract)
+			text += "\u00ABabstract\u00BB "
+		if (element.service)
+			text += "\u00ABservice\u00BB "
+		if (element.root)
+			text += "\u00ABroot\u00BB "
+		if (element.singleton)
+			text += "\u00ABroot\u00BB "
+		
+		text + element.name.split('\\.').last
 	}
 
 	public def String text(FCAssemblyConnector element) {
@@ -82,33 +87,60 @@ class FCompLabelProvider extends org.eclipse.xtext.ui.label.DefaultEObjectLabelP
 		"annotations"
 	}
 	
+	public def String text(FCAnnotation element) {
+		var String name 
+		if (element.kind == FCAnnotationType.CUSTOM) 
+			name = element.tag.name.substring(1) 
+		else 
+			name = element.kind.literal.substring(1) 
+			
+		if (element.value === null)
+			name
+		else 
+			name + element.value	
+	}
+	
 	public def String text(FCVersion element) {
 		"v" + element.major + "." + element.minor
 	}
 	
 	public def String text(Import element) {
-		element.importedNamespace + " \u2192 " + element.importURI
+		var String imported = null
+		if (element.importedNamespace !== null)
+			imported = element.importedNamespace
+		else 
+			imported = '*' 
+		imported + " \u2192 " + element.importURI
 	}      
 	
 	// icons
 	
 	public def String image(FCAnnotation element) {
-		"annotation.png"
+		if (element.kind == FCAnnotationType.CUSTOM)
+			"bluelabel.png"
+		else
+			"@.png"
+			
 	}
-   
+	
     public def String image(FCAnnotationBlock element) {
 		"annotation.png"
 	}
 
 	public def String image(FCComponent element) {
-		if (element.labels.exists[kind == FCLabelKind.ROOT])
-			"root.png"
-		else if (element.labels.exists[kind == FCLabelKind.FRAMEWORK])
-			"framework.png"
-		else if (element.labels.exists[kind == FCLabelKind.CLUSTER])
-			"cluster.png"
-		else
-			"component.png"
+		
+		if (element.comment !== null ) {
+			var tags = element.comment.elements
+				.filter(FCAnnotation).filterNull()
+				.filter[kind == FCAnnotationType.CUSTOM]
+				.map[tag.name]
+			
+			// TODO: test if label is present in file system	
+			val found = tags.findFirst[#["@framework", "@cluster", 	"@dienst"].contains(it)]
+			if (found != null)
+				return found + ".png"			
+		}
+		"component.png"
 	}
 
 	public def String image(FCPrototype element) {
@@ -125,10 +157,6 @@ class FCompLabelProvider extends org.eclipse.xtext.ui.label.DefaultEObjectLabelP
 	
 	public def String image(FCHostedInstance element) {
 		"hosted.png"
-	}
-
-	public def String image(FCLabel element) {
-		"label.png"
 	}
 
 	public def String image(FCRequiredPort element) {

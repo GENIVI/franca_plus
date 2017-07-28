@@ -29,21 +29,4 @@
          </property>
       </product>
    </extension>
-   <extension
-         id="FDev"
-         point="org.eclipse.core.runtime.products">
-      <product
-            application="org.eclipse.ui.ide.workbench"
-            name="Franca Device Editor">
-      </product>
-   </extension>
-   <extension
-         id="CompEditor"
-         point="org.eclipse.core.runtime.products">
-      <product
-            application="org.eclipse.ui.ide.workbench"
-            name="Franca Component Editor with Extensions">
-      </product>
-   </extension>
-
 </plugin>

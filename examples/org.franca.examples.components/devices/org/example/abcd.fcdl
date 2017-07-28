@@ -1,31 +1,35 @@
 package org.example
 
-component Leaf {}
+import model "classpath:/Tags.fcdl"
 
-@cluster
+
+<** @dienst **>
+service component Leaf {}
+
+<** @cluster **>
 component Node {
 	contains Leaf as L1
 	contains Leaf as L2 
 	contains Leaf as L3
 }
 
-<** @framework **> 
-@framework
-@property(ea_guid='{000-x-x-x-fc}')
+<** 
+ ** @framework 
+ ** @eaguid: {000-x-x-x-fc}
+ **> 
 component Framework {
 	contains Node as N1
 	contains Node as N2
 }
 
-@root
-component Root {
+root component Root {
 	contains Framework
 }
 
 instance Root.Framework.N1.L1
 
 device D {
-	@property(ea_guid='{abcd-x-x-x-fc}')
+	<** @eaguid:'{abcd-x-x-x-fc}' **>
 	hosts org.example.Root.Framework.N1.L1
 	
 	instance Root.Framework.N2.L1 

@@ -1,0 +1,48 @@
+package de.bmw.bdc.deployment
+
+import "classpath:/org/example/DefaultDeployTypes.fidl"
+
+specification defaults {
+	for attributes {
+		
+		// Timeout scopes to any const declaration value from the IDL 
+		Timeout : Constant ( optional ) ;
+		
+		// flag "typed" scopes alternative to the actual type of the attribute 
+		TypedDefaultValue : Constant (optional, typed);
+		
+		DefaultValue : Constant (optional);
+
+	}
+	for fields {
+		DefaultValue: Constant (optional);
+		// flag "typed" scopes alternative to the actual type of the field 
+		TypedDefaultValue: Constant (optional, typed);  
+		
+		// scope possible values to field type (if it is an enum)
+		DefaultEnum: Enumerator (default: enumerator org.example.mytypes.Q_ENUM.INITIALIZATION, typed);
+	}
+	for enumerations {
+		DefaultValueEnum : Enumerator ( optional ) ;
+		
+	}
+	for strings {
+		DefaultValueString : String ( optional ) ;
+	}
+	for booleans {
+		DefaultBool : Boolean ( optional ) ;
+	}
+	for enumerators {
+		DefaultEnum: Enumerator (default: enumerator org.example.mytypes.Q_ENUM.INITIALIZATION);	}
+	for integers {
+		DefaultValueInteger : Integer ( optional ) ;
+		ForIntegersTimeout: Constant (optional) ;
+	}
+	for arrays {
+		DefaultValueArray: Constant (optional);
+	}
+	for numbers {
+		DefaultValueNumber : Integer ( optional ) ;
+	}
+
+}

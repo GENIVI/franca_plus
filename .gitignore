@@ -41,3 +41,8 @@ org
 /plugins/org.franca.compmodel.dsl/bin
 /releng/org.francaplus.targetplatform/*.bak
 *.bak
+/examples/org.franca.examples.components/.settings/org.eclipse.jdt.core.prefs
+/plugins/org.franca.compdeploymodel.dsl.ui/.settings/org.eclipse.jdt.core.prefs
+/plugins/org.franca.compdeploymodel.dsl/.settings/org.eclipse.jdt.core.prefs
+/tests/org.franca.compdeploymodel.dsl.tests.base/.settings/org.eclipse.jdt.core.prefs
+/tests/org.franca.compdeploymodel.dsl.tests/.settings/org.eclipse.jdt.core.prefs

@@ -9,9 +9,10 @@ package org.franca.compmodel.dsl.ui.outline
 
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider
+import org.franca.compmodel.dsl.fcomp.FCComponent
 import org.franca.compmodel.dsl.fcomp.FCPrototype
 import org.franca.compmodel.dsl.fcomp.FCPrototypeInstance
-import org.franca.compmodel.dsl.fcomp.FCComponent
+import org.franca.compmodel.dsl.fcomp.FCAnnotation
 
 /**
  * Customization of the default outline structure.
@@ -24,12 +25,18 @@ class FCompOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	    true
 	}
 	
+	protected def boolean _isLeaf(FCAnnotation feature) {
+	    true
+	}
+	
 	/**
 	 * Provide a navigable tree structure with components and prototypes 
 	 */
 	protected def void _createNode(IOutlineNode parentNode, FCPrototype proto) {
 		if (proto.component !== proto.eContainer as FCComponent) {
 			val protoNode = createEObjectNode(parentNode, proto)
+			if (proto.comment !== null)
+				_createNode(protoNode, proto.comment)
 			_createNode(protoNode, proto.component)
 		}
 	}	

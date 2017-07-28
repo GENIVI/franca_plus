@@ -1,3 +1,4 @@
+
 /* Copyright (C) 2017 BMW Group
  * Author: Bernhard Hennlich (bernhard.hennlich@bmw.de)
  * Author: Manfred Bathelt (manfred.bathelt@bmw.de)
@@ -8,6 +9,7 @@
 package org.franca.compmodel.dsl.scoping
 
 import com.google.common.base.Predicate
+import java.util.ArrayList
 import java.util.List
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.EcoreUtil2
@@ -21,8 +23,8 @@ import org.franca.compmodel.dsl.fcomp.FCComponent
 import org.franca.compmodel.dsl.fcomp.FCDelegateConnector
 import org.franca.compmodel.dsl.fcomp.FCGenericPrototype
 import org.franca.compmodel.dsl.fcomp.FCInjectedPrototype
+import org.franca.compmodel.dsl.fcomp.FCInjectionModifier
 import org.franca.compmodel.dsl.fcomp.FCInstance
-import org.franca.compmodel.dsl.fcomp.FCLabelKind
 import org.franca.compmodel.dsl.fcomp.FCPort
 import org.franca.compmodel.dsl.fcomp.FCPortKind
 import org.franca.compmodel.dsl.fcomp.FCPrototype
@@ -30,8 +32,8 @@ import org.franca.compmodel.dsl.fcomp.FCPrototypeInjection
 import org.franca.compmodel.dsl.fcomp.FCPrototypeInstance
 
 import static extension org.eclipse.xtext.scoping.Scopes.*
-import java.util.ArrayList
-import org.franca.compmodel.dsl.fcomp.FCInjectionModifier
+import org.eclipse.emf.ecore.util.EcoreUtil
+import org.franca.compmodel.dsl.fcomp.FCDevice
 
 /**
  * This class contains custom scoping description.
@@ -42,11 +44,32 @@ import org.franca.compmodel.dsl.fcomp.FCInjectionModifier
  */
 class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 
-	/** Scope "contains" for possible component types */
-	def scope_FCAbstractPrototype_component(FCComponent component, EReference ref) {
+	/** Scope "superType" for possible component types */
+	def scope_FCComponent_superType(FCComponent component, EReference ref) {
 		val IScope delegateScope = delegateGetScope(component, ref)
 		// Remove self component from scope, to avoid recursion in modeling
 		new FilteringScope(delegateScope, [getEObjectOrProxy != component])
+	}
+	
+	/** Scope "contains" for possible component types: without self and not root */
+	def scope_FCAbstractPrototype_component(FCComponent component, EReference ref) {
+		val IScope delegateScope = delegateGetScope(component, ref)
+		// Remove self component from scope, to avoid recursion in modeling
+		// Remove root component
+		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
+			override boolean apply(IEObjectDescription od) {
+				val obj = od.EObjectOrProxy
+				if (obj instanceof FCComponent) {
+					if (obj !== component && !obj.root)
+						true 	
+					else 
+						false		
+				}
+				else 
+					false
+			}
+		}
+		new FilteringScope(delegateScope, filter)
 	}
 
 	/** Scope "delegate from" for possible ports inclusive inherited ports */
@@ -58,7 +81,7 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 
 	/** Scope "delegate to" for possible contained components, depending on the "from" interface type */
-	def scope_FCInner_componentRef(FCDelegateConnector dc, EReference ref) {
+	def scope_FCInner_prototype(FCDelegateConnector dc, EReference ref) {
 		val comp = FCompUtils::getComponentForObject(dc)
 		val interfaceType = dc.outer.port.interface
 		var compRefs = comp.prototypes.filter [
@@ -211,7 +234,7 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 		// Because of rewrite in the Xtext-grammer the parent is either PrototypeInstance or Instance.
 		if (parent instanceof FCPrototypeInstance)
 			candidates += parent.prototype.component.prototypes
-		else if (parent instanceof FCInstance)
+		else 
 			candidates += parent.component.prototypes
 			
 		// look for injected components and add them if  the override a proto (two variants with no name :-()
@@ -223,9 +246,7 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 			.filter[candidates.contains(it.ref)].toList
 		candidates += pis
 		
-		candidates.filter[
-			component.labels.map[kind].contains(FCLabelKind.ABSTRACT) == false
-		].scopeFor
+		candidates.filter[component.abstract == false].scopeFor
 	}
 
 	/**
@@ -235,15 +256,39 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 		val IScope delegateScope = delegateGetScope(instance, ref)
 		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
 			override boolean apply(IEObjectDescription od) {
-				val obj = od.EObjectOrProxy
-				if (obj instanceof FCComponent)
-					obj.labels.map[kind].contains(FCLabelKind.ABSTRACT) == false
+				var obj = od.EObjectOrProxy
+				if (obj.eIsProxy) 
+					obj = EcoreUtil.resolve(obj, instance.eResource.resourceSet)
+				if (obj instanceof FCComponent) 
+					obj.abstract == false && obj.root == true
 				else
 					false
 			}
 		}
 		new FilteringScope(delegateScope, filter)
 	}
+	
+	def IScope scope_FCHostedInstance_instance(FCDevice device, EReference ref) {
+		val IScope delegateScope = delegateGetScope(device, ref)
+		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
+			override boolean apply(IEObjectDescription od) {
+				var obj = od.EObjectOrProxy
+				if (obj.eIsProxy) 
+					obj = EcoreUtil.resolve(obj, device.eResource.resourceSet)
+				
+				if (obj instanceof FCPrototypeInstance) {
+					val prototype = obj.prototype
+					if (prototype !== null) {
+						if (prototype.component.service && !device.instances.contains(obj))
+							return true
+					}
+				}
+				return false
+			}
+		}
+		new FilteringScope(delegateScope, filter)
+	}
+	
 	
 	private def boolean inheritsFrom(FCComponent component, FCComponent superType) {
 		var c = component?.superType
@@ -256,10 +301,10 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 
 	// *****************************************************************************
-	def private dump(IScope s, String tag) {
-		println("    " + tag)
-		for (e : s.allElements) {
-			println("        " + e.name + " = " + e.EObjectOrProxy)
-		}
-	}
+//	def private dump(IScope s, String tag) {
+//		println("    " + tag)
+//		for (e : s.allElements) {
+//			println("        " + e.name + " = " + e.EObjectOrProxy)
+//		}
+//	}
 }
