@@ -13,6 +13,15 @@ import org.franca.compmodel.dsl.fcomp.FCComponent
 import org.franca.compmodel.dsl.fcomp.FCModel
 import org.franca.compmodel.dsl.fcomp.FCPort
 import org.franca.compmodel.dsl.fcomp.FCPortKind
+import org.franca.compmodel.dsl.fcomp.FCInstance
+import org.franca.compmodel.dsl.fcomp.FcompFactory
+import org.eclipse.emf.ecore.resource.ResourceSet
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.resource.Resource
+import java.util.Collections
+import org.eclipse.xtext.nodemodel.INode
+import javax.inject.Inject
+import org.franca.compmodel.dsl.scoping.FCompDeclarativeNameProvider
 
 class FCompUtils {
 
@@ -56,6 +65,79 @@ class FCompUtils {
 				obj = o.eContainer
 			}
 		}
+		return null
+	}
+	
+	/**
+	 * Handle creation of FCInstance entities, linked from FCDevice or FDService.
+	 * node: contains the name for the instance
+	 * context: where to look for existing instances
+	 * domain: dismangle the resouce uri for different callers
+	 */
+	public def static List<EObject> linkInstance(INode node, EObject context, String domain) {
+        val String referencedServiceFQN  = node.getText().trim
+//        println("*************************************")
+//        println(referencedServiceFQN)
+		var FCComponent component = getReferencedService(context, referencedServiceFQN)
+		
+		if (component !== null) {
+			// create a dummy URI with the DSL's file extension
+			var ResourceSet resourceSet = context.eResource.getResourceSet
+			val URI uri = URI.createURI(referencedServiceFQN + domain)
+			var Resource resource = resourceSet.getResource(uri, false)
+//			println('uri "' + uri.toString + '"')
+			var FCInstance instance = null
+			if (resource == null) {
+				instance = FcompFactory.eINSTANCE.createFCInstance()
+				instance.component = component
+				instance.name = referencedServiceFQN
+				resource = resourceSet.createResource(uri)
+				val List<EObject> contents = resource.getContents
+				contents.add(instance)
+				return Collections.singletonList(instance as EObject)
+			} 
+			else if (!resource.getContents.empty) {
+				instance = resource.getContents.get(0) as FCInstance
+				return Collections.singletonList(instance as EObject)		
+			}
+		}
+//		println('cannot ACCESSS instance for ' + referencedServiceFQN)
+		Collections.emptyList()
+	}
+	
+	@Inject
+	static FCompDeclarativeNameProvider nameProvider = new FCompDeclarativeNameProvider
+	
+	private def static FCComponent getReferencedService(EObject context, String fqn) {
+//		println('search for ' + fqn)
+		
+		val components = context.eResource.resourceSet.allContents.filter(FCComponent).toList	
+//		if (components.isNullOrEmpty) 
+//			println("====================AUUTSCH=======================")
+		
+		var component = components.findFirst[
+			fqn.startsWith(nameProvider.getFullyQualifiedName(it).toString)
+		]
+		
+		if (component !== null) {
+			val endOfPrefix = nameProvider.getFullyQualifiedName(component).toString.length + 1
+			val stripped = fqn.substring(endOfPrefix)
+			val segments = stripped.split('\\.')
+			
+			for (prototypeName: segments) {
+				var prototype = component?.prototypes.findFirst[name == prototypeName]
+				if (prototype === null) {
+//					println('no match')
+					return null
+				}
+				component = prototype.component
+			}
+			if (component.service) {
+//				println('found service ' + component.name)
+				return component	
+			}
+		}
+//		println('no match')
 		return null
 	}
 }

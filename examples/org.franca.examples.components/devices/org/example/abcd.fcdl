@@ -26,13 +26,11 @@ root component Root {
 	contains Framework
 }
 
-instance Root.Framework.N1.L1
+create Root
 
 device D {
 	<** @eaguid:'{abcd-x-x-x-fc}' **>
-	hosts org.example.Root.Framework.N1.L1
-	
-	instance Root.Framework.N2.L1 
-	instance Root.Framework.N2.L2
-	instance Root.Framework.N2.L3
+	partition org.example.Root.Framework.N1.L1 
+	partition org.example.Root.Framework.N1.L2
+	partition org.example.Root.Framework.N1.L3
 }

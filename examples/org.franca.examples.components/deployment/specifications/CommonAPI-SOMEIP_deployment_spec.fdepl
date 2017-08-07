@@ -26,7 +26,12 @@ specification deployment extends org.genivi.commonapi.core.deployment {
     }
     
     for services {
-    	SomeOtherAttribute: 				Integer 						(optional);
+    	SomeOtherAttribute: 			Integer 						(optional);
+    }
+    
+    for devices {
+    	SomeIpDeviceUnicastAddress:        String                          (default: "");
+        SomeIpDeviceMulticastAddresses:    String[]                        (optional);
     }
     
     for provided_ports {

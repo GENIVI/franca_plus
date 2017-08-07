@@ -24,13 +24,15 @@ FCModel:
 	'package' name=FQN
 	(imports+=Import)*
     (
-    	(declaredTags+=FCTagDecl)* 
-	    (
-			components+=FCComponent |
-			injects+=FCInjectedPrototype |
-			instances+=FCInstance |
-			device+=FCDevice
-		)*
+    	(
+    		tags=FCTagsDeclaration |
+		    (
+				components+=FCComponent |
+				injects+=FCInjectedPrototype |
+				instanceCreators+=FCInstanceCreator |
+				devices+=FCDevice 
+			)*
+		)
 	);
 
 // **************************************************************
@@ -51,6 +53,10 @@ FCVersion: {FCVersion} 'version' '{' 'major' major=INT 'minor' minor=INT '}';
 enum FCPortKind: provided|required;
 enum FCPortCardinality: MANDATORY='mandatory' | OPTIONAL='optional';
 enum FCInjectionModifier: finally;
+	
+FCTagsDeclaration:
+	{FCTagsDeclaration} 
+	declaredTags+=FCTagDecl+;
 
 FCRequiredPort returns FCPort:
 	{FCRequiredPort}
@@ -108,33 +114,39 @@ FCAssemblyConnector:
 FCFrom: prototype=[FCPrototype] '.' port=[FCRequiredPort];
 FCTo: prototype=[FCPrototype] '.' port=[FCProvidedPort];
 
-// ************************************************************************************
-// Partitioning of Components and Prototypes as Instances to Devices
-
+// ***************************************************************
+// Partitioning of Instances to Devices
 FCDevice:
 	comment=FCAnnotationBlock?
 	'device' name=ID
 	'{' 
-		 instances+=FCContainedInstance*
+		instances+=FCPartitionedInstance*
 	'}';
-
-FCContainedInstance:
-	FCInstance |
-	FCHostedInstance
+	
+FCPartitionedInstance: 
+	comment=FCAnnotationBlock?
+	'partition'
+	instance=[FCInstance|FQN]
 ;
 
+// Instances implicitly created (xtext creates and links instances on the fly, 
+// see proposal provider and linking service)
 FCInstance:
+	name=FQN
+	component=[FCComponent|FQN]?;
+	
+FCInstanceCreator:
 	comment=FCAnnotationBlock?
-	'instance' component=[FCComponent] 
-	({FCPrototypeInstance.parent=current} '.' prototype=[FCGenericPrototype])* 
-	('as' name=ID)?;
-
-FCHostedInstance:
-	comment=FCAnnotationBlock?
-	'hosts' instance=[FCInstance|FQN];
-
+	'create' component=[FCComponent|FQN];
+	
+//FCInstance:
+//	comment=FCAnnotationBlock?
+//	'instance' component=[FCComponent] 
+//	({FCPrototypeInstance.parent=current} '.' prototype=[FCGenericPrototype])* 
+//	('as' name=ID)?;
+	 
 // **************************************************************
-// annotations with built-in and custom defined tags
+// Annotations with built-in and custom Defined Tags
 
 FCAnnotationBlock:
 	{FCAnnotationBlock}

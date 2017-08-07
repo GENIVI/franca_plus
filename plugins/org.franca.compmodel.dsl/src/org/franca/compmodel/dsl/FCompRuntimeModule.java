@@ -8,6 +8,8 @@
 package org.franca.compmodel.dsl;
 
 import org.eclipse.xtext.conversion.IValueConverterService;
+import org.eclipse.xtext.linking.ILinker;
+import org.eclipse.xtext.linking.ILinkingService;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 
 import com.google.inject.Binder;
@@ -36,6 +38,15 @@ public class FCompRuntimeModule extends org.franca.compmodel.dsl.AbstractFCompRu
 	@Override
 	public Class<? extends IValueConverterService> bindIValueConverterService() {
 		return org.franca.compmodel.dsl.valueconverter.FCompValueConverters.class;
+	}	
+	
+	@Override
+	public Class<? extends ILinkingService> bindILinkingService() {
+		return org.franca.compmodel.dsl.linker.FCompLinkingService.class;
 	}
 	
+	@Override
+	public Class<? extends ILinker> bindILinker() {
+		return org.franca.compmodel.dsl.linker.FCompLinker.class;
+	}	
 }

@@ -1,0 +1,28 @@
+package org.example
+
+import model "classpath:/Tags.fcdl"
+
+<** 
+	 @author: bernhard
+	 @eaguid: 123
+	 @description
+	 @framework
+ **>
+component X {
+	<** 
+		@org: '123''
+		@description: bla bla
+		blub
+		@level:1
+		@experimental
+		@framework:
+		
+	**>
+	contains Y
+}
+
+<** @dienst **>
+service component Y {}
+
+
+

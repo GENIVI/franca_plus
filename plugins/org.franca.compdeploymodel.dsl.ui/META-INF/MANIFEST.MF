@@ -6,6 +6,7 @@ Bundle-Version: 0.11.1.qualifier
 Bundle-SymbolicName: org.franca.compdeploymodel.dsl.ui;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.franca.compdeploymodel.dsl;visibility:=reexport,
+ org.franca.compmodel.dsl,
  org.eclipse.xtext.ui,
  org.eclipse.xtext.ui.shared,
  org.eclipse.xtext.builder,

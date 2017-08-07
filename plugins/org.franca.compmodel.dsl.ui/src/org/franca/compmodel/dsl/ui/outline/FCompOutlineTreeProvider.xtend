@@ -11,7 +11,6 @@ import org.eclipse.xtext.ui.editor.outline.IOutlineNode
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider
 import org.franca.compmodel.dsl.fcomp.FCComponent
 import org.franca.compmodel.dsl.fcomp.FCPrototype
-import org.franca.compmodel.dsl.fcomp.FCPrototypeInstance
 import org.franca.compmodel.dsl.fcomp.FCAnnotation
 
 /**
@@ -20,10 +19,6 @@ import org.franca.compmodel.dsl.fcomp.FCAnnotation
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#outline
  */
 class FCompOutlineTreeProvider extends DefaultOutlineTreeProvider {
-	
-	protected def boolean _isLeaf(FCPrototypeInstance feature) {
-	    true
-	}
 	
 	protected def boolean _isLeaf(FCAnnotation feature) {
 	    true

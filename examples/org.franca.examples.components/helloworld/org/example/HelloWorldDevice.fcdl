@@ -1,0 +1,17 @@
+package org.example
+
+import org.example.* from "classpath:/org/example/HelloWorld.fcdl"
+
+// usage: create <root component>
+//    unfolds the component type hierarchy starting from a component with <root> property
+//    and creates on demand an instance for each component with <service> property 
+create org.example.System
+
+device HelloServerECU {
+	partition org.example.System.Room1.Service
+}
+
+device HelloClientECU {
+	partition org.example.System.Room1.Client1
+	partition org.example.System.Room1.Client2
+}

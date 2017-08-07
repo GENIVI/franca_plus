@@ -1,0 +1,17 @@
+package org.example
+
+typeCollection {
+	enumeration WindowId {
+		DriverDoorWindow = 0,
+		CoDriverDoorWindow = 1
+	} 
+}
+
+interface WindowLifter {
+	method moveWindow fireAndForget {
+		in {
+			WindowId wid
+			Boolean up
+		}
+	}
+}

@@ -1,0 +1,56 @@
+/*=========== Components belong to packages =============== */
+package org.example
+
+import org.example.* from "classpath:/org/example/MediaPlayer.fidl"
+import org.example.* from "classpath:/org/example/MusicDatabase.fidl"
+import org.example.* from "classpath:/org/example/Decode.fidl"
+
+component PlayerComponent {
+	provides MediaPlayer 
+}
+
+component PlayerClientComponent {
+	version { major 1 minor 0 }
+	requires MediaPlayer as Port1 
+}
+
+component BigPlayerComponent extends PlayerComponent {
+	version { major 1 minor 0 }
+	provides MusicDatabase as Port4 
+}
+component BigPlayerClientComponent extends PlayerClientComponent {
+	version { major 1 minor 0 }
+	requires MusicDatabase as Port6 
+}
+
+component SomePlayer {
+	provides MediaPlayer
+}
+
+// create a composition, which contains a MusicPlayer
+component MusicPlayerCluster {
+	contains SomePlayer as AbstractPlayer
+}
+
+// component SomePlayerRealisation inherits 
+component SomePlayerRealisation extends SomePlayer {
+	
+	provides Decode 
+	
+	// contains a detailed implementation
+	contains Decoder as DecoderInstance
+	contains Controller as ControllerInstance
+	contains Database as DatabaseInstance
+	delegate provided MediaPlayer to DecoderInstance.MediaPlayer
+}
+
+
+component Decoder {
+	provides MediaPlayer 
+	provides Decode as DecoderPort
+}
+
+component Controller {}
+component Database {}
+
+

@@ -68,7 +68,6 @@
     <eLiterals name="provided_ports" value="24" literal="provided_ports"/>
     <eLiterals name="required_ports" value="25" literal="required_ports"/>
     <eLiterals name="devices" value="26" literal="devices"/>
-    <eLiterals name="hosted_services" value="27" literal="hosted_services"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FDTypeRef">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="predefined" eType="#//FDPredefinedTypeId"/>
@@ -124,7 +123,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="requiredPorts" upperBound="-1"
         eType="#//FDRequiredPort" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FDService" eSuperTypes="#//FDRootElement">
+  <eClassifiers xsi:type="ecore:EClass" name="FDService" eSuperTypes="#//FDElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="ecore:EClass ../../org.franca.compmodel.dsl/model/generated/FComp.ecore#//FCInstance"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="providedPorts" upperBound="-1"
         eType="#//FDProvidedPort" containment="true"/>
@@ -133,8 +132,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FDDevice" eSuperTypes="#//FDRootElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="ecore:EClass ../../org.franca.compmodel.dsl/model/generated/FComp.ecore#//FCDevice"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="instances" upperBound="-1"
-        eType="ecore:EClass ../../org.franca.compmodel.dsl/model/generated/FComp.ecore#//FCContainedInstance"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="services" upperBound="-1"
+        eType="#//FDService" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FDInterfaceInstance" eSuperTypes="#//FDElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="ecore:EClass ../../org.franca.core/model/franca.ecore#//FInterface"/>

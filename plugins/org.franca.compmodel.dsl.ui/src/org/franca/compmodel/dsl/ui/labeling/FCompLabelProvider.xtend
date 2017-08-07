@@ -9,26 +9,30 @@ package org.franca.compmodel.dsl.ui.labeling
 
 import com.google.inject.Inject
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
+import org.eclipse.jface.resource.JFaceResources
+import org.eclipse.swt.SWT
+import org.eclipse.swt.graphics.RGB
+import org.eclipse.xtext.ui.editor.utils.TextStyle
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider
+import org.eclipse.xtext.ui.label.StylerFactory
+import org.franca.compmodel.dsl.fcomp.FCAnnotation
 import org.franca.compmodel.dsl.fcomp.FCAnnotationBlock
+import org.franca.compmodel.dsl.fcomp.FCAnnotationType
 import org.franca.compmodel.dsl.fcomp.FCAssemblyConnector
 import org.franca.compmodel.dsl.fcomp.FCComponent
-import org.franca.compmodel.dsl.fcomp.FCContainedInstance
 import org.franca.compmodel.dsl.fcomp.FCDelegateConnector
 import org.franca.compmodel.dsl.fcomp.FCDevice
-import org.franca.compmodel.dsl.fcomp.FCHostedInstance
 import org.franca.compmodel.dsl.fcomp.FCInjectedPrototype
 import org.franca.compmodel.dsl.fcomp.FCInstance
+import org.franca.compmodel.dsl.fcomp.FCInstanceCreator
+import org.franca.compmodel.dsl.fcomp.FCPartitionedInstance
+import org.franca.compmodel.dsl.fcomp.FCPort
 import org.franca.compmodel.dsl.fcomp.FCPrototype
 import org.franca.compmodel.dsl.fcomp.FCPrototypeInjection
-import org.franca.compmodel.dsl.fcomp.FCPrototypeInstance
 import org.franca.compmodel.dsl.fcomp.FCProvidedPort
 import org.franca.compmodel.dsl.fcomp.FCRequiredPort
 import org.franca.compmodel.dsl.fcomp.FCVersion
 import org.franca.compmodel.dsl.fcomp.Import
-import org.franca.compmodel.dsl.scoping.FCompDeclarativeNameProvider
-import org.franca.compmodel.dsl.fcomp.FCAnnotation
-import org.franca.compmodel.dsl.fcomp.FCAnnotationType
 
 /**
  * Provides labels for EObjects.
@@ -42,25 +46,41 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 		super(delegate);
 	}
 	
-	@Inject
-	FCompDeclarativeNameProvider fqnProvider
+	@Inject 
+	StylerFactory stylerFactory
 
-	// labels
+	// ********** labels ***********
 	public def String text(FCInstance element) {
 		if (element.name === null)
 			element.component.name
 		else
 			element.name.split('\\.').last
 	}
-
-	public def String text(FCPrototypeInstance element) {
-		fqnProvider.getFullyQualifiedName(element).toString.split('\\.').last
+		
+	public def text(FCPort element) {
+		val styledString = element.name.convertToStyledString
+		if (element.name != element.interface.name) {
+			val TextStyle textStyle = new TextStyle()
+			val fontData= JFaceResources.getDialogFont().getFontData
+			fontData.get(0).style = SWT.ITALIC
+			textStyle.setFontData(fontData)
+			// textStyle.color = new RGB(63, 72, 204)
+			textStyle.color = new RGB(0, 0, 0)
+			styledString.append(' [')
+			styledString.append(stylerFactory.createFromXtextStyle(element.interface.name, textStyle))
+			styledString.append(']')
+		}
+		styledString	
 	}
 	
-	public def String text(FCHostedInstance element) {
-		fqnProvider.getFullyQualifiedName(element.instance).toString.split('\\.').last
+	public def text(FCPartitionedInstance partition) {
+		partition.instance.name
 	}
-
+	
+	public def text (FCInstanceCreator creator) {
+		creator.component.name
+	}
+	
 	public def String text(FCComponent element) {
 		var String text = ''
 		if (element.abstract)
@@ -76,15 +96,23 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 	}
 
 	public def String text(FCAssemblyConnector element) {
-		element.from.port.name + "." + element.from.port.name // + ' \u221E ' + element.to.port.name + "." + element.to.port.name 
+		element.from.port.name + " to " + element.to.port.name // + ' \u221E ' + element.to.port.name + "." + element.to.port.name 
 	}
 
 	public def String text(FCDelegateConnector element) {
-		element.inner.port.name + element.inner.port.name // + ' \u221E ' + element.outer.port.name
+		element.inner.port.name + " to " + element.outer.port.name // + ' \u221E ' + element.outer.port.name
 	}
 	
 	public def String text(FCAnnotationBlock element) {
 		"annotations"
+	}
+	
+	public def String text(FCInjectedPrototype inject) {
+		inject.component.name.split('\\.').last + " into " + inject.ref.name.split('\\.').last
+	}
+	
+	public def String text(FCPrototypeInjection inject) {
+		inject.ref.name.split('\\.').last +" by " + inject.name.split('\\.').last  
 	}
 	
 	public def String text(FCAnnotation element) {
@@ -100,6 +128,7 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 			name + element.value	
 	}
 	
+	
 	public def String text(FCVersion element) {
 		"v" + element.major + "." + element.minor
 	}
@@ -113,7 +142,7 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 		imported + " \u2192 " + element.importURI
 	}      
 	
-	// icons
+	// ******** icons *********
 	
 	public def String image(FCAnnotation element) {
 		if (element.kind == FCAnnotationType.CUSTOM)
@@ -127,6 +156,7 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 		"annotation.png"
 	}
 
+	val static datags = #["@framework", "@cluster", "@dienst" ]
 	public def String image(FCComponent element) {
 		
 		if (element.comment !== null ) {
@@ -136,7 +166,7 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 				.map[tag.name]
 			
 			// TODO: test if label is present in file system	
-			val found = tags.findFirst[#["@framework", "@cluster", 	"@dienst"].contains(it)]
+			val found = tags.findFirst[datags.contains(it)]
 			if (found != null)
 				return found + ".png"			
 		}
@@ -147,16 +177,12 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 		"prototype.png"
 	}
 
-	public def String image(FCInstance element) {
+	public def String image(FCPartitionedInstance element) {
 		"instance.png"
 	}
 	
-	public def String image(FCContainedInstance element) {
-		"instance.png"
-	}
-	
-	public def String image(FCHostedInstance element) {
-		"hosted.png"
+	public def String image(FCInstanceCreator element) {
+		"creator.png"
 	}
 
 	public def String image(FCRequiredPort element) {
@@ -194,5 +220,4 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 	public def String image(FCVersion element) {
 		"version.gif"
 	}
-	
 }

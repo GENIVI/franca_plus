@@ -1,0 +1,29 @@
+package org.example
+ 
+typeCollection {
+  	version {major 1 minor 0}
+	
+	enumeration Location {
+		Europe,
+		Asia,
+		America
+	}
+	struct Person {
+		String name
+		Location location
+	}
+	typedef Request is UInt8
+	array KnownPeople of Person 
+	
+	struct Answer {
+		String greeting
+		TimeOfDay timeOfDay 
+	}
+	
+	enumeration TimeOfDay {
+		Morning,
+		Noon,
+		Evening,
+		Night
+	}
+} 

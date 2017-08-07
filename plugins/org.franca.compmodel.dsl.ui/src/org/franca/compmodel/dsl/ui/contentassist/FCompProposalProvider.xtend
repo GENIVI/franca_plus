@@ -8,13 +8,15 @@
  */
 package org.franca.compmodel.dsl.ui.contentassist
 
-import org.eclipse.jdt.internal.core.JavaProject
 import com.google.common.base.Joiner
 import com.google.inject.Inject
 import java.util.List
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.jdt.internal.core.JavaProject
 import org.eclipse.xtext.Assignment
+import org.eclipse.xtext.GrammarUtil
+import org.eclipse.xtext.RuleCall
 import org.eclipse.xtext.resource.IContainer
 import org.eclipse.xtext.resource.IResourceDescription
 import org.eclipse.xtext.resource.XtextResourceSet
@@ -23,13 +25,14 @@ import org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
 import org.eclipse.xtext.ui.editor.contentassist.ReplacementTextApplier
-import org.franca.compmodel.dsl.fcomp.FCModel
-import org.franca.compmodel.dsl.fcomp.Import
-import org.franca.core.utils.FrancaIDLUtils
-import org.eclipse.xtext.GrammarUtil
-import org.eclipse.xtext.RuleCall
-import org.franca.compmodel.dsl.fcomp.FCTagDecl
 import org.franca.compmodel.dsl.fcomp.FCAnnotationType
+import org.franca.compmodel.dsl.fcomp.FCComponent
+import org.franca.compmodel.dsl.fcomp.FCInstanceCreator
+import org.franca.compmodel.dsl.fcomp.FCModel
+import org.franca.compmodel.dsl.fcomp.FCTagDecl
+import org.franca.compmodel.dsl.fcomp.Import
+import org.franca.compmodel.dsl.scoping.FCompDeclarativeNameProvider
+import org.franca.core.utils.FrancaIDLUtils
 
 class FCompProposalProvider extends AbstractFCompProposalProvider {
 	
@@ -110,7 +113,7 @@ class FCompProposalProvider extends AbstractFCompProposalProvider {
 	
 	def toClassPathString(URI uri) {
 		val segments = uri.segmentsList.classPathSegments
-		'''classpath:/«Joiner.on('/').join(segments)»'''.toString
+		'classpath:/' + Joiner.on('/').join(segments) + ''.toString
 
 	}
 
@@ -120,13 +123,13 @@ class FCompProposalProvider extends AbstractFCompProposalProvider {
 	} 
 
 	def createProposal(String name, String display, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-		var proposal = createCompletionProposal('''«name.toString»''',display,null, context)
+		var proposal = createCompletionProposal(name.toString,display,null, context)
 
 		if (proposal instanceof ConfigurableCompletionProposal) {
 			proposal.textApplier = new ReplacementTextApplier() {
 				override getActualReplacementString(ConfigurableCompletionProposal proposal) {
 					proposal.replacementLength = proposal.replaceContextLength
-					'''"«name.toString»"'''
+					'"' + name.toString + '"'
 				}
 			}
 		}
@@ -147,18 +150,47 @@ class FCompProposalProvider extends AbstractFCompProposalProvider {
 		val tagDecls = model.eResource.resourceSet.allContents.filter(FCTagDecl).toList
 		for (tag: tagDecls ) {
 			val text = tag.name
-			val proposal = createCompletionProposal('''«text»''', text, null, context)
+			val proposal = createCompletionProposal(text, text, null, context)
 			acceptor.accept(proposal)
 		}
 		
 		for (annoType: FCAnnotationType.VALUES ) {
 			if (annoType != FCAnnotationType.CUSTOM_VALUE) {
-				val proposal = createCompletionProposal('''«annoType.literal»''', annoType.literal, null, context)
+				val proposal = createCompletionProposal(annoType.literal, annoType.literal, null, context)
 				acceptor.accept(proposal)
 			}
 		}
 		
 		super.complete_FCAnnotation(model, ruleCall, context, acceptor)
+	}
+	
+	@Inject
+	FCompDeclarativeNameProvider nameProvider
+		
+	override void completeFCPartitionedInstance_Instance(EObject model, Assignment assignment, 
+			ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		
+		val creators = model.eResource.resourceSet.allContents.filter(FCInstanceCreator)
+		
+		val serviceCandidates = newArrayList		
+		creators.forEach[
+			findServices(component, serviceCandidates, nameProvider.getFullyQualifiedName(component).toString)
+			if (component.service)	
+				serviceCandidates.add(component.name)
+		]
+		serviceCandidates.forEach[
+			val short = split('\\.').last
+			acceptor.accept(createCompletionProposal(it, short + ' - ' + it, null, context))
+		]
+	}
+	
+	def void findServices(FCComponent parent, List<String>services, String path) {
+		parent.prototypes.forEach[
+			val newPath = path + '.' + name
+			findServices(component, services, newPath)
+			if (component.service)	
+				services.add(newPath)
+		]
 	}
 	
 }

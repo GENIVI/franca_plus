@@ -12,7 +12,7 @@ import com.google.common.base.Predicate
 import java.util.ArrayList
 import java.util.List
 import org.eclipse.emf.ecore.EReference
-import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider
@@ -21,19 +21,17 @@ import org.franca.compmodel.dsl.FCompUtils
 import org.franca.compmodel.dsl.fcomp.FCAssemblyConnector
 import org.franca.compmodel.dsl.fcomp.FCComponent
 import org.franca.compmodel.dsl.fcomp.FCDelegateConnector
-import org.franca.compmodel.dsl.fcomp.FCGenericPrototype
 import org.franca.compmodel.dsl.fcomp.FCInjectedPrototype
 import org.franca.compmodel.dsl.fcomp.FCInjectionModifier
 import org.franca.compmodel.dsl.fcomp.FCInstance
+import org.franca.compmodel.dsl.fcomp.FCInstanceCreator
 import org.franca.compmodel.dsl.fcomp.FCPort
 import org.franca.compmodel.dsl.fcomp.FCPortKind
 import org.franca.compmodel.dsl.fcomp.FCPrototype
 import org.franca.compmodel.dsl.fcomp.FCPrototypeInjection
-import org.franca.compmodel.dsl.fcomp.FCPrototypeInstance
 
 import static extension org.eclipse.xtext.scoping.Scopes.*
-import org.eclipse.emf.ecore.util.EcoreUtil
-import org.franca.compmodel.dsl.fcomp.FCDevice
+import org.franca.compmodel.dsl.fcomp.FCModel
 
 /**
  * This class contains custom scoping description.
@@ -137,12 +135,12 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 	def scope_FCTo_prototype(FCAssemblyConnector ac, EReference ref) {
 		val comp = FCompUtils::getComponentForObject(ac)
 		val interfaceType = ac.from.port.interface
-		val compRefs = comp.prototypes.filter [
+		val prototypes = comp.prototypes.filter [
 			var List<FCPort> ports = newArrayList()
 			FCompUtils::collectInheritedPorts(component, FCPortKind.PROVIDED, ports)
 			ports.exists[interface == interfaceType]
 		]
-		compRefs.scopeFor
+		prototypes.scopeFor
 	}
 
 	def scope_FCTo_port(FCAssemblyConnector ac, EReference ref) {
@@ -222,35 +220,7 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 	 }	
 
 	/**
-	 * Scope to the prototypes available in the parent's component type. 
-	 * Handle injected components.
-	 * Remove "abstract" components from the scope. 
-	 */
-	def IScope scope_FCPrototypeInstance_prototype(FCPrototypeInstance pi, EReference ref) {
-		val parent = pi.parent
-		if (parent === null)
-			return IScope.NULLSCOPE
-		val List<FCGenericPrototype> candidates = newArrayList()
-		// Because of rewrite in the Xtext-grammer the parent is either PrototypeInstance or Instance.
-		if (parent instanceof FCPrototypeInstance)
-			candidates += parent.prototype.component.prototypes
-		else 
-			candidates += parent.component.prototypes
-			
-		// look for injected components and add them if  the override a proto (two variants with no name :-()
-		val ips = EcoreUtil2.getResourceSet(pi).allContents.filter(FCInjectedPrototype)
-			.filter[candidates.contains(it.ref)].toList
-		candidates += ips	
-		
-		val pis = EcoreUtil2.getResourceSet(pi).allContents.filter(FCPrototypeInjection)
-			.filter[candidates.contains(it.ref)].toList
-		candidates += pis
-		
-		candidates.filter[component.abstract == false].scopeFor
-	}
-
-	/**
-	 * Remove "abstract" components from the scope for component type of an instance. 
+	 * Remove "abstract" components from the scope for component type of an explicit instance. 
 	 */
 	def IScope scope_FCInstance_component(FCInstance instance, EReference ref) {
 		val IScope delegateScope = delegateGetScope(instance, ref)
@@ -268,27 +238,25 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 		new FilteringScope(delegateScope, filter)
 	}
 	
-	def IScope scope_FCHostedInstance_instance(FCDevice device, EReference ref) {
-		val IScope delegateScope = delegateGetScope(device, ref)
+	/**
+	 * Remove "abstract" components from the scope for component type of an instance creator. 
+	 */
+	def IScope scope_FCInstanceCreator_component(FCModel model, EReference ref) {
+		val IScope delegateScope = delegateGetScope(model, ref)
 		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
 			override boolean apply(IEObjectDescription od) {
 				var obj = od.EObjectOrProxy
 				if (obj.eIsProxy) 
-					obj = EcoreUtil.resolve(obj, device.eResource.resourceSet)
-				
-				if (obj instanceof FCPrototypeInstance) {
-					val prototype = obj.prototype
-					if (prototype !== null) {
-						if (prototype.component.service && !device.instances.contains(obj))
-							return true
-					}
-				}
-				return false
+					obj = EcoreUtil.resolve(obj, model.eResource.resourceSet)
+				if (obj instanceof FCComponent) 
+					obj.abstract == false && obj.root == true
+				else
+					false
 			}
 		}
-		new FilteringScope(delegateScope, filter)
+		val scope = new FilteringScope(delegateScope, filter)
+		scope
 	}
-	
 	
 	private def boolean inheritsFrom(FCComponent component, FCComponent superType) {
 		var c = component?.superType
@@ -301,10 +269,11 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 
 	// *****************************************************************************
-//	def private dump(IScope s, String tag) {
-//		println("    " + tag)
-//		for (e : s.allElements) {
-//			println("        " + e.name + " = " + e.EObjectOrProxy)
-//		}
-//	}
+	@SuppressWarnings("unused")
+	def private dump(IScope s, String tag) {
+		println("    " + tag)
+		for (e : s.allElements) {
+			println("        " + e.name + " = " + e.EObjectOrProxy)
+		}
+	}
 }

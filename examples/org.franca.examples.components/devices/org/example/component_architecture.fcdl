@@ -45,19 +45,12 @@ component AudioCluster {
 }
 
 //=====================================================
-// instances
-instance VehicleFuture.InfotainmentFramework2030.AudioCluster.Component2Inst1.ComponentInst2 as Inst2
-instance VehicleFuture.InfotainmentFramework2030.AudioCluster.Component2Inst1.ComponentInst1 as Inst1
-
-//=====================================================
 // partitioning
 
 device HeadUnit {
-	instance VehicleFuture.InfotainmentFramework2030.AudioCluster.Component2Inst1.ComponentInst3
-	hosts Inst1
+	partition org.example.VehicleFuture.InfotainmentFramework2030.AudioCluster.Component2Inst1.ComponentInst3
+	partition org.example.VehicleFuture.InfotainmentFramework2030.AudioCluster.Component2Inst1.ComponentInst1
 }
-
 device Amplifier {
-	
-	hosts Inst2
+	partition org.example.VehicleFuture.InfotainmentFramework2030.AudioCluster.Component2Inst1.ComponentInst2
 }

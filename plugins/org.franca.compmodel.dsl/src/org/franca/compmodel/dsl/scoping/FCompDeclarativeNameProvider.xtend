@@ -12,14 +12,12 @@ import org.eclipse.xtext.naming.DefaultDeclarativeQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.franca.compmodel.dsl.fcomp.FCInjectedPrototype
+import org.franca.compmodel.dsl.fcomp.FCInstance
 import org.franca.compmodel.dsl.fcomp.FCPort
 import org.franca.compmodel.dsl.fcomp.FCPrototype
 import org.franca.compmodel.dsl.fcomp.FCPrototypeInjection
-import org.franca.compmodel.dsl.fcomp.FCPrototypeInstance
 import org.franca.compmodel.dsl.fcomp.FCTagDecl
-import org.franca.compmodel.dsl.fcomp.FCInstance
-import org.franca.compmodel.dsl.fcomp.FCModel
-import org.eclipse.xtext.EcoreUtil2
+import org.franca.compmodel.dsl.fcomp.FCPartitionedInstance
 
 class FCompDeclarativeNameProvider extends DefaultDeclarativeQualifiedNameProvider {
 	
@@ -69,7 +67,7 @@ class FCompDeclarativeNameProvider extends DefaultDeclarativeQualifiedNameProvid
 		
 		val node = NodeModelUtils.getNode(pi)
 		val text = NodeModelUtils.getTokenText(node)
-		val name = text.split("\\s").get(3)
+		val name = text.split("\\s").last
 		pi.name = name
 		val fqn = makeFQN(pi, converter.toQualifiedName( name ))
 		fqn	
@@ -96,20 +94,14 @@ class FCompDeclarativeNameProvider extends DefaultDeclarativeQualifiedNameProvid
 		fqn	
     }
     
-    /**
-     * QualifiedName for FCPrototypeInstance are explicitly prefixed with package
-     */   
-    def QualifiedName qualifiedName(FCPrototypeInstance pi) {
-		if (pi.name == null) {
-			val node = NodeModelUtils.getNode(pi)
-			pi.name = NodeModelUtils.getTokenText(node).split("\\s").last
-		}
-		val model = EcoreUtil2.getRootContainer(pi) as FCModel
-		val fqn = converter.toQualifiedName( model.name ).append(converter.toQualifiedName( pi.name ))
-		// println('FCPrototypeInstance:  ' + pi.name + ' ==> '+ fqn)
-		fqn
+    def QualifiedName qualifiedName(FCPartitionedInstance pi) {	
+    	val node = NodeModelUtils.getNode(pi)
+		val text = NodeModelUtils.getTokenText(node)
+		val name = text.split("\\s").get(1)
+    	val fqn = converter.toQualifiedName(name)
+		fqn	
     }
-    
+       
     /**
      * Create a simple name (no FQN) from the label token.
      */

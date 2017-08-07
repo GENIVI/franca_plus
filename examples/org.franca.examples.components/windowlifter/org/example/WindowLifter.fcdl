@@ -1,0 +1,74 @@
+package org.example
+
+import model "classpath:/Tags.fcdl"
+import org.example.* from "WindowLifter.fidl"
+
+<** 
+    @description: Steuert Motor für Fenster
+    @dienst 
+ **>
+service component WindowLifter {
+	provides WindowLifter as PPort
+}
+
+<** @dienst **>
+service component WindowLifterMaster {
+	requires WindowLifter as RDriverPort
+	requires WindowLifter as RCoDriverPort
+}
+
+
+<** @cluster **>
+component BodyCluster {
+	provides WindowLifter as PDriverPort
+    provides WindowLifter as PCoDriverPort
+    	
+	contains WindowLifter as DriverWindowLifterPrototype
+	contains WindowLifter as CoDriverWindowLifterPrototype
+	
+	contains WindowLifterMaster as WindowLifterMasterPrototype
+		
+	connect WindowLifterMasterPrototype.RDriverPort to DriverWindowLifterPrototype.PPort
+	connect WindowLifterMasterPrototype.RCoDriverPort to CoDriverWindowLifterPrototype.PPort
+	
+	delegate provided PDriverPort to DriverWindowLifterPrototype.PPort
+	delegate provided PCoDriverPort to CoDriverWindowLifterPrototype.PPort
+}
+
+<** @cluster **>
+component ComfortCluster {
+	requires WindowLifter as RDriverPort
+	requires WindowLifter as RCoDriverPort
+	
+	contains WindowLifterMaster as WindowLifterClient
+	
+	delegate required RDriverPort to WindowLifterClient.RDriverPort
+	delegate required RCoDriverPort to WindowLifterClient.RCoDriverPort	
+}
+
+<** @framework **>
+component BodyFramework {
+	contains BodyCluster
+	contains ComfortCluster
+	
+	connect ComfortCluster.RDriverPort to BodyCluster.PDriverPort	
+	connect ComfortCluster.RCoDriverPort to BodyCluster.PCoDriverPort
+}
+
+
+root component Vehicle2021 {
+	contains BodyFramework
+	// ...
+}
+
+create Vehicle2021
+
+device MasterECU {
+	partition org.example.Vehicle2021.BodyFramework.BodyCluster.WindowLifterMasterPrototype
+}
+
+device ClientECU {
+	partition org.example.Vehicle2021.BodyFramework.ComfortCluster.WindowLifterClient
+	partition org.example.Vehicle2021.BodyFramework.BodyCluster.DriverWindowLifterPrototype
+	partition org.example.Vehicle2021.BodyFramework.BodyCluster.CoDriverWindowLifterPrototype  
+}
