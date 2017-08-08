@@ -129,7 +129,7 @@ class FCompProposalProvider extends AbstractFCompProposalProvider {
 			proposal.textApplier = new ReplacementTextApplier() {
 				override getActualReplacementString(ConfigurableCompletionProposal proposal) {
 					proposal.replacementLength = proposal.replaceContextLength
-					'"' + name.toString + '"'
+					'"' + name.toString + '"\r\n'
 				}
 			}
 		}

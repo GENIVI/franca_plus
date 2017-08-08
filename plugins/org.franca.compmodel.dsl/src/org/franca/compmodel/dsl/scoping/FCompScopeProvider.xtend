@@ -269,7 +269,6 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 
 	// *****************************************************************************
-	@SuppressWarnings("unused")
 	def private dump(IScope s, String tag) {
 		println("    " + tag)
 		for (e : s.allElements) {

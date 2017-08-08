@@ -99,7 +99,7 @@ public class FDeployProposalProvider extends AbstractFDeployProposalProvider {
 	}
 
 	/**
-	 * Proposes both all fidl and fdepl files in the current workspace (to be
+	 * Proposes both all fidl, fcdl and fdepl files in the current workspace (to be
 	 * precise: the files residing in visible containers) as well as the
 	 * fdepl-files contributed by means of
 	 * <code> &lt;extension point="org.franca.compdeploymodel.dsl.deploySpecProvider"> </code>
