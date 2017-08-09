@@ -8,6 +8,7 @@ component HelloWorldServer {
 
 component ChatterClient {}
 
+// itemis: There should be a convention ensured by validator that component names start with uppercase and instances start with lowercase. 
 component HelloWorldClient {
 	requires org.example.HelloWorld2 as AnswerMePort
 	contains ChatterClient as HyperActiveChatterClient
@@ -39,4 +40,8 @@ component DerivedHelloWorldClient2 extends DerivedHelloWorldClient {
 }
 
 // or replace HelloWorldClient.BoringChatterClient with an implementation of DerivedChatterClient  
+// itemis: In which context will the injection be applied? Shouldn't it always start with a root component? Or in a "create" context?#
+// itemis: Will "inject" work despite "finally"?
+// itemis: How do "inject" and "implement" interact?
+// itemis: Example for "abstract" would be helpful
 inject DerivedChatterClient into HelloWorldClient.BoringChatterClient

@@ -2,7 +2,10 @@ package org.example
 
 import model "classpath:/Tags.fcdl"
 
+// itemis: Missing: Parameterization for components (parameters have a type and are initialized by expressions)
 
+// itemis: Should annotation tags be hardcoded? Or is more flexibility needed?
+// itemis: Why annotations inside of comments? Could be directly before model element instead..
 <** @dienst **>
 service component Leaf {}
 
@@ -22,15 +25,21 @@ component Framework {
 	contains Node as N2
 }
 
+// itemis: Does the "root" keyword trigger an instantiation? Or can only "root" components be instantiated?
 root component Root {
 	contains Framework
 }
 
-create Root
+// itemis: This shouldn't be part of a component model. Better: in deployment
+create Root 
 
+// itemis: devices should probably be defined in the deployment model
 device D {
 	<** @eaguid:'{abcd-x-x-x-fc}' **>
+	// itemis: What does partition mean? Why is there a 1:1 association with a component instance?
+	// itemis: Should actual instances be really specified here? Better: in deployment
 	partition org.example.Root.Framework.N1.L1 
 	partition org.example.Root.Framework.N1.L2
 	partition org.example.Root.Framework.N1.L3
 }
+

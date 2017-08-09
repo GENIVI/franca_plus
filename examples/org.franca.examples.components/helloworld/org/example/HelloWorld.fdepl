@@ -9,6 +9,7 @@ define org.genivi.commonapi.someip.deployment for device org.example.HelloServer
 	// some SOME/IP specific stuff
     SomeIpDeviceUnicastAddress = "127.0.0.1"
 	
+	// itemis: "service" is confusing, here it might depict more than one provided interface instance
 	service org.example.System.Room1.Service {
 		provide AskMePort  {	
 			SomeIpInstanceID = 1

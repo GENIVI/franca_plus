@@ -5,6 +5,8 @@ import org.example.* from "classpath:/org/example/HelloWorld.fcdl"
 // usage: create <root component>
 //    unfolds the component type hierarchy starting from a component with <root> property
 //    and creates on demand an instance for each component with <service> property 
+// itemis: a missing "root" keyword means that the component never can be used as part of a larger system, this is too restrictive (e.g., for building test environments).
+// itemis: "service" keyword and "being a leaf component" is redundant, thus there might be inconsistencies.
 create org.example.System
 
 device HelloServerECU {
