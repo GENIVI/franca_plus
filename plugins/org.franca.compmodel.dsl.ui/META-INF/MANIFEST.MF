@@ -15,7 +15,11 @@ Require-Bundle: org.franca.compmodel.dsl;bundle-version="0.11.1";visibility:=ree
  org.eclipse.xtext.common.types.ui,
  org.eclipse.xtext.ui.codetemplates.ui,
  org.eclipse.compare,
- org.eclipse.jdt.core
+ org.eclipse.jdt.core,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.xtend,
+ org.eclipse.xpand
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.franca.compmodel.dsl.ui,

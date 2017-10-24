@@ -3,11 +3,18 @@
  */
 package org.franca.compdeploymodel.dsl.ui.outline;
 
+import org.franca.compdeploymodel.dsl.fDeploy.FDComponentInstance;
+import org.franca.compdeploymodel.dsl.fDeploy.FDDeployment;
+
 /**
  * Customization of the default outline structure.
  *
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#outline
  */
 public class FDeployOutlineTreeProvider extends org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider {
+	protected boolean _isLeaf(FDDeployment feature) {
+	    return true;
+	}
 	
+
 }

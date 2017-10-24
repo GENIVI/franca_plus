@@ -8,6 +8,11 @@
 package org.franca.compdeploymodel.dsl.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher;
+import org.eclipse.xtext.ui.editor.contentassist.XtextContentAssistProcessor;
+import org.franca.compdeploymodel.dsl.ui.contentassist.FCompDeployProposalPrefixMatcher;
+
+import com.google.inject.Binder;
 
 /**
  * Use this class to register components to be used within the IDE.
@@ -21,5 +26,35 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 public class FDeployUiModule extends org.franca.compdeploymodel.dsl.ui.AbstractFDeployUiModule {
 	public FDeployUiModule(AbstractUIPlugin plugin) {
 		super(plugin);
+	}
+	
+	@Override
+	public void configure(Binder binder) {
+		super.configure(binder);
+		binder.bind(String.class)
+				.annotatedWith(
+						com.google.inject.name.Names
+								.named((XtextContentAssistProcessor.COMPLETION_AUTO_ACTIVATION_CHARS)))
+				.toInstance(".:");
+	}
+	
+//	@Override
+//	public Provider<IAllContainersState> provideIAllContainersState() {
+//		return Access.getWorkspaceProjectsState();
+//	}
+//
+//	@Override
+//	public Class<? extends IResourceSetProvider> bindIResourceSetProvider() {
+//		return SimpleResourceSetProvider.class;
+//	}
+//
+//	@Override
+//	public Class<? extends IResourceForEditorInputFactory> bindIResourceForEditorInputFactory() {
+//		return ResourceForIEditorInputFactory.class;
+//	}
+	
+	@Override
+	public Class<? extends PrefixMatcher> bindPrefixMatcher() {
+		return FCompDeployProposalPrefixMatcher.class;
 	}
 }

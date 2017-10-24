@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.franca.compmodel.dsl" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.franca.compmodel.dsl" id="francaplusValidator" name="Franca Plus Validator"/>
+      </appInfo>
+      <documentation>
+         This Extension Point is provided to allow external validation on the Franca Component Model DSL (.fcdl). 
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
+      <complexType>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="validator"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="validator">
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":org.franca.compmodel.dsl.validation.IFCompExternalValidator"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="mode" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="FAST">
+                  </enumeration>
+                  <enumeration value="NORMAL">
+                  </enumeration>
+                  <enumeration value="EXPENSIVE">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         Since Version 0.11.1
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         After importing this plugin the extension point can be used like seen below:
+
+ &lt;extension
+         point=&quot;org.franca.compmodel.dsl.francaplusValidator&quot;&gt;
+      &lt;validator
+            class=&quot;de.example.application.ExternalTestValidator&quot;
+            mode=&quot;FAST&quot;
+            name=&quot;de.example.application.validatorTest&quot;&gt;
+      &lt;/validator&gt;
+ &lt;/extension&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiinfo"/>
+      </appInfo>
+      <documentation>
+         To create an external validation you need to implement the IFCompExternalValidator Interface from this plugin:
+
+public class ExternalTestValidator implements IFCompExternalValidator 
+{
+
+	@Override
+	public void validateModel(FCModel arg0, ValidationMessageAcceptor arg1) 
+	{
+		EList&lt;FCComponent&gt; list = arg0.getComponents();
+		
+		for(FCComponent comp : list)
+		{
+			if(comp.getComment() == null)
+			{
+				arg1.acceptError(&quot;A comment section is required&quot;, comp,
+						FcompPackage.Literals.FC_COMPONENT__NAME, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
+			}
+	}
+      </documentation>
+   </annotation>
+
+
+
+</schema>

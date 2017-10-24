@@ -70,7 +70,7 @@ enum FDPropertyHost:
 	typedefs |
 	strings | numbers | integers | floats | booleans | byte_buffers |
 	components | services | required_ports | provided_ports |
-	devices;
+	devices | variants;
 
 
 // **************************************************************
@@ -96,7 +96,8 @@ FDEnumerator:
 // content definition (model part)
 
 FDRootElement:
-	FDProvider | FDTypes | FDInterface | FDComponent | FDDevice;
+	FDProvider | FDTypes | FDInterface | 
+	FDComponent | FDDevice | FDService | FDVariant;
 
 FDElement:
 	FDRootElement | FDInterfaceInstance | 
@@ -120,19 +121,21 @@ FDProvider:
 // Additional property hosts for component modeling
 FDDevice:
 	'define' spec=[FDSpecification|FQN]
-	'for' 'device' target=[fcomp::FCDevice|FQN] ('as' name=FQN)?
+	'for' 'device' target=[fcomp::FCDevice|FQN] ('as' name=ID)?
 	'{'
 		('use' use+=[FDRootElement|FQN])*
 
 		// the own properties of this service
 		properties=FDPropertySet
-		
-		// service instances on this device
-		(services+=FDService)*
 	'}';
+
+FDComponentInstance:
+	target=[fcomp::FCComponent] 
+	({FDComponentInstance.parent=current} '.' prototype=[fcomp::FCGenericPrototype])*;
 	
 FDService:
-	'service' target=[fcomp::FCInstance|FQN]
+	'define' spec=[FDSpecification|FQN]
+	'for' 'service' target=[FDComponentInstance|FQN] ('as' name=ID)?
 	'{'
 		// the own properties of this service
 		properties=FDPropertySet
@@ -140,6 +143,15 @@ FDService:
 		// ports of component
 		(providedPorts+=FDProvidedPort|
 		requiredPorts+=FDRequiredPort)*
+	'}';
+
+// deploy an instance to a device	
+FDDeployment:
+	'deploy' target=FDComponentInstance 'to' device=[fcomp::FCDevice] ('with' ('specification' spec=[FDSpecification|FQN] | 'definition' def=[FDService|FQN]))?;
+
+FDVariant:
+	'define' 'variant' name=ID 'for' 'system' target=[fcomp::FCSystem|FQN] '{'
+		deployments+=FDDeployment*
 	'}';
 	
 FDComponent:

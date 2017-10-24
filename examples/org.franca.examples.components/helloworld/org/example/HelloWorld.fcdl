@@ -24,7 +24,7 @@ component MeetingPoint {
 	connect Client2.AnswerMePort to Service.AskMePort
 }
 
-root component System {
+component System {
 	contains MeetingPoint as Room1
 	contains MeetingPoint as Room2
 }

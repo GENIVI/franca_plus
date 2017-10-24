@@ -1,0 +1,15 @@
+package org.example
+
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "component_architecture.fcdl"
+
+define variant CA for system org.example.Vehicle {
+	deploy VehicleFuture.InfotainmentFramework2030.AudioCluster.Component2Inst1.ComponentInst3 
+	to HeadUnit with specification org.genivi.commonapi.someip.deployment
+	
+	deploy VehicleFuture.InfotainmentFramework2030.AudioCluster.Component2Inst1.ComponentInst1 
+	to HeadUnit with specification org.genivi.commonapi.someip.deployment
+	
+	deploy VehicleFuture.InfotainmentFramework2030.AudioCluster.Component2Inst1.ComponentInst2 
+	to Amplifier with specification org.genivi.commonapi.someip.deployment
+}

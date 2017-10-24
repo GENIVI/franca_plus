@@ -1,0 +1,9 @@
+package org.example
+
+import model "classpath:/Tags.fcdl"
+import model "Root.fcdl"
+
+system System with root org.example.Root
+{
+	device D
+}

@@ -36,7 +36,7 @@ public class FCompUiModule extends org.franca.compmodel.dsl.ui.AbstractFCompUiMo
 				.annotatedWith(
 						com.google.inject.name.Names
 								.named((XtextContentAssistProcessor.COMPLETION_AUTO_ACTIVATION_CHARS)))
-				.toInstance(":");
+				.toInstance(".:");
 	}
 		
 	@Override

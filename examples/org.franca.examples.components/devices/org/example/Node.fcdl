@@ -1,0 +1,13 @@
+package org.example
+
+import model "classpath:/Tags.fcdl"
+import model "Leaf.fcdl"
+import org.example from "classpath://devices/org.example/Leaf.fcdl"
+
+<** @cluster **>
+component Node {
+	contains org.example.Leaf as L1
+	contains org.example.Leaf as L2 
+	contains org.example.Leaf as L3
+}
+

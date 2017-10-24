@@ -26,12 +26,9 @@ import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
 import org.eclipse.xtext.ui.editor.contentassist.ReplacementTextApplier
 import org.franca.compmodel.dsl.fcomp.FCAnnotationType
-import org.franca.compmodel.dsl.fcomp.FCComponent
-import org.franca.compmodel.dsl.fcomp.FCInstanceCreator
 import org.franca.compmodel.dsl.fcomp.FCModel
 import org.franca.compmodel.dsl.fcomp.FCTagDecl
 import org.franca.compmodel.dsl.fcomp.Import
-import org.franca.compmodel.dsl.scoping.FCompDeclarativeNameProvider
 import org.franca.core.utils.FrancaIDLUtils
 
 class FCompProposalProvider extends AbstractFCompProposalProvider {
@@ -74,20 +71,13 @@ class FCompProposalProvider extends AbstractFCompProposalProvider {
 			]
 		}
 
-		if (context.prefix == "\"classpath:") {
+		if (context.prefix.contains("classpath:")) {
 			classpathResources.forEach [
 				it.createClasspathProposal(modelUri,context, acceptor,importedUris)
-			]
-		} else if (context.prefix == "\"platform:") {
-			platformResources.forEach [
-				it.createPlatformProposal(modelUri,context, acceptor,importedUris)
 			]
 		} else {
 			platformResources.forEach [
-				it.createPlatformProposal(modelUri,context,acceptor,importedUris)
-			]
-			classpathResources.forEach [
-				it.createClasspathProposal(modelUri,context, acceptor,importedUris)
+				it.createFilenameProposal(modelUri,context,acceptor,importedUris)
 			]
 		}
 		super.completeImport_ImportURI(model, assignment, context, acceptor)
@@ -102,7 +92,7 @@ class FCompProposalProvider extends AbstractFCompProposalProvider {
 		}
 	}
 	
-	def void createPlatformProposal(URI uri,URI model, ContentAssistContext context, ICompletionProposalAcceptor acceptor,List<String> importedUris)
+	def void createFilenameProposal(URI uri,URI model, ContentAssistContext context, ICompletionProposalAcceptor acceptor,List<String> importedUris)
 	{
 		val result = FrancaIDLUtils.relativeURIString(model,uri)
 		if(!importedUris.contains(result)){
@@ -163,34 +153,4 @@ class FCompProposalProvider extends AbstractFCompProposalProvider {
 		
 		super.complete_FCAnnotation(model, ruleCall, context, acceptor)
 	}
-	
-	@Inject
-	FCompDeclarativeNameProvider nameProvider
-		
-	override void completeFCPartitionedInstance_Instance(EObject model, Assignment assignment, 
-			ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-		
-		val creators = model.eResource.resourceSet.allContents.filter(FCInstanceCreator)
-		
-		val serviceCandidates = newArrayList		
-		creators.forEach[
-			findServices(component, serviceCandidates, nameProvider.getFullyQualifiedName(component).toString)
-			if (component.service)	
-				serviceCandidates.add(component.name)
-		]
-		serviceCandidates.forEach[
-			val short = split('\\.').last
-			acceptor.accept(createCompletionProposal(it, short + ' - ' + it, null, context))
-		]
-	}
-	
-	def void findServices(FCComponent parent, List<String>services, String path) {
-		parent.prototypes.forEach[
-			val newPath = path + '.' + name
-			findServices(component, services, newPath)
-			if (component.service)	
-				services.add(newPath)
-		]
-	}
-	
 }

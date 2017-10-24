@@ -1,0 +1,7 @@
+package org.example
+
+import model "classpath:/Tags.fcdl"
+
+
+<** @dienst **>
+service component Leaf {}

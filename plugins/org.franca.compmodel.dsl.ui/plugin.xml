@@ -421,5 +421,33 @@
             type="text">
     </fileTypes>
   </extension>
+  <extension
+        point="org.eclipse.ui.newWizards">
+     <category
+           id="org.franca.compmodel.dsl.ui.wizard"
+           name="Franca Wizards">
+     </category>
+     <wizard
+           category="org.franca.compmodel.dsl.ui.wizard"
+           class="org.franca.compmodel.dsl.ui.wizards.NewFcdlFile"
+           icon="icons/component.png"
+           id="org.franca.compmodel.dsl.ui.wizards.NewFcdlFile"
+           name="New Franca Component Editor file">
+     </wizard>
+     <wizard
+           category="org.franca.compmodel.dsl.ui.wizard"
+           class="org.franca.compmodel.dsl.ui.wizards.NewFidlFile"
+           icon="icons/sample.gif"
+           id="org.franca.compmodel.dsl.ui.wizards.NewIdlFile"
+           name="New Franca IDL Editor file">
+     </wizard>
+     <wizard
+           category="org.franca.compmodel.dsl.ui.wizard"
+           class="org.franca.compmodel.dsl.ui.wizards.NewFdeplFile"
+           icon="icons/sample.gif"
+           id="org.franca.compmodel.dsl.ui.wizards.NewFdeplFile"
+           name="New Franca Deployment Editor file">
+     </wizard>
+  </extension>
 
 </plugin>

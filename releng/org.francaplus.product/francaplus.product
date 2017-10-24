@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Franca Component Editor with Extensions" uid="org.francaplus.product" id="org.franca.compmodel.dsl.FComp" application="org.eclipse.ui.ide.workbench" version="0.11.1.qualifier" useFeatures="false" includeLaunchers="true">
+<product name="Franca Component Editor with Extensions" uid="org.francaplus.product" id="org.franca.compmodel.dsl.FComp" application="org.eclipse.ui.ide.workbench" version="0.11.1.qualifier" useFeatures="true" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
 
    <launcherArgs>
+      <programArgs>-clearPersistedState
+      </programArgs>
+      <vmArgs>-Xmx1024m
+      </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
    </launcherArgs>
@@ -14,7 +18,6 @@
    <windowImages/>
 
    <launcher name="francaplus">
-      <solaris/>
       <win useIco="false">
          <bmp/>
       </win>
@@ -136,14 +139,11 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <plugin id="org.eclipse.core.filesystem"/>
       <plugin id="org.eclipse.core.filesystem.java7" fragment="true"/>
       <plugin id="org.eclipse.core.filesystem.win32.x86" fragment="true"/>
-      <plugin id="org.eclipse.core.filesystem.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.core.jobs"/>
       <plugin id="org.eclipse.core.net"/>
       <plugin id="org.eclipse.core.net.win32.x86" fragment="true"/>
-      <plugin id="org.eclipse.core.net.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.core.resources"/>
       <plugin id="org.eclipse.core.resources.win32.x86" fragment="true"/>
-      <plugin id="org.eclipse.core.resources.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.core.runtime"/>
       <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
       <plugin id="org.eclipse.core.variables"/>
@@ -196,7 +196,6 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <plugin id="org.eclipse.equinox.registry"/>
       <plugin id="org.eclipse.equinox.security"/>
       <plugin id="org.eclipse.equinox.security.win32.x86" fragment="true"/>
-      <plugin id="org.eclipse.equinox.security.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.equinox.util"/>
       <plugin id="org.eclipse.help"/>
       <plugin id="org.eclipse.jdt.compiler.apt" fragment="true"/>
@@ -218,7 +217,6 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <plugin id="org.eclipse.search"/>
       <plugin id="org.eclipse.swt"/>
       <plugin id="org.eclipse.swt.win32.win32.x86" fragment="true"/>
-      <plugin id="org.eclipse.swt.win32.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.team.core"/>
       <plugin id="org.eclipse.team.ui"/>
       <plugin id="org.eclipse.text"/>
@@ -264,14 +262,91 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <plugin id="org.franca.compmodel.dsl.ui"/>
       <plugin id="org.franca.core"/>
       <plugin id="org.franca.core.dsl"/>
+      <plugin id="org.franca.core.dsl.source"/>
       <plugin id="org.franca.core.dsl.ui"/>
+      <plugin id="org.franca.core.dsl.ui.source"/>
       <plugin id="org.franca.core.edit"/>
+      <plugin id="org.franca.core.edit.source"/>
+      <plugin id="org.franca.core.source"/>
+      <plugin id="org.genivi.commonapi.core"/>
+      <plugin id="org.genivi.commonapi.someip"/>
       <plugin id="org.objectweb.asm"/>
       <plugin id="org.w3c.css.sac"/>
       <plugin id="org.w3c.dom.events"/>
       <plugin id="org.w3c.dom.smil"/>
       <plugin id="org.w3c.dom.svg"/>
    </plugins>
+
+   <features>
+      <feature id="org.francaplus.feature" version="0.11.1.qualifier"/>
+      <feature id="org.eclipse.platform"/>
+      <feature id="org.eclipse.rcp"/>
+      <feature id="org.eclipse.e4.rcp"/>
+      <feature id="org.eclipse.jdt"/>
+      <feature id="org.eclipse.jdt.junit.runners.feature"/>
+      <feature id="org.eclipse.ecf.core.feature"/>
+      <feature id="org.eclipse.ecf.filetransfer.feature"/>
+      <feature id="org.eclipse.pde"/>
+      <feature id="org.eclipse.draw2d"/>
+      <feature id="org.eclipse.emf"/>
+      <feature id="org.eclipse.emf.mwe.core.feature"/>
+      <feature id="org.eclipse.emf.mwe2.runtime.sdk"/>
+      <feature id="org.eclipse.emf.mwe2.language.sdk"/>
+      <feature id="org.eclipse.emf.mwe.sdk"/>
+      <feature id="org.eclipse.xtext.sdk"/>
+      <feature id="de.itemis.xtext.antlr.feature"/>
+      <feature id="org.eclipse.xtend.sdk"/>
+      <feature id="org.xpect.sdk"/>
+      <feature id="org.eclipse.ecf.filetransfer.httpclient4.feature"/>
+      <feature id="org.eclipse.help"/>
+      <feature id="org.eclipse.emf.mapping.ecore"/>
+      <feature id="org.eclipse.emf.codegen"/>
+      <feature id="org.eclipse.xtext.xbase.lib"/>
+      <feature id="org.eclipse.equinox.p2.core.feature"/>
+      <feature id="org.eclipse.ecf.core.ssl.feature"/>
+      <feature id="org.eclipse.ecf.filetransfer.ssl.feature"/>
+      <feature id="org.eclipse.emf.mwe.ui.feature"/>
+      <feature id="org.eclipse.emf.edit"/>
+      <feature id="org.eclipse.xtext.runtime"/>
+      <feature id="org.eclipse.xtext.xbase"/>
+      <feature id="org.eclipse.emf.codegen.ui"/>
+      <feature id="org.eclipse.emf.databinding.edit"/>
+      <feature id="org.eclipse.xtext.xtext.ui.source"/>
+      <feature id="org.eclipse.emf.codegen.ecore"/>
+      <feature id="org.eclipse.emf.converter"/>
+      <feature id="org.eclipse.emf.edit.ui"/>
+      <feature id="org.eclipse.xtext.ui.source"/>
+      <feature id="org.eclipse.xtext.xbase.lib.source"/>
+      <feature id="org.eclipse.equinox.p2.rcp.feature"/>
+      <feature id="org.eclipse.emf.mwe2.language.sdk.source"/>
+      <feature id="org.eclipse.xtext.examples.source"/>
+      <feature id="org.eclipse.xtext.ui"/>
+      <feature id="org.eclipse.emf.mwe.doc.feature"/>
+      <feature id="org.eclipse.xtext.runtime.source"/>
+      <feature id="org.eclipse.xtext.docs"/>
+      <feature id="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature"/>
+      <feature id="org.eclipse.xtext.xtext.ui"/>
+      <feature id="org.eclipse.emf.common.ui"/>
+      <feature id="org.eclipse.emf.common"/>
+      <feature id="org.eclipse.jdt.junit.runners.feature.source"/>
+      <feature id="org.eclipse.emf.mapping.ui"/>
+      <feature id="org.eclipse.emf.mapping"/>
+      <feature id="org.eclipse.emf.mwe.ui.feature.source"/>
+      <feature id="org.eclipse.emf.ecore"/>
+      <feature id="org.eclipse.equinox.p2.user.ui"/>
+      <feature id="org.eclipse.equinox.p2.extras.feature"/>
+      <feature id="org.eclipse.xtext.examples"/>
+      <feature id="org.eclipse.emf.codegen.ecore.ui"/>
+      <feature id="org.eclipse.emf.ecore.editor"/>
+      <feature id="org.eclipse.emf.mwe.core.feature.source"/>
+      <feature id="org.eclipse.emf.mapping.ecore.editor"/>
+      <feature id="org.eclipse.xtext.xbase.source"/>
+      <feature id="org.eclipse.emf.databinding"/>
+      <feature id="org.eclipse.emf.ecore.edit"/>
+      <feature id="org.francaplus.thirdparty.feature" version="0.11.1.qualifier"/>
+      <feature id="org.genivi.commonapi.core.feature" version="0.11.1.qualifier"/>
+      <feature id="org.genivi.commonapi.someip.feature" version="0.11.1.qualifier"/>
+   </features>
 
    <configurations>
       <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />

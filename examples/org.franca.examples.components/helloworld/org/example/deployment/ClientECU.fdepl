@@ -1,0 +1,9 @@
+package org.example.deployment
+
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "../HelloWorldSystem.fcdl" 
+
+define org.genivi.commonapi.someip.deployment for device org.example.TUT.HelloClientECU {
+	// some SOME/IP specific stuff
+	SomeIpDeviceUnicastAddress = "127.0.0.2"
+}

@@ -7,7 +7,6 @@ import org.example.* from "classpath:/org/example/MediaPlayer.fidl"
 // service definitions
 
 <** @dienst **>
-// itemis: What does "service" mean? Probably "instantiable component", but there are different notions of "service" which might confuse users.
 service component Component1 {}
 
 
@@ -30,7 +29,7 @@ component Component2 {
 <** 
  ** @author: bernhard hennlich
  **>
-root component VehicleFuture
+component VehicleFuture
 {
 	contains InfotainmentFrameworkFuture as InfotainmentFramework2030
 }
@@ -47,12 +46,7 @@ component AudioCluster {
 
 //=====================================================
 // partitioning
-
-device HeadUnit {
-	// itemis: Instance references should be implemented differently. Each segment of the FQN should be a reference on its own.
-	partition org.example.VehicleFuture.InfotainmentFramework2030.AudioCluster.Component2Inst1.ComponentInst3
-	partition org.example.VehicleFuture.InfotainmentFramework2030.AudioCluster.Component2Inst1.ComponentInst1
-}
-device Amplifier {
-	partition org.example.VehicleFuture.InfotainmentFramework2030.AudioCluster.Component2Inst1.ComponentInst2
+system Vehicle with root VehicleFuture {
+	device HeadUnit
+	device Amplifier
 }

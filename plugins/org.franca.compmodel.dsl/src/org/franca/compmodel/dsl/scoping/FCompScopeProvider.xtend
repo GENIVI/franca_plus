@@ -21,17 +21,14 @@ import org.franca.compmodel.dsl.FCompUtils
 import org.franca.compmodel.dsl.fcomp.FCAssemblyConnector
 import org.franca.compmodel.dsl.fcomp.FCComponent
 import org.franca.compmodel.dsl.fcomp.FCDelegateConnector
-import org.franca.compmodel.dsl.fcomp.FCInjectedPrototype
 import org.franca.compmodel.dsl.fcomp.FCInjectionModifier
-import org.franca.compmodel.dsl.fcomp.FCInstance
-import org.franca.compmodel.dsl.fcomp.FCInstanceCreator
+import org.franca.compmodel.dsl.fcomp.FCModel
 import org.franca.compmodel.dsl.fcomp.FCPort
 import org.franca.compmodel.dsl.fcomp.FCPortKind
 import org.franca.compmodel.dsl.fcomp.FCPrototype
 import org.franca.compmodel.dsl.fcomp.FCPrototypeInjection
 
 import static extension org.eclipse.xtext.scoping.Scopes.*
-import org.franca.compmodel.dsl.fcomp.FCModel
 
 /**
  * This class contains custom scoping description.
@@ -58,7 +55,7 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 			override boolean apply(IEObjectDescription od) {
 				val obj = od.EObjectOrProxy
 				if (obj instanceof FCComponent) {
-					if (obj !== component && !obj.root)
+					if (obj !== component /* && !obj.root */)
 						true 	
 					else 
 						false		
@@ -154,28 +151,6 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 			IScope.NULLSCOPE
 	}
 
-	// scope inject-able prototypes
-	def scope_FCInjectedPrototype_ref(FCInjectedPrototype ip, EReference ref) {
-		val IScope delegateScope = delegateGetScope(ip, ref)
-		val FCComponent wantedSuperType = ip.component.superType
-		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
-			override boolean apply(IEObjectDescription od) {
-				val obj = od.EObjectOrProxy
-
-				if (obj instanceof FCPrototype) {
-					if (obj == ip || obj == ip.eContainer || obj == ip.component)
-						return false
-					if (obj.component == wantedSuperType)
-						return true
-					if (obj.component.inheritsFrom(wantedSuperType))
-				    	return true
-				}
-				return false
-			}
-		}
-		new FilteringScope(delegateScope, filter)
-	}
-
 	// injection from within a derived component type
 	def scope_FCPrototypeInjection_ref(FCComponent component, EReference ref) {
 		val prototypes = new ArrayList()
@@ -221,7 +196,6 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 
 	/**
 	 * Remove "abstract" components from the scope for component type of an explicit instance. 
-	 */
 	def IScope scope_FCInstance_component(FCInstance instance, EReference ref) {
 		val IScope delegateScope = delegateGetScope(instance, ref)
 		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
@@ -230,18 +204,19 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 				if (obj.eIsProxy) 
 					obj = EcoreUtil.resolve(obj, instance.eResource.resourceSet)
 				if (obj instanceof FCComponent) 
-					obj.abstract == false && obj.root == true
+					obj.abstract == false 
 				else
 					false
 			}
 		}
 		new FilteringScope(delegateScope, filter)
 	}
+	 */
 	
 	/**
 	 * Remove "abstract" components from the scope for component type of an instance creator. 
 	 */
-	def IScope scope_FCInstanceCreator_component(FCModel model, EReference ref) {
+	def IScope scope_FCSystem_component(FCModel model, EReference ref) {
 		val IScope delegateScope = delegateGetScope(model, ref)
 		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
 			override boolean apply(IEObjectDescription od) {
@@ -249,7 +224,7 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 				if (obj.eIsProxy) 
 					obj = EcoreUtil.resolve(obj, model.eResource.resourceSet)
 				if (obj instanceof FCComponent) 
-					obj.abstract == false && obj.root == true
+					obj.abstract == false /* && obj.root == true */
 				else
 					false
 			}

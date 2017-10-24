@@ -1,0 +1,11 @@
+package org.example
+
+import org.example.* from "classpath:/org/example/HelloWorld.fcdl"
+
+system TUT with root org.example.System
+{
+	device HelloServerECU
+	device HelloClientECU
+}
+
+

@@ -1,0 +1,9 @@
+package org.example
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "abcd.fcdl"
+
+define variant ABCD for system org.example.System {
+	deploy Root.Framework.N1.L1 to D with specification org.genivi.commonapi.someip.deployment
+	deploy Root.Framework.N1.L2 to D
+	deploy Root.Framework.N1.L3 to D
+}

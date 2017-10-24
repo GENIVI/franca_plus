@@ -1,0 +1,71 @@
+package org.example.deployment
+
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "classpath:/org/example/HelloWorld.fidl"
+import "../HelloWorld.fcdl"
+import "../HelloWorldSystem.fcdl"
+
+define org.genivi.commonapi.someip.deployment for device org.example.TUT.HelloServerECU {
+	// some SOME/IP specific stuff
+    SomeIpDeviceUnicastAddress = "127.0.0.1"
+}
+
+define org.genivi.commonapi.someip.deployment for service System.Room1.Service {
+	provide AskMePort  {	
+		SomeIpInstanceID = 1
+        SomeIpReliableUnicastPort = 30506
+        SomeIpUnreliableUnicastPort = 0
+   	}
+}
+
+define variant AIO for system org.example.TUT {
+	deploy System.Room1.Service to HelloServerECU 
+	deploy System.Room1.Client1 to HelloClientECU 
+	deploy System.Room1.Client2 to HelloClientECU
+	deploy System.Room2.Client1 to HelloClientECU
+}
+
+define org.genivi.commonapi.someip.deployment for device org.example.TUT.HelloClientECU {
+	// some SOME/IP specific stuff
+	SomeIpDeviceUnicastAddress = "127.0.0.1"
+}
+	
+	// deployment for a hosted client instance 
+define org.genivi.commonapi.someip.deployment for service System.Room1.Client1 { 
+		require AnswerMePort  {	
+			SomeIpInstanceID = 1
+	        SomeIpUnicastAddress = "160.48.199.99"
+	        SomeIpReliableUnicastPort = 30506
+	        SomeIpUnreliableUnicastPort = 0
+	        
+	    }
+	}    
+define org.genivi.commonapi.someip.deployment for service System.Room1.Client2 {
+		require AnswerMePort  {	
+			SomeIpInstanceID = 1
+	        SomeIpUnicastAddress = "160.48.199.99"
+	        SomeIpReliableUnicastPort = 30506
+	        SomeIpUnreliableUnicastPort = 0
+	    }
+	}	
+
+
+// deployment for the service type 
+define org.genivi.commonapi.someip.deployment for component org.example.HelloWorldClient {
+	require AnswerMePort {	
+		SomeIpInstanceID = 1
+        SomeIpUnicastAddress = "160.48.199.99"
+        SomeIpReliableUnicastPort = 30506
+        SomeIpUnreliableUnicastPort = 0
+	}    
+}
+
+
+// deployment for the interface type
+define org.genivi.commonapi.someip.deployment for interface org.example.HelloWorld2 {
+	SomeIpServiceID = 123
+
+	broadcast isThereSomeBody {
+		SomeIpEventID = 5
+	}
+}

@@ -5,6 +5,7 @@
  * License, v. 1.0. If a copy of the EPL was not distributed with this
  * file, You can obtain one at https://www.eclipse.org/legal/epl-v10.html. 
  */
+
 grammar org.franca.compmodel.dsl.FComp with org.eclipse.xtext.common.Terminals
 
 hidden(WS, ML_COMMENT, SL_COMMENT)
@@ -28,9 +29,8 @@ FCModel:
     		tags=FCTagsDeclaration |
 		    (
 				components+=FCComponent |
-				injects+=FCInjectedPrototype |
-				instanceCreators+=FCInstanceCreator |
-				devices+=FCDevice 
+				devices+=FCDevice | 
+				systems+=FCSystem 
 			)*
 		)
 	);
@@ -51,7 +51,7 @@ WildcardFQN: FQN ('.' '*')?;
 FCVersion: {FCVersion} 'version' '{' 'major' major=INT 'minor' minor=INT '}';
 	
 enum FCPortKind: provided|required;
-enum FCPortCardinality: MANDATORY='mandatory' | OPTIONAL='optional';
+enum FCPortCardinality: OPTIONAL='optional';
 enum FCInjectionModifier: finally;
 	
 FCTagsDeclaration:
@@ -71,12 +71,12 @@ FCProvidedPort returns FCPort:
 FCPrototypeInjection returns FCGenericPrototype:
 	{FCPrototypeInjection}
 	comment=FCAnnotationBlock?
-	modifier=FCInjectionModifier? 'implement' ref=[FCPrototype|FQN] ('as' name=ID)? 'by' component=[FCComponent|FQN];
+	'implement' ref=[FCPrototype|FQN] ('as' name=ID)? 'by' component=[FCComponent|FQN] modifier=FCInjectionModifier?;
 
 FCComponent: 
 	{FCComponent}
 	comment=FCAnnotationBlock?
-	(abstract?='abstract'? & root?='root'? & singleton?='singleton'? & service?='service'?)
+	(abstract?='abstract'? & /* root?='root'? & */ singleton?='singleton'? & service?='service'?)
 	'component' name=ID ('extends' superType=[FCComponent|FQN])?
 	'{'
 		version=FCVersion?
@@ -95,11 +95,6 @@ FCPrototype returns FCGenericPrototype:
 	comment=FCAnnotationBlock?
 	'contains' component=[FCComponent|FQN] ('as' name=ID)?;
 	
-FCInjectedPrototype returns FCGenericPrototype:
-	{FCInjectedPrototype}
-	comment=FCAnnotationBlock?
-	'inject' component=[FCComponent|FQN] ('as' name=ID)? 'into' ref=[FCPrototype|FQN] modifier=FCInjectionModifier?;
-
 FCDelegateConnector: 
 	comment=FCAnnotationBlock?
 	'delegate' kind=FCPortKind outer=FCOuter 'to' inner=FCInner;
@@ -109,35 +104,26 @@ FCInner: prototype=[FCPrototype] '.' port=[FCPort];
 
 FCAssemblyConnector:
 	comment=FCAnnotationBlock?
-	('connect'|'assemble') from=FCFrom 'to' to=FCTo;
+	('connect') from=FCFrom 'to' to=FCTo;
 	
 FCFrom: prototype=[FCPrototype] '.' port=[FCRequiredPort];
 FCTo: prototype=[FCPrototype] '.' port=[FCProvidedPort];
 
 // ***************************************************************
-// Partitioning of Instances to Devices
-FCDevice:
-	comment=FCAnnotationBlock?
-	'device' name=ID
+// Partitioning of Instances to Devices of a System
+FCSystem:
+    comment=FCAnnotationBlock?
+	'system' name=ID 'with' root=FCRoot
 	'{' 
-		instances+=FCPartitionedInstance*
+		devices+=FCDevice*
 	'}';
 	
-FCPartitionedInstance: 
-	comment=FCAnnotationBlock?
-	'partition'
-	instance=[FCInstance|FQN]
-;
-
-// Instances implicitly created (xtext creates and links instances on the fly, 
-// see proposal provider and linking service)
-FCInstance:
-	name=FQN
-	component=[FCComponent|FQN]?;
+FCRoot:
+	'root' component=[FCComponent|FQN];
 	
-FCInstanceCreator:
+FCDevice:
 	comment=FCAnnotationBlock?
-	'create' component=[FCComponent|FQN];
+	'device' name=ID;
 	
 //FCInstance:
 //	comment=FCAnnotationBlock?

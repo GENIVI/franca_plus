@@ -1,27 +1,28 @@
 package windowlifter
 
-import "classpath:/specifications/CommonAPI-SOMEIP_deployment_spec.fdepl"
-import "classpath:/org/example/WindowLifter.fcdl"
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "WindowLifter.fcdl"
 
-define org.genivi.commonapi.someip.deployment for device org.example.ClientECU {
+define org.genivi.commonapi.someip.deployment for service Vehicle2021.BodyFramework.BodyCluster.DriverWindowLifterPrototype {
+	SomeOtherAttribute = 42
 	
-	service org.example.Vehicle2021.BodyFramework.BodyCluster.DriverWindowLifterPrototype {
-		SomeOtherAttribute = 42
-		
-		provide PPort {
-			SomeIpInstanceID = 4711
-		}
+	provide PPort {
+		SomeIpInstanceID = 4711
 	}
 }
 
-define org.genivi.commonapi.someip.deployment for device org.example.MasterECU {
-	
-	service org.example.Vehicle2021.BodyFramework.BodyCluster.WindowLifterMasterPrototype {
-		require RCoDriverPort {
-			
-		}
-		require RDriverPort {
-			
-		}
+
+
+define org.genivi.commonapi.someip.deployment for service Vehicle2021.BodyFramework.BodyCluster.WindowLifterMasterPrototype {
+	require RCoDriverPort {
+		// ...
 	}
+	require RDriverPort {
+		//...
+	}
+}
+
+define variant V for system org.example.Vehicle2021 {
+	deploy Vehicle2021.BodyFramework.BodyCluster.DriverWindowLifterPrototype to ClientECU
+	deploy Vehicle2021.BodyFramework.BodyCluster.WindowLifterMasterPrototype to MasterECU
 }

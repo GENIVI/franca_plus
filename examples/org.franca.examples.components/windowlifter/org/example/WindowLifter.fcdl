@@ -8,6 +8,7 @@ import org.example.* from "WindowLifter.fidl"
     @dienst 
  **>
 service component WindowLifter {
+	
 	provides WindowLifter as PPort
 }
 
@@ -56,19 +57,13 @@ component BodyFramework {
 }
 
 
-root component Vehicle2021 {
+component Vehicle2021 {
 	contains BodyFramework
 	// ...
 }
 
-create Vehicle2021
-
-device MasterECU {
-	partition org.example.Vehicle2021.BodyFramework.BodyCluster.WindowLifterMasterPrototype
-}
-
-device ClientECU {
-	partition org.example.Vehicle2021.BodyFramework.ComfortCluster.WindowLifterClient
-	partition org.example.Vehicle2021.BodyFramework.BodyCluster.DriverWindowLifterPrototype
-	partition org.example.Vehicle2021.BodyFramework.BodyCluster.CoDriverWindowLifterPrototype  
-}
+system Vehicle2021 with root Vehicle2021
+{
+	device MasterECU
+	device ClientECU
+} 

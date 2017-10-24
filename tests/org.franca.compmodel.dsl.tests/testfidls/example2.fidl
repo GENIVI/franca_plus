@@ -1,0 +1,14 @@
+package org.example
+
+interface SecondTestInterface
+{
+	method testingMethod
+	{
+		in{}
+	}
+	
+	broadcast testingBroadcast
+	{
+		out{}
+	} 
+}

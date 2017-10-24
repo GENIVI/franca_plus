@@ -107,7 +107,9 @@ Workflow {
 
             // scoping and exporting API
             //fragment = scoping.ImportNamespacesScopingFragment {}
-            fragment = exporting.QualifiedNamesFragment {}
+            
+            // adds prefix matcher for content assistent
+            fragment = exporting.QualifiedNamesFragment {} 
             fragment = builder.BuilderIntegrationFragment {}
 
             // generator API

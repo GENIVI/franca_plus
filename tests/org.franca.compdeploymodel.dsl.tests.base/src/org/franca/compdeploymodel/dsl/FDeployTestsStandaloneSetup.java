@@ -10,6 +10,7 @@ package org.franca.compdeploymodel.dsl;
 import org.eclipse.xtext.util.Modules2;
 import org.franca.compdeploymodel.dsl.FDeployRuntimeModule;
 import org.franca.compdeploymodel.dsl.FDeployStandaloneSetup;
+import org.franca.compmodel.dsl.FCompRuntimeModule;
 import org.franca.core.dsl.FrancaIDLRuntimeModule;
 
 import com.google.inject.Guice;
@@ -21,6 +22,7 @@ public class FDeployTestsStandaloneSetup extends FDeployStandaloneSetup {
         return Guice.createInjector(Modules2.mixin(
         		new FrancaIDLRuntimeModule(),
         		new FDeployRuntimeModule(),
+        		new FCompRuntimeModule(),
         		new FDeployTestsModule()));
     }
 }

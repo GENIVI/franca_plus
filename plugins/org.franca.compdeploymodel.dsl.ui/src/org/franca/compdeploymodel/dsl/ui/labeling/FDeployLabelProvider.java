@@ -17,6 +17,7 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDBoolean;
 import org.franca.compdeploymodel.dsl.fDeploy.FDBroadcast;
 import org.franca.compdeploymodel.dsl.fDeploy.FDComponent;
 import org.franca.compdeploymodel.dsl.fDeploy.FDDeclaration;
+import org.franca.compdeploymodel.dsl.fDeploy.FDDeployment;
 import org.franca.compdeploymodel.dsl.fDeploy.FDDevice;
 import org.franca.compdeploymodel.dsl.fDeploy.FDEnumerator;
 import org.franca.compdeploymodel.dsl.fDeploy.FDField;
@@ -25,6 +26,7 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDInteger;
 import org.franca.compdeploymodel.dsl.fDeploy.FDInterface;
 import org.franca.compdeploymodel.dsl.fDeploy.FDInterfaceInstance;
 import org.franca.compdeploymodel.dsl.fDeploy.FDMethod;
+import org.franca.compdeploymodel.dsl.fDeploy.FDModel;
 import org.franca.compdeploymodel.dsl.fDeploy.FDProperty;
 import org.franca.compdeploymodel.dsl.fDeploy.FDPropertyDecl;
 import org.franca.compdeploymodel.dsl.fDeploy.FDPropertySet;
@@ -35,6 +37,7 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDString;
 import org.franca.compdeploymodel.dsl.fDeploy.FDStruct;
 import org.franca.compdeploymodel.dsl.fDeploy.FDTypedef;
 import org.franca.compdeploymodel.dsl.fDeploy.FDUnion;
+import org.franca.compdeploymodel.dsl.fDeploy.FDVariant;
 import org.franca.compdeploymodel.dsl.fDeploy.Import;
 
 import com.google.inject.Inject;
@@ -101,6 +104,10 @@ public class FDeployLabelProvider extends DefaultEObjectLabelProvider {
    public String text(FDProperty element) {
       return element.getDecl().getName();
    }
+   
+   public String text(FDVariant element) {
+	      return element.getName();
+   }
 
    public String text(FDInteger element) {
       return getDefaultMarker(element) + String.valueOf(element.getValue());
@@ -150,6 +157,10 @@ public class FDeployLabelProvider extends DefaultEObjectLabelProvider {
    }
    
    public String text(FDService element) {
+	   return element.getTarget().getName();
+   }
+   
+   public String text(FDDeployment element) {
 	   return element.getTarget().getName();
    }
    
@@ -244,6 +255,10 @@ public class FDeployLabelProvider extends DefaultEObjectLabelProvider {
 	      return "provides.png";
    }
    
+   public String image(FDDeployment element) {
+	      return "deployment.png";
+   }
+   
    public String image(FDRequiredPort element) {
 	      return "requires.png";
    }
@@ -251,8 +266,15 @@ public class FDeployLabelProvider extends DefaultEObjectLabelProvider {
    public String image(FDComponent element) {
 	      return "component.png";
    }
-	   
-
+   
+   public String image(FDModel element) {
+		return "package.png";
+   }
+   
+   public String image(FDVariant element) {
+		return "variant.gif";
+   }
+   
    public String image(FDArgument element) {
 	  EObject parent = element.eContainer().eContainer(); 
       if (parent instanceof FDBroadcast

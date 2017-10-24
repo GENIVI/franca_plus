@@ -1,0 +1,28 @@
+package org.example.deployment
+
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "../HelloWorldSystem.fcdl"
+import "../HelloWorld.fcdl"
+import "Partitioning.fdepl"
+
+	
+// deployment for a hosted client instance 
+define org.genivi.commonapi.someip.deployment for 
+	service System.Room1.Client1 as Client1_deplyoment{ 
+		require AnswerMePort {	
+			SomeIpInstanceID = 1
+	        SomeIpUnicastAddress = "160.48.199.99"
+	        SomeIpReliableUnicastPort = 30506
+	        SomeIpUnreliableUnicastPort = 0
+	    }
+}
+    
+define org.genivi.commonapi.someip.deployment for
+	service System.Room1.Client2 {
+		require AnswerMePort  {	
+			SomeIpInstanceID = 1
+	        SomeIpUnicastAddress = "160.48.199.99"
+	        SomeIpReliableUnicastPort = 30506
+	        SomeIpUnreliableUnicastPort = 0
+	    }
+}	

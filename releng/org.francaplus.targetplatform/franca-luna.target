@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Franca Target Platform - Eclipse 4.4" sequenceNumber="1470053577">
+<?pde version="3.8"?><target includeMode="feature" name="Franca Target Platform - Eclipse 4.4" sequenceNumber="1470053589">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="de.itemis.xtext.antlr.sdk.feature.group" version="2.1.1.v201405091103"/>
-<unit id="de.itemis.xtext.antlr.feature.feature.group" version="2.1.1.v201405091103"/>
-<repository location="http://download.itemis.com/updates/releases/"/>
+<unit id="org.franca.core.feature.group" version="0.11.1.201705031527"/>
+<unit id="org.franca.core.sdk.feature.group" version="0.11.1.201705031527"/>
+<unit id="org.franca.ui.feature.group" version="0.11.1.201705031527"/>
+<unit id="org.franca.ui.sdk.feature.group" version="0.11.1.201705031527"/>
+<repository location="http://franca.github.io/franca/update_site/releases"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jdt.junit.runners.feature.feature.group" version="0.1.0.201411181552"/>
@@ -12,36 +14,38 @@
 <repository location="http://www.xpect-tests.org/updatesite/nightly/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.franca.core.feature.group" version="0.11.1.201705031527"/>
-<unit id="org.franca.core.sdk.feature.group" version="0.11.1.201705031527"/>
-<unit id="org.franca.ui.sdk.feature.group" version="0.11.1.201705031527"/>
-<unit id="org.franca.ui.feature.group" version="0.11.1.201705031527"/>
-<repository location="http://franca.github.io/franca/update_site/releases"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.sdk.feature.group" version="4.4.2.v20150204-1700"/>
-<unit id="org.eclipse.pde.feature.group" version="3.10.1.v20150204-1700"/>
-<unit id="org.eclipse.emf.transaction.sdk.feature.group" version="1.8.0.201405281451"/>
-<unit id="org.eclipse.emf.eef.sdk-feature.feature.group" version="1.3.0.201311221533"/>
-<unit id="org.eclipse.gef.sdk.feature.group" version="3.9.101.201408150207"/>
-<unit id="org.eclipse.zest.sdk.feature.group" version="1.5.101.201408150207"/>
-<unit id="org.eclipse.swt" version="3.103.2.v20150203-1313"/>
-<unit id="org.eclipse.equinox.executable.feature.group" version="3.6.102.v20150204-1316"/>
 <unit id="org.eclipse.emf.compare.feature.group" version="3.0.2.201501201328"/>
+<unit id="org.eclipse.emf.eef.sdk-feature.feature.group" version="1.3.0.201311221533"/>
+<unit id="org.eclipse.emf.transaction.sdk.feature.group" version="1.8.0.201405281451"/>
+<unit id="org.eclipse.equinox.executable.feature.group" version="3.6.102.v20150204-1316"/>
+<unit id="org.eclipse.gef.sdk.feature.group" version="3.9.101.201408150207"/>
+<unit id="org.eclipse.pde.feature.group" version="3.10.1.v20150204-1700"/>
+<unit id="org.eclipse.sdk.feature.group" version="4.4.2.v20150204-1700"/>
+<unit id="org.eclipse.swt" version="3.103.2.v20150203-1313"/>
+<unit id="org.eclipse.zest.sdk.feature.group" version="1.5.101.201408150207"/>
 <repository location="http://download.eclipse.org/releases/luna"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.xtext.sdk.feature.group" version="2.8.4.v201508050135"/>
-<unit id="org.eclipse.xtend.sdk.feature.group" version="2.8.4.v201508050135"/>
-<unit id="org.eclipse.emf.mwe2.language.sdk.feature.group" version="2.8.2.v201511170842"/>
-<unit id="org.eclipse.emf.mwe2.runtime.sdk.feature.group" version="2.8.2.v201511170833"/>
-<unit id="org.eclipse.emf.common" version="2.10.1.v20150123-0348"/>
-<unit id="org.eclipse.emf.sdk.feature.group" version="2.10.2.v20150123-0452"/>
-<repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipselabs.xtext.utils.unittesting.feature.feature.group" version="0.9.3.201204261440"/>
 <repository location="http://franca.github.io/franca/update_site/thirdparty"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="com.google.gson" version="2.7.0.v20161205-1708"/>
+<unit id="com.google.gson.source" version="2.7.0.v20161205-1708"/>
+<unit id="de.itemis.xtext.antlr.feature.feature.group" version="2.1.1.v201405091103"/>
+<unit id="de.itemis.xtext.antlr.sdk.feature.group" version="2.1.1.v201405091103"/>
+<unit id="org.eclipse.emf.common.feature.group" version="2.10.1.v20150123-0348"/>
+<unit id="org.eclipse.emf.ecore.feature.group" version="2.10.2.v20150123-0348"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.10.2.v20150123-0452"/>
+<unit id="org.eclipse.lsp4j.sdk.feature.group" version="0.1.1.v20170124-1237"/>
+<repository location="http://download.itemis.com/updates/releases/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.emf.mwe.sdk.feature.group" version="1.3.20.v201605261103"/>
+<unit id="org.eclipse.emf.mwe2.language.sdk.feature.group" version="2.8.2.v201511170842"/>
+<unit id="org.eclipse.xtend.sdk.feature.group" version="2.8.4.v201508050135"/>
+<unit id="org.eclipse.xtext.sdk.feature.group" version="2.8.4.v201508050135"/>
+<repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"/>
 </location>
 </locations>
 <environment>

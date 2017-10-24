@@ -31,8 +31,7 @@ Export-Package: org.franca.compdeploymodel.core,
  org.franca.compdeploymodel.dsl.parser.antlr.internal,
  org.franca.compdeploymodel.dsl.scoping,
  org.franca.compdeploymodel.dsl.services,
- org.franca.compdeploymodel.dsl.validation,
- org.franca.compdeploymodel.dsl.linker
+ org.franca.compdeploymodel.dsl.validation
 Import-Package: org.apache.log4j,
  org.eclipse.xtend.lib,
  org.eclipse.xtext.xbase.lib

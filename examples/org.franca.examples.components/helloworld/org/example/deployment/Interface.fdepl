@@ -1,0 +1,15 @@
+package org.example.deployment
+
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "classpath:/org/example/HelloWorld.fidl"
+
+// deployment for the interface type
+define org.genivi.commonapi.someip.deployment for interface org.example.HelloWorld2 {
+	SomeIpServiceID = 123
+
+	broadcast isThereSomeBody {
+		SomeIpEventID = 5
+	}
+}
+
+

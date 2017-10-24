@@ -1,0 +1,8 @@
+package org.example
+
+typeCollection {
+	enumeration WindowId {
+		DriverDoorWindow = 0,
+		CoDriverDoorWindow = 1
+	} 
+}

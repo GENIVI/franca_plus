@@ -8,8 +8,7 @@
 package org.franca.compdeploymodel.dsl;
 
 import org.eclipse.xtext.conversion.IValueConverterService;
-import org.eclipse.xtext.linking.ILinker;
-import org.eclipse.xtext.linking.ILinkingService;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.franca.compdeploymodel.dsl.generator.internal.ImportManager;
 import org.franca.compdeploymodel.dsl.valueconverter.FDeployValueConverters;
 
@@ -33,12 +32,7 @@ public class FDeployRuntimeModule extends AbstractFDeployRuntimeModule {
 	}
 	
 	@Override
-	public Class<? extends ILinkingService> bindILinkingService() {
-		return org.franca.compdeploymodel.dsl.linker.FCompDeployLinkingService.class;
-	}
-	
-	@Override
-	public Class<? extends ILinker> bindILinker() {
-		return org.franca.compdeploymodel.dsl.linker.FCompDeployLinker.class;
-	}	
+    public Class<? extends IQualifiedNameProvider> bindIQualifiedNameProvider() {
+        return org.franca.compdeploymodel.dsl.scoping.FDeployDeclarativeNameProvider.class;
+    }
 }

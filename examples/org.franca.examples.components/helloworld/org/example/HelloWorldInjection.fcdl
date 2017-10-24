@@ -2,46 +2,49 @@ package org.example
 
 import org.example.* from "HelloWorld.fidl"
 
-component HelloWorldServer {
+service component HelloWorldServer {
 	provides HelloWorld2 as AskMePort
 }
 
-component ChatterClient {}
+service component ChatterClient {}
 
-// itemis: There should be a convention ensured by validator that component names start with uppercase and instances start with lowercase. 
-component HelloWorldClient {
+component GenericClient {
+	version { major 1 minor 2 }
+	contains ChatterClient as GenericChatterClient
+}
+
+abstract component HelloWorldClient extends GenericClient {
 	requires org.example.HelloWorld2 as AnswerMePort
 	contains ChatterClient as HyperActiveChatterClient
 	contains ChatterClient as BoringChatterClient
+	contains ChatterClient as AdditionalChatterClient
 }
 
 
-root component MeetingPoint {
+component MeetingPoint {
 	contains HelloWorldServer as Service
 	
 	contains HelloWorldClient as Client1
-	contains HelloWorldClient as Client2 
+	contains DerivedHelloWorldClient2 as DerivedClient2 
 	
 	connect Client1.AnswerMePort to Service.AskMePort
-	connect Client2.AnswerMePort to Service.AskMePort
+	connect DerivedClient2.AnswerMePort to Service.AskMePort
 }
 
 // now implement in derived classes for derived types
-component DerivedChatterClient extends ChatterClient {}
+service component DerivedChatterClient extends ChatterClient {}
 
 component DerivedHelloWorldClient extends HelloWorldClient {
-	provides HelloWorld2 as ChatterPort 
-	implement HyperActiveChatterClient by DerivedChatterClient  
-	finally implement BoringChatterClient by DerivedChatterClient 
+	implement HyperActiveChatterClient as InjectedHyperActiveChatterClient by DerivedChatterClient   
+	implement BoringChatterClient as InjectedBoringChatterClient by DerivedChatterClient finally
 }
 
-component DerivedHelloWorldClient2 extends DerivedHelloWorldClient {
-	provides HelloWorld2 as ChatterPort2 
-}
+component DerivedHelloWorldClient2 extends DerivedHelloWorldClient {}
 
 // or replace HelloWorldClient.BoringChatterClient with an implementation of DerivedChatterClient  
-// itemis: In which context will the injection be applied? Shouldn't it always start with a root component? Or in a "create" context?#
-// itemis: Will "inject" work despite "finally"?
-// itemis: How do "inject" and "implement" interact?
-// itemis: Example for "abstract" would be helpful
-inject DerivedChatterClient into HelloWorldClient.BoringChatterClient
+// inject DerivedChatterClient into HelloWorldClient.BoringChatterClient
+
+/* ============================== Unfold  component tree and partition services ============== */
+system MeetingPoint with root MeetingPoint {
+	device test
+}

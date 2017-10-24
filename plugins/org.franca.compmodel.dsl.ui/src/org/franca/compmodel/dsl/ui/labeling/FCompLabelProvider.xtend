@@ -22,10 +22,6 @@ import org.franca.compmodel.dsl.fcomp.FCAssemblyConnector
 import org.franca.compmodel.dsl.fcomp.FCComponent
 import org.franca.compmodel.dsl.fcomp.FCDelegateConnector
 import org.franca.compmodel.dsl.fcomp.FCDevice
-import org.franca.compmodel.dsl.fcomp.FCInjectedPrototype
-import org.franca.compmodel.dsl.fcomp.FCInstance
-import org.franca.compmodel.dsl.fcomp.FCInstanceCreator
-import org.franca.compmodel.dsl.fcomp.FCPartitionedInstance
 import org.franca.compmodel.dsl.fcomp.FCPort
 import org.franca.compmodel.dsl.fcomp.FCPrototype
 import org.franca.compmodel.dsl.fcomp.FCPrototypeInjection
@@ -33,6 +29,11 @@ import org.franca.compmodel.dsl.fcomp.FCProvidedPort
 import org.franca.compmodel.dsl.fcomp.FCRequiredPort
 import org.franca.compmodel.dsl.fcomp.FCVersion
 import org.franca.compmodel.dsl.fcomp.Import
+import org.franca.compmodel.dsl.fcomp.FCModel
+import org.franca.compmodel.dsl.fcomp.FCTagsDeclaration
+import org.franca.compmodel.dsl.fcomp.FCTagDecl
+import org.franca.compmodel.dsl.fcomp.FCSystem
+import org.franca.compmodel.dsl.fcomp.FCRoot
 
 /**
  * Provides labels for EObjects.
@@ -50,13 +51,6 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 	StylerFactory stylerFactory
 
 	// ********** labels ***********
-	public def String text(FCInstance element) {
-		if (element.name === null)
-			element.component.name
-		else
-			element.name.split('\\.').last
-	}
-		
 	public def text(FCPort element) {
 		val styledString = element.name.convertToStyledString
 		if (element.name != element.interface.name) {
@@ -73,26 +67,20 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 		styledString	
 	}
 	
-	public def text(FCPartitionedInstance partition) {
-		partition.instance.name
-	}
-	
-	public def text (FCInstanceCreator creator) {
-		creator.component.name
-	}
-	
 	public def String text(FCComponent element) {
 		var String text = ''
 		if (element.abstract)
-			text += "\u00ABabstract\u00BB "
+			text += "<abstract> "
 		if (element.service)
-			text += "\u00ABservice\u00BB "
-		if (element.root)
-			text += "\u00ABroot\u00BB "
+			text += "<service> "
 		if (element.singleton)
-			text += "\u00ABroot\u00BB "
+			text += "<root> "
 		
 		text + element.name.split('\\.').last
+	}
+	
+	public def text(FCDevice element) {
+		element.name
 	}
 
 	public def String text(FCAssemblyConnector element) {
@@ -105,10 +93,6 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 	
 	public def String text(FCAnnotationBlock element) {
 		"annotations"
-	}
-	
-	public def String text(FCInjectedPrototype inject) {
-		inject.component.name.split('\\.').last + " into " + inject.ref.name.split('\\.').last
 	}
 	
 	public def String text(FCPrototypeInjection inject) {
@@ -128,9 +112,12 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 			name + element.value	
 	}
 	
-	
 	public def String text(FCVersion element) {
 		"v" + element.major + "." + element.minor
+	}
+	
+	public def String text(FCTagsDeclaration element) {
+		"tags"
 	}
 	
 	public def String text(Import element) {
@@ -139,7 +126,11 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 			imported = element.importedNamespace
 		else 
 			imported = '*' 
-		imported + " \u2192 " + element.importURI
+		imported + " from " + element.importURI
+	}
+	
+	public def String text(FCRoot element) {
+		element.component.name
 	}      
 	
 	// ******** icons *********
@@ -177,12 +168,12 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 		"prototype.png"
 	}
 
-	public def String image(FCPartitionedInstance element) {
-		"instance.png"
+	public def String image(FCSystem element) {
+		"system.png"
 	}
 	
-	public def String image(FCInstanceCreator element) {
-		"creator.png"
+	public def String image(FCRoot element) {
+		"root.png"
 	}
 
 	public def String image(FCRequiredPort element) {
@@ -201,10 +192,6 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 		"delegate.png"
 	}
 	
-	public def String image(FCInjectedPrototype element) {
-		"inject.png"
-	}
-	
 	public def String image(FCPrototypeInjection element) {
 		"inject.png"
 	}
@@ -219,5 +206,17 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 
 	public def String image(FCVersion element) {
 		"version.gif"
+	}
+	
+	public def String image(FCModel element) {
+		"package.png"
+	}
+	
+	public def String image(FCTagsDeclaration element) {
+		"library.png"
+	}
+	
+	public def String image(FCTagDecl element) {
+		"bluelabel.png"
 	}
 }

@@ -8,12 +8,23 @@
 package org.franca.compmodel.dsl.ui.contentassist
 
 import org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher
+import org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher.LastSegmentFinder
 
 class FCompProposalPrefixMatcher extends FQNPrefixMatcher {
 	
 	override isCandidateMatchingPrefix(String name, String prefix) {
-		if (prefix=="\"platform:"||prefix=="\"classpath:") 
-			return true
-		super.isCandidateMatchingPrefix(name,prefix)	
-	}
+		
+		var String newPrefix = null
+		
+		if (prefix.contains("classpath:")) 
+			newPrefix = prefix.substring(prefix.indexOf(':') + 1)
+		else 
+			newPrefix = prefix
+
+		if (name.endsWith(".fcdl") || name.endsWith(".fidl"))
+			delimiter = '/'
+		else
+			delimiter = '.'
+		super.isCandidateMatchingPrefix(name, newPrefix)	
+	}	
 }

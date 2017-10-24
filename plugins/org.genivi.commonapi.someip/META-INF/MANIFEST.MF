@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: franca deployment someip
+Bundle-SymbolicName: org.genivi.commonapi.someip
+Bundle-Version: 0.11.1.qualifier

@@ -4,7 +4,7 @@ package org.example
 import org.example.* from "classpath:/org/example/SystemdManager.fidl"
 import org.example.* from "classpath:/org/example/PowerManagement.fidl"
 
-root component SystemdComponent {
+component SystemdComponent {
 	provides org.example.SystemdManager as systemdPort
 	provides org.example.SystemdManager as systemdPortConfig
 	requires org.example.PowerManagement as powerPort

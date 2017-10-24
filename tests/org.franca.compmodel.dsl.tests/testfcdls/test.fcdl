@@ -1,0 +1,24 @@
+package test
+		import org.example.* from "../testfidls/example1.fidl"
+		import org.example.* from "../testfidls/example2.fidl"
+		
+		component compSuper
+		{
+			requires FirstTestInterface as interface1
+			provides SecondTestInterface as interface2
+		}
+		
+		component compDerived extends compSuper{
+			
+		}
+		
+		component Test{
+			provides FirstTestInterface as inter
+		}
+		
+		component Cluster{
+			contains compDerived as derived
+			contains Test as testing
+			
+			connect derived.interface1 to testing.inter
+		}

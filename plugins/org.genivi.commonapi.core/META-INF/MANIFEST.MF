@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: franca deployment commonapi
+Bundle-SymbolicName: org.genivi.commonapi.core
+Bundle-Version: 0.11.1.qualifier

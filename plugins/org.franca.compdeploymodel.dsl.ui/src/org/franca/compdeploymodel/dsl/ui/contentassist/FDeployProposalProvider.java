@@ -10,6 +10,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -25,6 +30,7 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.ui.IImageHelper;
 import org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
@@ -36,6 +42,7 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDeployPackage;
 import org.franca.compdeploymodel.dsl.fDeploy.Import;
 import org.franca.compdeploymodel.dsl.scoping.DeploySpecProvider;
 import org.franca.compdeploymodel.dsl.scoping.DeploySpecProvider.DeploySpecEntry;
+import org.franca.compdeploymodel.dsl.scoping.FDeployDeclarativeNameProvider;
 import org.franca.core.franca.FEnumerationType;
 import org.franca.core.franca.FStructType;
 import org.franca.core.franca.FType;
@@ -53,15 +60,22 @@ import com.google.inject.Inject;
  * http://www.eclipse.org/Xtext/documentation/latest/xtext.html#contentAssist on
  * how to customize content assistant
  */
-@SuppressWarnings({ "restriction" })
-public class FDeployProposalProvider extends AbstractFDeployProposalProvider {
+@SuppressWarnings({ "restriction", "unused" })
+public class FDeployProposalProvider extends AbstractFDeployProposalProvider  {
 	@Inject
 	DeploySpecProvider deploySpecProvider;
 	@Inject
 	ContainerUtil containerUtil;
+	@Inject
+	IImageHelper imageHelper;
 
 	protected final static String[] extensionsForImportURIScope = new String[] {
 			"fidl", "fdepl", "fcdl" };
+	
+	protected final static String[] preconfiguredDeploymentSpec = new String [] {
+			"platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl",
+			"platform:/plugin/org.genivi.commonapi.core/deployment/CommonAPI_deployment_spec.fdepl"
+	};
 
 	static {
 		Arrays.sort(extensionsForImportURIScope);
@@ -130,41 +144,49 @@ public class FDeployProposalProvider extends AbstractFDeployProposalProvider {
 				}
 			}
 		}
+		if (context.getPrefix().contains("platform:")) {
+			createPlatformProposals(context, acceptor, preconfiguredDeploymentSpec, fromURI, importedUris);
+		}
+		else if (context.getPrefix().contains("classpath:")) {
+			createClasspathProposals(context, acceptor, proposedURIs, fromURI, importedUris);
+		}
+		else {
+			createFileProposals(context, acceptor, proposedURIs, fromURI, importedUris);
+		}
+		super.completeImport_ImportURI(model, assignment, context, acceptor);
+	}
+
+	private void createPlatformProposals(ContentAssistContext context, ICompletionProposalAcceptor acceptor,
+			String[] preconfigureddeploymentspec, URI fromURI, List<String> importedUris) {
+		
+		for (int i = 0; i < preconfigureddeploymentspec.length; i++) {
+			if(!importedUris.contains(preconfigureddeploymentspec[i])){
+				String[] segments = preconfigureddeploymentspec[i].split("/");
+				String displayString = segments[segments.length -1 ]  + " - " + preconfigureddeploymentspec[i];
+				createProposal(preconfigureddeploymentspec[i], displayString, context, acceptor);
+			}
+		}
+		
+	}
+
+	private void createClasspathProposals(ContentAssistContext context,ICompletionProposalAcceptor acceptor,
+			List<URI> proposedURIs,URI fromURI, List<String> importedUris) {
+		for (URI path : proposedURIs) {
+			String result = toClassPathString(path);
+			if(!importedUris.contains(result)){
+				String displayString = path.lastSegment() + " - " + result;
+				createProposal(result, displayString, context, acceptor);
+			}
+		}
+	}
+	
+	private void createFileProposals(ContentAssistContext context,ICompletionProposalAcceptor acceptor,
+			List<URI> proposedURIs, URI fromURI, List<String> importedUris) {
 		for (URI uri : proposedURIs) {
 			String result = FrancaIDLUtils.relativeURIString(fromURI, uri);
 			if(!importedUris.contains(result)){
 				String displayString = uri.lastSegment() + " - " + result;
-				acceptor.accept(createCompletionProposal("\"" + result + "\"", displayString, null, context));
-			}
-		}
-		List<URI> classpathResources = Lists.newArrayList();
-		XtextResourceSet resourceSet = (XtextResourceSet)model.eResource().getResourceSet();
-		Object classpathURIContext = resourceSet.getClasspathURIContext();
-		if (classpathURIContext instanceof JavaProject) {
-			for (IContainer iContainer : visibleContainers) {
-				Iterable<IResourceDescription> resourceDescriptions = iContainer.getResourceDescriptions();
-				for (IResourceDescription iResourceDescription : resourceDescriptions) {
-					if(iResourceDescription.getURI().toString()!=model.eResource().getURI().toString() && (Arrays.binarySearch(extensionsForImportURIScope, iResourceDescription.getURI().fileExtension()) > -1)){
-						classpathResources.add(iResourceDescription.getURI());
-					}
-				}
-			}
-		}
-		if (context.getPrefix()=="\"classpath:") {
-			createProposals(context, acceptor, classpathResources,fromURI,importedUris);
-		}
-		else {
-			createProposals(context, acceptor, classpathResources,fromURI,importedUris);
-		}		
-		super.completeImport_ImportURI(model, assignment, context, acceptor);
-	}
-
-	private void createProposals(ContentAssistContext context,ICompletionProposalAcceptor acceptor,List<URI> classpathResources,URI fromURI, List<String> importedUris) {
-		for (URI path : classpathResources) {
-			String result = toClassPathString(path);
-			if(!importedUris.contains(result)){
-				String displayString = path.lastSegment() + " - " + result;
-				createProposal(result,displayString, context, acceptor);
+				createProposal(result, displayString, context, acceptor);
 			}
 		}
 	}
@@ -230,7 +252,7 @@ public class FDeployProposalProvider extends AbstractFDeployProposalProvider {
 						_builder.append("\"");
 						String _string = name.toString();
 						_builder.append(_string, "");
-						_builder.append("\"");
+						_builder.append("\"\r\n");
 						_xblockexpression = _builder.toString();
 					}
 					return _xblockexpression;

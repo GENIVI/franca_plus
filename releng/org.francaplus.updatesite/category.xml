@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.francaplus.feature_0.11.1.qualifier.jar" id="org.francaplus.feature" version="0.11.1.qualifier">
+      <category name="francaplus.feature"/>
+   </feature>
+   <feature url="features/org.genivi.commonapi.core.feature_0.11.1.qualifier.jar" id="org.genivi.commonapi.core.feature" version="0.11.1.qualifier">
+      <category name="deployment.specification"/>
+   </feature>
+   <feature url="features/org.genivi.commonapi.someip.feature_0.11.1.qualifier.jar" id="org.genivi.commonapi.someip.feature" version="0.11.1.qualifier">
+      <category name="deployment.specification"/>
+   </feature>
+   <feature url="features/org.francaplus.thirdparty.feature_0.11.1.qualifier.jar" id="org.francaplus.thirdparty.feature" version="0.11.1.qualifier">
+      <category name="francaplus.feature"/>
+   </feature>
+   <category-def name="francaplus.feature" label="Franca Plus DSL">
+      <description>
+         This is the update site for the &quot;Franca Plus DSL&quot;. The &quot;Franca Plus Runtime and SDK&quot; contains the requiered Franca Plus Plugins. Some additional third party dependencies can be found in the &quot;Third Party Feature&quot;.
+      </description>
+   </category-def>
+   <category-def name="deployment.specification" label="Deployment Specifiations for Common API">
+      <description>
+         Contains the features for the different deployment specifications
+      </description>
+   </category-def>
+</site>

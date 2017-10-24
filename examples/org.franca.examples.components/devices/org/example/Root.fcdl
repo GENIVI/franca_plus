@@ -1,0 +1,9 @@
+package org.example
+
+import model "classpath:/Tags.fcdl"
+import model "Framework.fcdl"
+
+
+component Root {
+	contains org.example.Framework as Framework
+}
