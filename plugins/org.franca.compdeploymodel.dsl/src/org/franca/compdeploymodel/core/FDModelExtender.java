@@ -7,6 +7,7 @@
 *******************************************************************************/
 package org.franca.compdeploymodel.core;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.franca.compdeploymodel.dsl.fDeploy.FDInterface;
@@ -41,7 +42,7 @@ public class FDModelExtender {
 	 * @return the list of FDProviders
 	 */
 	public List<FDProvider> getFDProviders() {
-		List<FDProvider> results = Lists.newArrayList();
+		List<FDProvider> results = new ArrayList<FDProvider>();
 		
 		for(FDRootElement elem : fdmodel.getDeployments()) {
 			if (elem instanceof FDProvider) {
@@ -58,7 +59,7 @@ public class FDModelExtender {
 	 * @return the list of FDInterfaces
 	 */
 	public List<FDInterface> getFDInterfaces() {
-		List<FDInterface> results = Lists.newArrayList();
+		List<FDInterface> results = new ArrayList<FDInterface>();
 		
 		for(FDRootElement elem : fdmodel.getDeployments()) {
 			if (elem instanceof FDInterface) {

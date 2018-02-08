@@ -3,5 +3,5 @@ package org.example
 import model "classpath:/Tags.fcdl"
 
 
-<** @dienst **>
+<** @application **>
 service component Leaf {}

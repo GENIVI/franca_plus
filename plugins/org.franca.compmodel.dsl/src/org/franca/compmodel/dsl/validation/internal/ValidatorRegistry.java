@@ -1,3 +1,11 @@
+/* Copyright (C) 2017 BMW Group
+ * Author: Bernhard Hennlich (bernhard.hennlich@bmw.de)
+ * based on work of Klaus Birken (2013 itemis AG (http://www.itemis.de)
+ *  
+ * This Source Code Form is subject to the terms of the Eclipse Public
+ * License, v. 1.0. If a copy of the EPL was not distributed with this
+ * file, You can obtain one at https://www.eclipse.org/legal/epl-v10.html. 
+ */
 package org.franca.compmodel.dsl.validation.internal;
 
 import org.eclipse.core.runtime.CoreException;
@@ -44,6 +52,12 @@ public class ValidatorRegistry {
 
 		putToMap(validator, mode);
  	}
+	
+	public static void removeValidator(IFCompExternalValidator validator) {
+		if (validatorMap != null) {
+			removeFromMap(validator);
+		}
+ 	}
 
 	private static void initializeValidators() {
 		validatorMap = ArrayListMultimap.create();
@@ -85,6 +99,14 @@ public class ValidatorRegistry {
 		} else {
 			validatorMap.put(CheckMode.FAST_ONLY, validator);
 			validatorMap.put(CheckMode.NORMAL_AND_FAST, validator);
+		}
+	}
+	
+	private static void removeFromMap(IFCompExternalValidator validator)
+	{
+		if(validatorMap.containsValue(validator))
+		{
+			validatorMap.remove(CheckMode.ALL, validator);
 		}
 	}
 }

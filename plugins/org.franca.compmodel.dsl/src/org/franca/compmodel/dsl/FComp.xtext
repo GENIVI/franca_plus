@@ -29,8 +29,7 @@ FCModel:
     		tags=FCTagsDeclaration |
 		    (
 				components+=FCComponent |
-				devices+=FCDevice | 
-				systems+=FCSystem 
+				devices+=FCDevice
 			)*
 		)
 	);
@@ -76,9 +75,9 @@ FCPrototypeInjection returns FCGenericPrototype:
 FCComponent: 
 	{FCComponent}
 	comment=FCAnnotationBlock?
-	(abstract?='abstract'? & /* root?='root'? & */ singleton?='singleton'? & service?='service'?)
+	(abstract?='abstract'? & root?='root'? & singleton?='singleton'? & service?='service'?)
 	'component' name=ID ('extends' superType=[FCComponent|FQN])?
-	'{'
+	('{'
 		version=FCVersion?
 		(
 		 requiredPorts+=FCRequiredPort | 
@@ -88,7 +87,7 @@ FCComponent:
 		 assembles+=FCAssemblyConnector | 
 		 delegates+=FCDelegateConnector
 		)*
-	'}';
+	'}')?;
 
 FCPrototype returns FCGenericPrototype:
 	{FCPrototype}
@@ -109,47 +108,33 @@ FCAssemblyConnector:
 FCFrom: prototype=[FCPrototype] '.' port=[FCRequiredPort];
 FCTo: prototype=[FCPrototype] '.' port=[FCProvidedPort];
 
-// ***************************************************************
-// Partitioning of Instances to Devices of a System
-FCSystem:
-    comment=FCAnnotationBlock?
-	'system' name=ID 'with' root=FCRoot
-	'{' 
-		devices+=FCDevice*
-	'}';
-	
-FCRoot:
-	'root' component=[FCComponent|FQN];
-	
-FCDevice:
-	comment=FCAnnotationBlock?
-	'device' name=ID;
-	
-//FCInstance:
-//	comment=FCAnnotationBlock?
-//	'instance' component=[FCComponent] 
-//	({FCPrototypeInstance.parent=current} '.' prototype=[FCGenericPrototype])* 
-//	('as' name=ID)?;
-	 
-// **************************************************************
 // Annotations with built-in and custom Defined Tags
-
 FCAnnotationBlock:
 	{FCAnnotationBlock}
 	'<**' (elements+=FCAnnotation|ANNO_CONTINUED)* '**>';
 	
-terminal ANNOTATION_VALUE returns ecore::EString:
-	':' ( ('\\' ('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\')) | ('\\*'|'\\@') | !('\\'|'*'|'@') )*;
+// *************************************************************
+// Elements for physical system modeling
+FCDevice: 
+	comment=FCAnnotationBlock? 
+	'device' name=ID (
+	'{' 
+		(
+			adapters+=FCComAdapter |
+			devices+=FCDevice
+		)* 
+	'}'
+)?;
 
- 	
-// Structured Comments can contain custom defined tags
-terminal AT_ALPHA_NUMERIC_ID returns ecore::EString:
-	'@' ('a'..'z'|'A'..'Z') ('a'..'z'|'A'..'Z'|'0'..'9')*
-;
-TAG_ID: AT_ALPHA_NUMERIC_ID;
+FCComAdapter: 
+    comment=FCAnnotationBlock? 'adapter' name=ID;
+    
+// ************************************************************
+// Structured Comments 
+FCAnnotation returns FCAnnotation: 
+	(kind=FCBuiltinAnnotationType | tag=[FCTagDecl|TAG_ID])
+	value=ANNOTATION_VALUE?;
 	
-terminal ANNO_CONTINUED: '**';
-
 // annotation are by default custom (=0)
 enum FCCustomAnnotationType returns FCAnnotationType: custom;
 enum FCBuiltinAnnotationType returns FCAnnotationType: 
@@ -164,6 +149,16 @@ enum FCPredefinedTypeId: String;
 FCTagDecl:
 	'tag' type=FCPredefinedTypeId name=TAG_ID (mandatory?='mandatory')?;
 
-FCAnnotation returns FCAnnotation: 
-	(kind=FCBuiltinAnnotationType | tag=[FCTagDecl|TAG_ID])
-	value=ANNOTATION_VALUE?;
+//*************************************************************
+// terminals	
+terminal ANNOTATION_VALUE returns ecore::EString:
+	':' ( ('\\' ('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\')) | ('\\*'|'\\@') | !('\\'|'*'|'@') )*;
+
+ 	
+// Structured Comments can contain custom defined tags
+terminal AT_ALPHA_NUMERIC_ID returns ecore::EString:
+	'@' ('a'..'z'|'A'..'Z') ('a'..'z'|'A'..'Z'|'0'..'9')*
+;
+TAG_ID: AT_ALPHA_NUMERIC_ID;
+	
+terminal ANNO_CONTINUED: '**';

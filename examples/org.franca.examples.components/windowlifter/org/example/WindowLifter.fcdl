@@ -4,22 +4,23 @@ import model "classpath:/Tags.fcdl"
 import org.example.* from "WindowLifter.fidl"
 
 <** 
-    @description: Steuert Motor für Fenster
-    @dienst 
+    @description: controls the window motor
+    @responsible: the author
+    @application 
  **>
 service component WindowLifter {
 	
-	provides WindowLifter as PPort
+	provides WindowLifter 
 }
 
-<** @dienst **>
+<** @application **>
 service component WindowLifterMaster {
 	requires WindowLifter as RDriverPort
 	requires WindowLifter as RCoDriverPort
 }
 
 
-<** @cluster **>
+<** @application **>
 component BodyCluster {
 	provides WindowLifter as PDriverPort
     provides WindowLifter as PCoDriverPort
@@ -29,14 +30,14 @@ component BodyCluster {
 	
 	contains WindowLifterMaster as WindowLifterMasterPrototype
 		
-	connect WindowLifterMasterPrototype.RDriverPort to DriverWindowLifterPrototype.PPort
-	connect WindowLifterMasterPrototype.RCoDriverPort to CoDriverWindowLifterPrototype.PPort
+	connect WindowLifterMasterPrototype.RDriverPort to DriverWindowLifterPrototype.WindowLifter
+	connect WindowLifterMasterPrototype.RCoDriverPort to CoDriverWindowLifterPrototype.WindowLifter
 	
-	delegate provided PDriverPort to DriverWindowLifterPrototype.PPort
-	delegate provided PCoDriverPort to CoDriverWindowLifterPrototype.PPort
+	delegate provided PDriverPort to DriverWindowLifterPrototype.WindowLifter
+	delegate provided PCoDriverPort to CoDriverWindowLifterPrototype.WindowLifter
 }
 
-<** @cluster **>
+<** @domain **>
 component ComfortCluster {
 	requires WindowLifter as RDriverPort
 	requires WindowLifter as RCoDriverPort
@@ -47,7 +48,7 @@ component ComfortCluster {
 	delegate required RCoDriverPort to WindowLifterClient.RCoDriverPort	
 }
 
-<** @framework **>
+<** @domain **>
 component BodyFramework {
 	contains BodyCluster
 	contains ComfortCluster
@@ -57,13 +58,13 @@ component BodyFramework {
 }
 
 
-component Vehicle2021 {
+<** @system **>
+root component Vehicle {
 	contains BodyFramework
 	// ...
 }
 
-system Vehicle2021 with root Vehicle2021
-{
-	device MasterECU
-	device ClientECU
-} 
+root component ArchitectureNextGeneration extends Vehicle 
+
+<** @level: sec=1 **>
+device BODY_CONTROLER

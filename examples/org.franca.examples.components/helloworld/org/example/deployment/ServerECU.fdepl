@@ -1,9 +1,15 @@
 package org.example.deployment
 
-import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
-import "classpath:/org/example/HelloWorldSystem.fcdl"
+import "platform:/plugin/org.franca.architecture/deployment/network_SOMEIP_deployment_spec.fdepl"
+import "platform:/plugin/org.franca.architecture/deployment/architecture_deployment_spec.fdepl"
+import "Service.fdepl"
+import "../HelloWorldDevices.fcdl"
 
-define org.genivi.commonapi.someip.deployment for device org.example.TUT.HelloServerECU {
-	// some SOME/IP specific stuff
-    SomeIpDeviceUnicastAddress = "127.0.0.1"
+define system.architecture for device org.example.HelloServerECU as HelloServerECU {
+	use org.example.deployment.Service
+	
+	adapter EthernetCard1 on network.someip {
+		use org.example.deployment.Service.AskMePort 
+		SomeIpUnicastAddress = "127.0.0.1"
+	}
 }

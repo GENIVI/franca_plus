@@ -1,5 +1,4 @@
 package org.example
 
-tag String @dienst
 tag String @framework
 tag String @cluster

@@ -12,7 +12,6 @@ import com.google.common.base.Predicate
 import java.util.ArrayList
 import java.util.List
 import org.eclipse.emf.ecore.EReference
-import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider
@@ -22,13 +21,13 @@ import org.franca.compmodel.dsl.fcomp.FCAssemblyConnector
 import org.franca.compmodel.dsl.fcomp.FCComponent
 import org.franca.compmodel.dsl.fcomp.FCDelegateConnector
 import org.franca.compmodel.dsl.fcomp.FCInjectionModifier
-import org.franca.compmodel.dsl.fcomp.FCModel
 import org.franca.compmodel.dsl.fcomp.FCPort
 import org.franca.compmodel.dsl.fcomp.FCPortKind
 import org.franca.compmodel.dsl.fcomp.FCPrototype
 import org.franca.compmodel.dsl.fcomp.FCPrototypeInjection
 
 import static extension org.eclipse.xtext.scoping.Scopes.*
+import org.franca.compmodel.dsl.fcomp.FCGenericPrototype
 
 /**
  * This class contains custom scoping description.
@@ -70,17 +69,19 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 	/** Scope "delegate from" for possible ports inclusive inherited ports */
 	def scope_FCOuter_port(FCDelegateConnector dc, EReference ref) {
 		val comp = FCompUtils::getComponentForObject(dc)
-		var List<FCPort> ports = newArrayList()
+		var List<FCPort> ports = new ArrayList()
 		FCompUtils::collectInheritedPorts(comp, dc.kind, ports)
 		ports.scopeFor
 	}
 
-	/** Scope "delegate to" for possible contained components, depending on the "from" interface type */
+	/** Scope "delegate to" for possible contained (also inherited) components, depending on the "from" interface type */
 	def scope_FCInner_prototype(FCDelegateConnector dc, EReference ref) {
 		val comp = FCompUtils::getComponentForObject(dc)
 		val interfaceType = dc.outer.port.interface
-		var compRefs = comp.prototypes.filter [
-			var List<FCPort> ports = newArrayList()
+		val List<FCGenericPrototype> protos = new ArrayList<FCGenericPrototype>()
+		FCompUtils.collectInheritedPrototypes(comp, protos)
+		var compRefs = protos.filter [
+			var List<FCPort> ports = new ArrayList<FCPort>()
 			FCompUtils::collectInheritedPorts(component, dc.kind, ports)
 			ports.exists[interface == interfaceType]
 		]
@@ -92,7 +93,7 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 		val cref = dc.inner.prototype
 		val interfaceType = dc.outer.port.interface
 		if (cref !== null) {
-			var List<FCPort> ports = newArrayList()
+			var List<FCPort> ports = new ArrayList<FCPort>()
 			FCompUtils::collectInheritedPorts(cref.component, dc.kind, ports)
 			ports.filter[interface == interfaceType].scopeFor
 		} else
@@ -107,7 +108,7 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 			override boolean apply(IEObjectDescription od) {
 				val obj = od.EObjectOrProxy
 				if (obj instanceof FCPrototype) {
-					var List<FCPort> ports = newArrayList()
+					var List<FCPort> ports = new ArrayList()
 					FCompUtils::collectInheritedPorts(obj.component, FCPortKind.REQUIRED, ports)
 					val allPortsConnectedForCompRef = ports.empty
 					! allPortsConnectedForCompRef
@@ -122,7 +123,7 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 		// val comp = FCompUtils::getComponentForObject(ac)
 		val cref = ac.from.prototype
 		if (cref !== null) {
-			var List<FCPort> ports = newArrayList()
+			var List<FCPort> ports = new ArrayList()
 			FCompUtils::collectInheritedPorts(cref.component, FCPortKind.REQUIRED, ports)
 			ports.scopeFor
 		} else
@@ -133,7 +134,7 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 		val comp = FCompUtils::getComponentForObject(ac)
 		val interfaceType = ac.from.port.interface
 		val prototypes = comp.prototypes.filter [
-			var List<FCPort> ports = newArrayList()
+			var List<FCPort> ports = new ArrayList()
 			FCompUtils::collectInheritedPorts(component, FCPortKind.PROVIDED, ports)
 			ports.exists[interface == interfaceType]
 		]
@@ -144,7 +145,7 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 		val cref = ac.to.prototype
 		val interfaceType = ac.from.port.interface
 		if (cref !== null) {
-			var List<FCPort> ports = newArrayList()
+			var List<FCPort> ports = new ArrayList()
 			FCompUtils::collectInheritedPorts(cref.component, FCPortKind.PROVIDED, ports)
 			ports.filter[interface == interfaceType].scopeFor
 		} else
@@ -194,45 +195,6 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 		new FilteringScope(delegateScope, filter)
 	 }	
 
-	/**
-	 * Remove "abstract" components from the scope for component type of an explicit instance. 
-	def IScope scope_FCInstance_component(FCInstance instance, EReference ref) {
-		val IScope delegateScope = delegateGetScope(instance, ref)
-		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
-			override boolean apply(IEObjectDescription od) {
-				var obj = od.EObjectOrProxy
-				if (obj.eIsProxy) 
-					obj = EcoreUtil.resolve(obj, instance.eResource.resourceSet)
-				if (obj instanceof FCComponent) 
-					obj.abstract == false 
-				else
-					false
-			}
-		}
-		new FilteringScope(delegateScope, filter)
-	}
-	 */
-	
-	/**
-	 * Remove "abstract" components from the scope for component type of an instance creator. 
-	 */
-	def IScope scope_FCSystem_component(FCModel model, EReference ref) {
-		val IScope delegateScope = delegateGetScope(model, ref)
-		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
-			override boolean apply(IEObjectDescription od) {
-				var obj = od.EObjectOrProxy
-				if (obj.eIsProxy) 
-					obj = EcoreUtil.resolve(obj, model.eResource.resourceSet)
-				if (obj instanceof FCComponent) 
-					obj.abstract == false /* && obj.root == true */
-				else
-					false
-			}
-		}
-		val scope = new FilteringScope(delegateScope, filter)
-		scope
-	}
-	
 	private def boolean inheritsFrom(FCComponent component, FCComponent superType) {
 		var c = component?.superType
 		while (c !== null) {
@@ -244,10 +206,10 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 
 	// *****************************************************************************
-	def private dump(IScope s, String tag) {
-		println("    " + tag)
-		for (e : s.allElements) {
-			println("        " + e.name + " = " + e.EObjectOrProxy)
-		}
-	}
+//	def private dump(IScope s, String tag) {
+//		println("    " + tag)
+//		for (e : s.allElements) {
+//			println("        " + e.name + " = " + e.EObjectOrProxy)
+//		}
+//	}
 }

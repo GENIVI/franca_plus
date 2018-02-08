@@ -1,4 +1,4 @@
-
+package testcases
 // deployment specification with property declarations of all possible types
 
 specification a.b.c.MySpec11 {

@@ -42,8 +42,7 @@ class FCompDeclarativeNameProvider extends DefaultDeclarativeQualifiedNameProvid
 		val node = NodeModelUtils.getNode(p)
 		val name = NodeModelUtils.getTokenText(node).split("\\s").last
 		p.name = name
-		val fqn = converter.toQualifiedName( name )
-		fqn
+		converter.toQualifiedName( name )
     }
     
     /**
@@ -56,8 +55,7 @@ class FCompDeclarativeNameProvider extends DefaultDeclarativeQualifiedNameProvid
 		val node = NodeModelUtils.getNode(pt)
 		val name = NodeModelUtils.getTokenText(node).split("\\s").last
 		pt.name = name
-		val fqn = makeFQN(pt, converter.toQualifiedName( name ))
-		fqn
+		makeFQN(pt, converter.toQualifiedName( name ))
     }
     
     def QualifiedName qualifiedName(FCPrototypeInjection pi) {
@@ -68,8 +66,7 @@ class FCompDeclarativeNameProvider extends DefaultDeclarativeQualifiedNameProvid
 		val text = NodeModelUtils.getTokenText(node)
 		val name = text.split("\\s").get(1)
  		pi.name = name
-		val fqn = makeFQN(pi, converter.toQualifiedName( name ))
-		fqn	
+		makeFQN(pi, converter.toQualifiedName( name ))
     }
            
     /**

@@ -1,18 +1,26 @@
 package org.example.deployment
 
-import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "platform:/plugin/org.franca.architecture/deployment/network_SOMEIP_deployment_spec.fdepl"
+import "platform:/plugin/org.franca.architecture/deployment/architecture_deployment_spec.fdepl"
 import "../HelloWorld.fcdl"
-import "../HelloWorldSystem.fcdl" 
-import "Partitioning.fdepl" 
 
-define org.genivi.commonapi.someip.deployment for service System.Room1.Service {
-	provide AskMePort  {	
+
+
+define system.architecture for service World.Room1.Service as Service {
+	provide AskMePort on network.someip {	
 		SomeIpInstanceID = 1
         SomeIpReliableUnicastPort = 30506
         SomeIpUnreliableUnicastPort = 0
    	}
 }
 	
-define org.genivi.commonapi.someip.deployment for service System.Room1.Service.InnerStructure {
-	SomeOtherAttribute = 1
+define system.architecture for service World.Room1.Service.InnerStructure as InnerService {
+	StartupAtSystemInit = true
+}
+
+// deployment for a hosted client instance 
+define system.architecture for service World.Room1.Client1 as Client_1 { 
+	require AnswerMePort on network.someip {	
+		// ???
+	}
 }

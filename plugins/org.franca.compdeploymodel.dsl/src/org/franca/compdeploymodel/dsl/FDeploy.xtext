@@ -63,6 +63,7 @@ enum FDPropertyHost:
 	providers | instances |
 	type_collections | interfaces |
 	attributes | methods | broadcasts |
+	attribute_setters | attribute_getters | attribute_notifiers |
 	arguments |
 	struct_fields | union_fields | fields |
 	arrays | structs | unions |
@@ -70,7 +71,7 @@ enum FDPropertyHost:
 	typedefs |
 	strings | numbers | integers | floats | booleans | byte_buffers |
 	components | services | required_ports | provided_ports |
-	devices | variants;
+	devices | variants | adapters;
 
 
 // **************************************************************
@@ -96,12 +97,13 @@ FDEnumerator:
 // content definition (model part)
 
 FDRootElement:
-	FDProvider | FDTypes | FDInterface | 
-	FDComponent | FDDevice | FDService | FDVariant;
+	FDProvider | FDTypes | FDInterface |
+	FDComponent | FDDevice | FDService | FDVariant |
+	FDProvidedPort | FDRequiredPort | FDComAdapter;
 
 FDElement:
 	FDRootElement | FDInterfaceInstance | 
-	FDAttribute | FDOperation | FDArgument |
+	FDAttribute | FDOperation | FDArgument | 
 	FDTypeDefinition | FDField | FDEnumeration | FDEnumValue;
 
 FDProvider:
@@ -117,48 +119,53 @@ FDProvider:
 		instances+=FDInterfaceInstance*
 	'}';
 	
-// *************************************************************
 // Additional property hosts for component modeling
-FDDevice:
-	'define' spec=[FDSpecification|FQN]
-	'for' 'device' target=[fcomp::FCDevice|FQN] ('as' name=ID)?
-	'{'
-		('use' use+=[FDRootElement|FQN])*
-
-		// the own properties of this service
-		properties=FDPropertySet
-	'}';
-
-FDComponentInstance:
-	target=[fcomp::FCComponent] 
-	({FDComponentInstance.parent=current} '.' prototype=[fcomp::FCGenericPrototype])*;
-	
 FDService:
-	'define' spec=[FDSpecification|FQN]
-	'for' 'service' target=[FDComponentInstance|FQN] ('as' name=ID)?
-	'{'
+	'define' spec=[FDSpecification|FQN]	'for' 'service' target=FDComponentInstance ('as' name=ID)? ('{'
+		('use' use+=[FDComponent|FQN])*
+
 		// the own properties of this service
 		properties=FDPropertySet
 		
 		// ports of component
 		(providedPorts+=FDProvidedPort|
 		requiredPorts+=FDRequiredPort)*
-	'}';
+	'}')?;
+	
+FDDevice:
+	'define' spec=[FDSpecification|FQN]
+	'for' 'device' target=[fcomp::FCDevice|FQN] ('as' name = ID)?
+	('{'
+		('use' use+=[FDService|FQN])*
+		(adapters+=FDComAdapter)*
+		// the own properties of this service
+		properties=FDPropertySet
+	'}')?;
+	
+FDComponentInstance:
+	target=[fcomp::FCComponent]
+	({FDComponentInstance.parent=current} '.' prototype=[fcomp::FCGenericPrototype])*;
+	
 
-// deploy an instance to a device	
-FDDeployment:
-	'deploy' target=FDComponentInstance 'to' device=[fcomp::FCDevice] ('with' ('specification' spec=[FDSpecification|FQN] | 'definition' def=[FDService|FQN]))?;
+FDComAdapter: 'adapter' target=[fcomp::FCComAdapter] 'on' spec=[FDSpecification|FQN]
+	('{'
+		('use' use+=[FDProvidedPort|FQN])*
+		properties=FDPropertySet
+	'}')?
+;
 
 FDVariant:
-	'define' 'variant' name=ID 'for' 'system' target=[fcomp::FCSystem|FQN] '{'
-		deployments+=FDDeployment*
-	'}';
+	'define' 'variant' name=ID 'for' 'root' root=[fcomp::FCComponent]? 
+	('{'
+		('use' use+=[FDDevice|FQN])*
+	'}')?;
+
 	
 FDComponent:
 	'define' spec=[FDSpecification|FQN]
-	'for' 'component' target=[fcomp::FCComponent|FQN]
+	'for' 'component' target=[fcomp::FCComponent|FQN] ('as' name=FQN)?
 	'{'
-		('use' use+=[FDRootElement|FQN])*
+		// ('use' use+=[FDComponent|FQN])*
 
 		// the own properties of this component
 		properties=FDPropertySet
@@ -167,19 +174,28 @@ FDComponent:
 		(providedPorts+=FDProvidedPort|
 		requiredPorts+=FDRequiredPort)*
 	'}';
+	
+FDPort: FDProvidedPort | FDRequiredPort;
 
 FDRequiredPort:
-	'require' target=[fcomp::FCRequiredPort]
-	'{' 
+	'require' target=[fcomp::FCRequiredPort|FQN] ('on' spec=[FDSpecification|FQN])?
+	('{' 
+		('use' use+=[FDRootElement|FQN])*
+		
+		// the own properties of this component
 		properties=FDPropertySet
-	'}';
+	'}')?;
 
 FDProvidedPort:
-	'provide' target=[fcomp::FCProvidedPort]
-	'{'
+	'provide' target=[fcomp::FCProvidedPort|FQN] ('on' spec=[FDSpecification|FQN])?
+	('{'
+		('use' use+=[FDInterface|FQN])*
+		
+		// the own properties of this component
 		properties=FDPropertySet
-	'}';
-
+	'}')?;
+	
+// deployment of plain interfaces w/o components
 FDInterfaceInstance:
 	'instance' target=[fidl::FInterface|FQN] ('as' name=FQN)? '{'
 		properties=FDPropertySet
@@ -187,8 +203,7 @@ FDInterfaceInstance:
 
 FDTypes:
 	'define' spec=[FDSpecification|FQN]
-	'for' 'typeCollection' target=[fidl::FTypeCollection|FQN]
-	('as' name=FQN)?
+	'for' 'typeCollection' target=[fidl::FTypeCollection|FQN] ('as' name=FQN)?
 	'{'
 		('use' use+=[FDRootElement|FQN])*
 		
@@ -223,7 +238,7 @@ FDAttribute:
 		properties=FDPropertySet
 		(overwrites=FDTypeOverwrites)?
 	'}';
-
+	
 FDOperation:
 	FDMethod | FDBroadcast;
 
@@ -239,7 +254,7 @@ FDBroadcast:
 		properties=FDPropertySet
 		('out' outArguments=FDArgumentList)?
 	'}';
-
+	
 FDArgumentList:
 	{FDArgumentList}
 	'{' arguments+=FDArgument* '}';
@@ -249,7 +264,6 @@ FDArgument:
 		properties=FDPropertySet
 		(overwrites=FDTypeOverwrites)?
 	'}';
-
 
 FDTypeDefinition: FDArray | FDCompound | FDEnumeration | FDTypedef;
 FDCompound: FDStruct | FDUnion;

@@ -10,12 +10,15 @@ package org.franca.compmodel.dsl.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.ui.editor.autoedit.AbstractEditStrategyProvider;
+import org.eclipse.xtext.ui.editor.contentassist.IContentProposalProvider;
 import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher;
 import org.eclipse.xtext.ui.editor.contentassist.XtextContentAssistProcessor;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.ISemanticHighlightingCalculator;
+import org.franca.compmodel.dsl.ui.contentassist.ExternalProposalProviderRegistryLoader;
 import org.franca.compmodel.dsl.ui.contentassist.FCompAutoEditStrategyProvider;
 import org.franca.compmodel.dsl.ui.contentassist.FCompProposalPrefixMatcher;
+import org.franca.compmodel.dsl.ui.contentassist.FCompProposalProvider;
 import org.franca.compmodel.dsl.ui.highlighting.FCompHighlightingConfiguration;
 import org.franca.compmodel.dsl.ui.highlighting.FCompSemanticHighlightCalculator;
 
@@ -25,6 +28,7 @@ import com.google.inject.Binder;
  * Use this class to register components to be used within the IDE.
  */
 public class FCompUiModule extends org.franca.compmodel.dsl.ui.AbstractFCompUiModule {
+	
 	public FCompUiModule(AbstractUIPlugin plugin) {
 		super(plugin);
 	}
@@ -56,5 +60,19 @@ public class FCompUiModule extends org.franca.compmodel.dsl.ui.AbstractFCompUiMo
 	
 	public Class<? extends AbstractEditStrategyProvider> bindAbstractEditStrategyProvider() {
 		return FCompAutoEditStrategyProvider.class;
+	}
+	
+	// Load ProposalProvider. If extension is registered, the extension class is loaded, of not the FCompProposalProvider will be loaded.
+	@SuppressWarnings("unchecked")
+	@Override
+	public Class<? extends org.eclipse.xtext.ui.editor.contentassist.IContentProposalProvider> bindIContentProposalProvider() {
+		
+		Object o = ExternalProposalProviderRegistryLoader.externalProposalProviderLoader();
+		
+		if(o != null && o instanceof IContentProposalProvider)
+		{
+			return (Class<? extends IContentProposalProvider>) o.getClass();
+		}
+		return FCompProposalProvider.class;
 	}
 }

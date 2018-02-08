@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.franca</groupId>
 		<artifactId>org.francaplus.parent</artifactId>
-		<version>0.11.1-SNAPSHOT</version>
+		<version>0.12.0-SNAPSHOT</version>
 		<relativePath>../../releng/org.francaplus.parent/pom.xml</relativePath>
 	</parent>
 
@@ -30,6 +30,7 @@
 					<execution>
 						<goals>
 							<goal>compile</goal>
+							<goal>testCompile</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -37,43 +38,17 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
+				<goals>
+					<goal>test</goal>
+				</goals>
 				<configuration>
-					<skip>false</skip>
-					<testSuite>org.franca.comdeploymodel.dsl.tests</testSuite>
-					<testClass>org.franca.compdeploymodel.dsl.tests.xpect.ui.FrancaDeploymodelXpectUITests</testClass>
-					<!-- MacOS specific option to run an SWT application from the command line.
-							See http://www.eclipse.org/swt/faq.php#carbonapp
-					-->
-					<argLine>${os-jvm-flags}</argLine>
-					<useUIHarness>true</useUIHarness>
-					<useUIThread>true</useUIThread>
-				</configuration>
-			</plugin>
-            <!-- Got severe problems running plain unit tests with tycho-surefire-plugin, so disabled and using maven surefire plugin -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>test</id>
-						<phase>test</phase>
-						<configuration>
-							<testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
-							<includes>
-								<include>**/*Test*.java</include>
-							</includes>
-							<excludes>
-								<exclude>**/*UITest*.java</exclude>
-							</excludes>
-						</configuration>
-						<goals>
-							<goal>test</goal>
-						</goals>
-					</execution>
-				</executions>
+          			<includes>
+            			<include>**/*Tests.java</include>
+          			</includes>
+        		</configuration>
 			</plugin>
 		</plugins>
 	</build>		
-	<version>0.11.1-SNAPSHOT</version>
+	<version>0.12.0-SNAPSHOT</version>
 	<groupId>org.franca</groupId>
 </project>

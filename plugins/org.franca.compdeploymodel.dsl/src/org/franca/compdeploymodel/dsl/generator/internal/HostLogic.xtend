@@ -46,6 +46,9 @@ class HostLogic {
 		switch (host) {
 			case PROVIDERS:        null  // ignore
 			case INSTANCES:        null  // ignore
+			case DEVICES:	 	   null  // ignore
+			case ADAPTERS:	 	   null  // ignore
+			case SERVICES:	 	   null  // ignore
 			case TYPE_COLLECTIONS: typeof(FTypeCollection)
 			case INTERFACES:       forInterfaces.use(typeof(FInterface))
 			case ATTRIBUTES:       forInterfaces.use(typeof(FAttribute))
@@ -88,6 +91,9 @@ class HostLogic {
 		switch (host) {
 			case PROVIDERS:  "FDProvider"
 			case INSTANCES:  "FDInterfaceInstance"
+			case DEVICES:	 "FDDevice"
+			case ADAPTERS:	 "FDComAdapter"
+			case SERVICES:	 "FDService"
 			default:         null // ignore all other hosts
 		}
 	}

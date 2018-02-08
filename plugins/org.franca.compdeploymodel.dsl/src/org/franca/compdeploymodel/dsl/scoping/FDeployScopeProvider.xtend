@@ -10,9 +10,9 @@ package org.franca.compdeploymodel.dsl.scoping
 
 import com.google.common.base.Predicate
 import com.google.inject.Inject
+import java.util.ArrayList
 import java.util.HashSet
 import java.util.List
-import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.EcoreUtil2
@@ -34,10 +34,10 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDArgumentList
 import org.franca.compdeploymodel.dsl.fDeploy.FDArray
 import org.franca.compdeploymodel.dsl.fDeploy.FDAttribute
 import org.franca.compdeploymodel.dsl.fDeploy.FDBroadcast
+import org.franca.compdeploymodel.dsl.fDeploy.FDComAdapter
 import org.franca.compdeploymodel.dsl.fDeploy.FDComponent
 import org.franca.compdeploymodel.dsl.fDeploy.FDComponentInstance
 import org.franca.compdeploymodel.dsl.fDeploy.FDCompoundOverwrites
-import org.franca.compdeploymodel.dsl.fDeploy.FDDeployment
 import org.franca.compdeploymodel.dsl.fDeploy.FDDevice
 import org.franca.compdeploymodel.dsl.fDeploy.FDElement
 import org.franca.compdeploymodel.dsl.fDeploy.FDEnumType
@@ -57,6 +57,7 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDPropertyFlag
 import org.franca.compdeploymodel.dsl.fDeploy.FDProvidedPort
 import org.franca.compdeploymodel.dsl.fDeploy.FDProvider
 import org.franca.compdeploymodel.dsl.fDeploy.FDRequiredPort
+import org.franca.compdeploymodel.dsl.fDeploy.FDRootElement
 import org.franca.compdeploymodel.dsl.fDeploy.FDService
 import org.franca.compdeploymodel.dsl.fDeploy.FDStruct
 import org.franca.compdeploymodel.dsl.fDeploy.FDTypeOverwrites
@@ -66,6 +67,7 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDUnion
 import org.franca.compdeploymodel.dsl.fDeploy.FDVariant
 import org.franca.compdeploymodel.dsl.fDeploy.FDeployPackage
 import org.franca.compmodel.dsl.FCompUtils
+import org.franca.compmodel.dsl.fcomp.FCComponent
 import org.franca.compmodel.dsl.fcomp.FCGenericPrototype
 import org.franca.compmodel.dsl.fcomp.FCPort
 import org.franca.compmodel.dsl.fcomp.FCPortKind
@@ -73,6 +75,7 @@ import org.franca.core.franca.FArrayType
 import org.franca.core.franca.FCompoundType
 import org.franca.core.franca.FConstantDef
 import org.franca.core.franca.FEnumerationType
+import org.franca.core.franca.FInterface
 import org.franca.core.franca.FModel
 import org.franca.core.franca.FStructType
 import org.franca.core.franca.FType
@@ -82,7 +85,6 @@ import org.franca.core.franca.FUnionType
 import static extension org.eclipse.xtext.scoping.Scopes.*
 import static extension org.franca.compdeploymodel.core.FDModelUtils.*
 import static extension org.franca.core.FrancaModelExtensions.*
-import org.franca.compmodel.dsl.fcomp.FCComponent
 
 class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 
@@ -97,8 +99,7 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 	
 	def scope_FDRootElement_spec(EObject ctxt, EReference ref){
 		return delegateGetScope(ctxt,ref).joinImportedDeploySpecs(ctxt);
-	}
-	
+	}	
 		
 	def scope_FDSpecification_base(EObject ctxt, EReference ref){
 		return delegateGetScope(ctxt,ref).joinImportedDeploySpecs(ctxt);
@@ -109,7 +110,7 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 	def joinImportedDeploySpecs(IScope scope, EObject ctxt){
 		val model = EcoreUtil2::getContainerOfType(ctxt, typeof(FDModel))
 		val importedAliases = model.imports.filter[importedSpec!==null].map[importedSpec]
-		val List<IEObjectDescription> fdSpecsScopeImports = <IEObjectDescription>newArrayList();
+		val List<IEObjectDescription> fdSpecsScopeImports = <IEObjectDescription>newArrayList;
 		try { 
 			for(a:importedAliases){
 				val entry = deploySpecProvider.getEntry(a)
@@ -151,18 +152,18 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 
 	// *****************************************************************************
 	def scope_FDAttribute_target(FDInterface ctxt, EReference ref) {
-		ctxt.getTarget().getAttributes().scopeFor
+		ctxt.target.interfaceInheritationSet.map[attributes].flatten.scopeFor
 	}
 
 	def scope_FDMethod_target(FDInterface ctxt, EReference ref) {
-		ctxt.getTarget().getMethods().scopeFor(
+		ctxt.target.interfaceInheritationSet.map[methods].flatten.scopeFor(
 			[ QualifiedName.create(getUniqueName) ],
 			IScope.NULLSCOPE
 		)
 	}
 
 	def scope_FDBroadcast_target(FDInterface ctxt, EReference ref) {
-		ctxt.getTarget().getBroadcasts().scopeFor(
+		ctxt.target.interfaceInheritationSet.map[broadcasts].flatten.scopeFor(
 			[ QualifiedName.create(getUniqueName) ],
 			IScope.NULLSCOPE
 		)
@@ -189,7 +190,8 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 
 	def private getScopes(FDInterface ctxt, Class<? extends EObject> clazz) {
-		ctxt.getTarget().getTypes().filter(clazz).scopeFor
+		//ctxt.getTarget().getTypes().filter(clazz).scopeFor
+		ctxt.target.interfaceInheritationSet.map[types].flatten.filter(clazz).scopeFor
 	}
 
 	// *****************************************************************************
@@ -207,11 +209,11 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 			}
 		}
 	}
-
+	
 	def scope_FDArgument_target(FDBroadcast ctxt, EReference ref) {
 		ctxt.getTarget().getOutArgs.scopeFor
 	}
-
+		
 	def scope_FDField_target(FDStruct ctxt, EReference ref) {
 		ctxt.getTarget().getElements.scopeFor
 	}
@@ -278,6 +280,10 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 		owner.getPropertyDecls
 	}
 	
+	def scope_FDProperty_decl(FDComAdapter owner, EReference ref) {
+		owner.getPropertyDecls
+	}
+	
 	def scope_FDProperty_decl(FDVariant owner, EReference ref) {
 		owner.getPropertyDecls
 	}
@@ -301,19 +307,19 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 	def scope_FDProperty_decl(FDAttribute owner, EReference ref) {
 		owner.getPropertyDecls
 	}
-
+	
 	def scope_FDProperty_decl(FDMethod owner, EReference ref) {
 		owner.getPropertyDecls
 	}
-
+	
 	def scope_FDProperty_decl(FDBroadcast owner, EReference ref) {
 		owner.getPropertyDecls
 	}
-
+	
 	def scope_FDProperty_decl(FDArgument owner, EReference ref) {
 		owner.getPropertyDecls
 	}
-
+	
 	def scope_FDProperty_decl(FDArray owner, EReference ref) {
 		owner.getPropertyDecls
 	}
@@ -364,13 +370,17 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 
 	def private IScope getPropertyDecls(FDElement elem) {
-		val root = FDModelUtils::getRootElement(elem)
-		PropertyMappings::getAllPropertyDecls(root.getSpec(), elem).scopeFor
+		var root = FDModelUtils::getRootElement(elem)
+		if (root.spec === null)
+			root = FDModelUtils::getRootElement(root.eContainer as FDElement)
+		PropertyMappings::getAllPropertyDecls(root.getSpec, elem).scopeFor
 	}
 
 	def private IScope getPropertyDecls(FDElement some, FType elem) {
-		val root = FDModelUtils::getRootElement(some)
-		PropertyMappings::getAllPropertyDecls(root.getSpec(), elem).scopeFor
+		var root = FDModelUtils::getRootElement(some)
+		if (root.spec === null)
+			root = FDModelUtils::getRootElement(root.eContainer as FDElement)
+		PropertyMappings::getAllPropertyDecls(root.getSpec, elem).scopeFor
 	}
 
 	// *****************************************************************************
@@ -396,7 +406,7 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 		return delegateGetScope(prop, ref)
 	}
 	
-	def propertyIsTyped(FDProperty prop) {
+	private def propertyIsTyped(FDProperty prop) {
 		prop.decl.flags.exists[typed !== null] 
 	}
 
@@ -404,7 +414,7 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 		// look in all resources stored with the resourceSet containing this model
 		val resources = fdmodel.eResource.resourceSet.resources
 		val usedResources = resources.filter[ contents.get(0) instanceof FModel ]				
-		val HashSet<FConstantDef> consts = newHashSet()
+		val HashSet<FConstantDef> consts = newHashSet(null)
 		usedResources.forEach[ consts += allContents.filter(FConstantDef).toList ]
 		val derivedConsts = consts.filter[type.derived == derivedType]
 		return derivedConsts.scopeFor(qualifiedNameProvider, IScope.NULLSCOPE)
@@ -439,40 +449,22 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 	// ports in scope of a component
 	
 	def scope_FDRequiredPort_target(FDComponent comp, EReference ref) {
-		val List<FCPort> ports = newArrayList()
+		val List<FCPort> ports = newArrayList
 		FCompUtils::collectInheritedPorts(comp.target, FCPortKind.REQUIRED, ports)
 		ports.scopeFor
 	}
 	
 	def scope_FDProvidedPort_target(FDComponent comp, EReference ref) {
-		val List<FCPort> ports = newArrayList()
+		val List<FCPort> ports = newArrayList
 		FCompUtils::collectInheritedPorts(comp.target, FCPortKind.PROVIDED, ports)
 		ports.scopeFor
-	}
-	
-	// *****************************************************************************
-	// device in scope of a variant
-	
-	def scope_FDDeployment_device(FDVariant variant, EReference ref) {
-		variant.target.devices.scopeFor
-	}
-	
-	// *****************************************************************************
-	// service definition in scope of a variant deployment
-	
-	def scope_FDDeployment_def(FDDeployment deploy, EReference ref) {
-		val serviceDefs = deploy.eResource.resourceSet.allContents.filter(FDService).toList
-		val matched = serviceDefs.filter[it.target.name == deploy.target.name].toList	
-		val scope = matched.scopeFor 
-		// dump(scope, "scope_FDDeployment_def") 
-		scope	
 	}
 	
 	// *****************************************************************************
 	// ports in scope of a service
 	
 	def scope_FDRequiredPort_target(FDService service, EReference ref) {
-		val List<FCPort> ports = newArrayList()
+		val List<FCPort> ports = newArrayList
 		var FCComponent component = null
 		val FDComponentInstance instance = service.target
 		if (instance.target !== null)
@@ -484,7 +476,7 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 	
 	def scope_FDProvidedPort_target(FDService service, EReference ref) {
-		val List<FCPort> ports = newArrayList()
+		val List<FCPort> ports = newArrayList
 		var FCComponent component = null
 		val FDComponentInstance instance = service.target
 		if (instance.target !== null)
@@ -531,6 +523,23 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 	
 	// *******************************************************************************************
 	
+	/**
+	 * Component Instance starting point scoping: limit to root components
+	 */
+	def IScope scope_FDComponentInstance_target(FDService service, EReference ref) {
+		
+		val List<IEObjectDescription> rootComponents = <IEObjectDescription>newArrayList
+		for (od: delegateGetScope(service, ref).allElements) {
+			val comp = od.EObjectOrProxy
+			if (comp instanceof FCComponent) {
+				if (comp.root)
+					rootComponents.add(new EObjectDescription(qnConverter.toQualifiedName(comp.name), comp, null))
+			}
+		}
+		val scope = new SimpleScope(rootComponents)
+		// dump(scope, "scope_FDComponentInstance_target")
+		scope
+	}
 
 	/**
 	 * Component Instance segments scoping
@@ -541,42 +550,190 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 		if(parent === null)
 			return IScope.NULLSCOPE
 			
-		var EList<FCGenericPrototype> candidates = null
-		if(parent.prototype===null && parent.target!=null)
-			candidates = parent.target.prototypes
-		else 
-			candidates = parent.prototype.component.prototypes 
-		
+		var ArrayList<FCGenericPrototype> candidates = newArrayList()
+		if (parent.prototype === null && parent.target !== null) {
+			FCompUtils.collectInheritedPrototypes(parent.target, candidates)
+		} 
+		else {
+			FCompUtils.collectInheritedPrototypes(parent.prototype.component, candidates)
+		} 
 		val scope = candidates.filter[component.abstract == false].scopeFor	
 		// dump(scope, "scope_FDComponentInstance_prototype")
 		scope
 	}
 	
 	/**
-	 * Component Instance starting point scoping, confines to the root element
+	 * Limit scope to service for use on a device
 	 */
-	def IScope scope_FDComponentInstance_target(FDVariant variant, EReference ref) {
-		val target = variant.target.root.component
-		val List<IEObjectDescription> rootComponents = <IEObjectDescription>newArrayList()
-		rootComponents.add(new EObjectDescription(qnConverter.toQualifiedName(target.name), target, null))
+	def IScope scope_FDRootElement_use(FDDevice device, EReference ref) {
+
+		val IScope delegateScope = delegateGetScope(device, ref)
+		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
+			override boolean apply(IEObjectDescription od) {
+				val obj = od.EObjectOrProxy
+				obj instanceof FDService
+			}
+		}
+		new FilteringScope(delegateScope, filter)
+	}
+	
+	/**
+	 * Limit scope to adapter defined for the given device 
+	 */
+	def IScope scope_FDComAdapter_target(FDDevice device, EReference ref) {
+		if (device.adapters !== null) {
+			val scope = device.target.adapters.scopeFor
+			return scope
+		}
+		IScope::NULLSCOPE
+	}
+	
+	/**
+	 * Limit scope to devices with services matching the given root in the context of a variant
+	 */
+	def IScope scope_FDRootElement_use(FDVariant variant, EReference ref) {
+
+		val IScope delegateScope = delegateGetScope(variant, ref)
+		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
+			override boolean apply(IEObjectDescription od) {
+				od.EObjectOrProxy instanceof FDDevice 
+			}
+		}
+		new FilteringScope(delegateScope, filter)
+	}
+	
+	/**
+	 * Scope roots in the context of a variant
+	 */
+	def IScope scope_FDVariant_root(FDVariant variant, EReference ref) {
+
+		val List<IEObjectDescription> rootComponents = <IEObjectDescription>newArrayList
+		for (od: delegateGetScope(variant, ref).allElements) {
+			val comp = od.EObjectOrProxy
+			if (comp instanceof FCComponent) {
+				if (comp.root)
+					rootComponents.add(new EObjectDescription(qnConverter.toQualifiedName(comp.name), comp, null))
+			}
+		}
 		val scope = new SimpleScope(rootComponents)
 		// dump(scope, "scope_FDComponentInstance_target")
 		scope
 	}
 	
+	
 	/**
-	 * Component Instance must be of type service to be deployable
+	 * Limit scope to provided ports defined for used services the context of an adapter of a device
 	 */
-	def IScope scope_FDService_target(FDService service, EReference ref) {
-		val IScope delegateScope = delegateGetScope(service, ref)
-		// filter for service scopes
+	def IScope scope_FDRootElement_use(FDComAdapter adapter, EReference ref) {
+		if (adapter.eContainer instanceof FDDevice) {
+			val pPorts = (adapter.eContainer as FDDevice).use.filter(FDService).map[providedPorts].flatten
+			val rPorts = (adapter.eContainer as FDDevice).use.filter(FDService).map[requiredPorts].flatten
+			val IScope delegateScope = delegateGetScope(adapter, ref)
+			val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
+				override boolean apply(IEObjectDescription od) {
+					val port = od.EObjectOrProxy
+					if (port instanceof FDProvidedPort)
+						pPorts.exists[it == port && haveCompatibleSpecs(adapter, port)]
+					else if (port instanceof FDRequiredPort)
+						rPorts.exists[it == port && haveCompatibleSpecs(adapter, port)]
+					else 
+						false
+				}
+			}
+			new FilteringScope(delegateScope, filter)
+		}
+		else
+			IScope::NULLSCOPE
+	}
+	
+	/**
+	 * Limit scope to deployed type collections in an interface deployment context
+	 */
+	def IScope scope_FDRootElement_use(FDInterface fdif, EReference ref) {
+		val IScope delegateScope = delegateGetScope(fdif, ref)
 		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
 			override boolean apply(IEObjectDescription od) {
 				val obj = od.EObjectOrProxy
-				if (obj instanceof FDComponentInstance)
-					obj.prototype !== null && 
-					obj.prototype.component !== null &&
-					obj.prototype.component.service
+				obj instanceof FDTypes
+			}
+		}
+		new FilteringScope(delegateScope, filter)
+	}	
+	
+	
+	/**
+	 * Limit scope for component to compatible components deployments in a service context
+	 */
+	def IScope scope_FDRootElement_use(FDService service, EReference ref) {
+		val componentType = service.target.prototype?.component ?: service.target.target
+		val IScope delegateScope = delegateGetScope(service, ref)
+		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
+			override boolean apply(IEObjectDescription od) {
+				val obj = od.EObjectOrProxy
+				if (obj instanceof FDComponent)
+					obj.target == componentType
+				else 
+					false
+			}
+		}
+		new FilteringScope(delegateScope, filter)
+	}	
+	
+	/**
+	 * Limit scope to components deployments in a component context
+	 */
+	def IScope scope_FDRootElement_use(FDComponent component, EReference ref) {
+		val IScope delegateScope = delegateGetScope(component, ref)
+		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
+			override boolean apply(IEObjectDescription od) {
+				val obj = od.EObjectOrProxy
+				obj instanceof FDComponent
+			}
+		}
+		new FilteringScope(delegateScope, filter)
+	}
+	
+	/**
+	 * Limit scope to types deployments in a typeCollection context
+	 */
+	def IScope scope_FDRootElement_use(FDTypes types, EReference ref) {
+		val IScope delegateScope = delegateGetScope(types, ref)
+		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
+			override boolean apply(IEObjectDescription od) {
+				od.EObjectOrProxy instanceof FDTypes
+			}
+		}
+		new FilteringScope(delegateScope, filter)
+	}	
+	
+	
+	/**
+	 * Scope available interface deployments in required port deployment to fitting interfaces
+	 */
+	def IScope scope_FDRootElement_use(FDRequiredPort port, EReference ref) {
+		val FInterface interfaceType = port.target.interface
+		val IScope delegateScope = delegateGetScope(port, ref)
+		filterInterfaceForPort(port, delegateScope, interfaceType)	
+	}
+	
+	/**
+	 * Scope available interface deployments in provided port deployment to fitting interfaces
+	 */
+	def IScope scope_FDRootElement_use(FDProvidedPort port, EReference ref) {
+		val FInterface interfaceType = port.target.interface
+		val IScope delegateScope = delegateGetScope(port, ref)
+		filterInterfaceForPort(port, delegateScope, interfaceType)
+	}
+	
+	private def IScope filterInterfaceForPort(FDRootElement port, IScope delegateScope, FInterface interfaceType) {
+		val inheritedInterfaces = interfaceType.interfaceInheritationSet
+		
+		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
+			override boolean apply(IEObjectDescription od) {
+				val object = od.EObjectOrProxy
+				if (object instanceof FDInterface)
+					inheritedInterfaces.contains(object.target) 
+					&& haveCompatibleSpecs(port, object) 
 				else 
 					false
 			}
@@ -584,10 +741,31 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 		new FilteringScope(delegateScope, filter)
 	}
 	
-	def private dump(IScope s, String tag) {
-		println("    " + tag)
-		for (e : s.allElements) {
-			println("        " + e.name + " = " + e.EObjectOrProxy)
-		}
+	/*
+	 * Compatible means either a childs spec parent and child reference the same spec 
+	 * or child spec is derived from parent spec.
+	 */
+	def private haveCompatibleSpecs (FDRootElement parent, FDRootElement child) {
+		var parentSpec = parent.spec
+		if (parentSpec === null)
+			parentSpec = getRootElement(parent.eContainer as FDElement)?.spec
+		
+		var check = child.spec
+		if (check === null)
+			check = getRootElement(child.eContainer as FDElement)?.spec
+		
+		while (check !== null) {
+			if (parentSpec == check)
+				return true
+			check = check.base
+		} 
+		return false
 	}
+	
+//	def private dump(IScope s, String tag) {
+//		println("    " + tag)
+//		for (e : s.allElements) {
+//			println("        " + e.name + " = " + e.EObjectOrProxy)
+//		}
+//	}
 }

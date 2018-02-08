@@ -2,20 +2,26 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Franca Component Deployment Model UI plugin
 Bundle-Vendor: itemis AG
-Bundle-Version: 0.11.1.qualifier
+Bundle-Version: 0.12.0.qualifier
 Bundle-SymbolicName: org.franca.compdeploymodel.dsl.ui;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.franca.compdeploymodel.dsl;visibility:=reexport,
  org.franca.compmodel.dsl,
- org.eclipse.xtext.ui,
- org.eclipse.xtext.ui.shared,
- org.eclipse.xtext.builder,
- org.eclipse.xtext.ui.codetemplates.ui,
+ org.eclipse.xtext;bundle-version="[2.11.0,2.12.0)",
+ org.eclipse.xtext.ui;bundle-version="[2.11.0,2.12.0)",
+ org.eclipse.xtext.ui.shared;bundle-version="[2.11.0,2.12.0)",
+ org.eclipse.xtext.builder;bundle-version="[2.11.0,2.12.0)",
+ org.eclipse.xtext.xbase;bundle-version="2.8.4",
+ org.eclipse.xtext.xbase.lib;bundle-version="[2.11.0,2.12.0)",
+ org.eclipse.xtend.lib;bundle-version="[2.11.0,2.12.0)",
+ org.eclipse.xtend.lib.macro;bundle-version="[2.11.0,2.12.0)",
+ org.eclipse.xtext.ui.codetemplates.ui;bundle-version="[2.11.0,2.12.0)",
  org.eclipse.compare,
  org.eclipse.ui.editors,
  org.eclipse.ui,
  org.antlr.runtime,
- org.eclipse.jdt.core;resolution:=optional
+ org.eclipse.jdt.core;resolution:=optional,
+ org.eclipse.swt
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.franca.compdeploymodel.dsl.ui;

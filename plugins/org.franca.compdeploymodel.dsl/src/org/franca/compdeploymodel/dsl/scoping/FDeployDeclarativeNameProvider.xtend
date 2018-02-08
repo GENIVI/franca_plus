@@ -7,51 +7,57 @@
  */
 package org.franca.compdeploymodel.dsl.scoping
 
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.naming.DefaultDeclarativeQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.franca.compdeploymodel.dsl.fDeploy.FDComponent
 import org.franca.compdeploymodel.dsl.fDeploy.FDComponentInstance
-import org.franca.compdeploymodel.dsl.fDeploy.FDService
 import org.franca.compdeploymodel.dsl.fDeploy.FDDevice
+import org.franca.compdeploymodel.dsl.fDeploy.FDInterface
+import org.franca.compdeploymodel.dsl.fDeploy.FDProvidedPort
+import org.franca.compdeploymodel.dsl.fDeploy.FDRequiredPort
+import org.franca.compdeploymodel.dsl.fDeploy.FDService
+import org.franca.compdeploymodel.dsl.fDeploy.FDTypes
 
 class FDeployDeclarativeNameProvider extends DefaultDeclarativeQualifiedNameProvider {
 	
+	override getFullyQualifiedName(EObject obj) {
+		switch (obj) {
+			// provide a port name in the scope of the current deployment package
+			FDProvidedPort,
+			FDRequiredPort: {
+				val node = NodeModelUtils.getNode(obj)
+				val segments = NodeModelUtils.getTokenText(node).split("\\s")
+				if (segments.length >= 2) 
+					obj.name = segments.get(1)
+			}
+			// default name provisioning for anonymous deployments:
+			// <current deployment package>.<short name of deployed entity>_<entity type>_depl
+			FDService,
+			FDComponent,
+			FDDevice,
+			FDInterface,
+			FDTypes: {
+				if (obj.name === null) {
+					val node = NodeModelUtils.getNode(obj)
+					val segments = NodeModelUtils.getTokenText(node).split("\\s")
+					if (segments.length >= 5) {
+						val name = segments.get(4).split("\\.").last
+						obj.name = name + "_depl"
+					}
+				}
+			}
+		}
+		return super.getFullyQualifiedName(obj)
+	}
+	
 	 def QualifiedName qualifiedName(FDComponentInstance i) {	
-    	if (i.name == null) {
+    	if (i.name === null) {
 	    	val node = NodeModelUtils.getNode(i)
 			i.name = NodeModelUtils.getTokenText(node)
 		}
-		val fqn = converter.toQualifiedName(i.name)
-		fqn	
-    }
-    
-    /**
-	 * Provide the service deployment name as qualified name for a service if no explicit name is given by the user.
-	 */
-	def QualifiedName qualifiedName(FDService s) {
-        if (s.name !== null && s.name.length > 0) 
-        	return super.qualifiedName(s)
-		
-		val node = NodeModelUtils.getNode(s)
-		val segments = NodeModelUtils.getTokenText(node).split("\\s")
-		if (segments.length >= 4)
-			s.name = segments.get(4)
-		val fqn = converter.toQualifiedName( s.name )
-		fqn
-    }
-    
-    /**
-	 * Provide the device deployment name as qualified name for a device if no explicit name is given by the user.
-	 */
-	def QualifiedName qualifiedName(FDDevice d) {
-        if (d.name !== null && d.name.length > 0) 
-        	return super.qualifiedName(d)
-		
-		val node = NodeModelUtils.getNode(d)
-		val segments = NodeModelUtils.getTokenText(node).split("\\s")
-		if (segments.length >= 4)
-			d.name = segments.get(4)
-		val fqn = converter.toQualifiedName( d.name )
-		fqn
+		val qn = converter.toQualifiedName(i.name)
+		qn	
     }
 }

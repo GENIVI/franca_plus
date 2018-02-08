@@ -1,9 +1,10 @@
+package testcases
 // deployment definition
 
 import "03-SpecDataHostsSimple.fdepl"
 import "../fidl/07-InlineArrayInterface.fidl"
 
-define a.b.c.MySpec03 for interface fidl.InlineArrayInterface {
+define testcases.a.b.c.MySpec03 for interface fidl.InlineArrayInterface {
 
 	attribute someInt8Array {
 		PropInteger = 0

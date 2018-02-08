@@ -41,10 +41,3 @@ component DerivedHelloWorldClient extends HelloWorldClient {
 
 component DerivedHelloWorldClient2 extends DerivedHelloWorldClient {}
 
-// or replace HelloWorldClient.BoringChatterClient with an implementation of DerivedChatterClient  
-// inject DerivedChatterClient into HelloWorldClient.BoringChatterClient
-
-/* ============================== Unfold  component tree and partition services ============== */
-system MeetingPoint with root MeetingPoint {
-	device test
-}

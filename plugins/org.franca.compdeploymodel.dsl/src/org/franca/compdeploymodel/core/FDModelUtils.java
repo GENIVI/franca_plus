@@ -8,11 +8,10 @@
 package org.franca.compdeploymodel.core;
 
 import org.eclipse.emf.ecore.EObject;
-import org.franca.core.franca.FType;
-import org.franca.core.franca.FTypeRef;
 import org.franca.compdeploymodel.dsl.fDeploy.FDArgument;
 import org.franca.compdeploymodel.dsl.fDeploy.FDArray;
 import org.franca.compdeploymodel.dsl.fDeploy.FDAttribute;
+import org.franca.compdeploymodel.dsl.fDeploy.FDComponentInstance;
 import org.franca.compdeploymodel.dsl.fDeploy.FDElement;
 import org.franca.compdeploymodel.dsl.fDeploy.FDEnumerator;
 import org.franca.compdeploymodel.dsl.fDeploy.FDField;
@@ -22,6 +21,9 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDModel;
 import org.franca.compdeploymodel.dsl.fDeploy.FDOverwriteElement;
 import org.franca.compdeploymodel.dsl.fDeploy.FDRootElement;
 import org.franca.compdeploymodel.dsl.fDeploy.FDValue;
+import org.franca.compmodel.dsl.fcomp.FCComponent;
+import org.franca.core.franca.FType;
+import org.franca.core.franca.FTypeRef;
 
 /**
  * Helper functions for navigation in deployment models.
@@ -127,12 +129,22 @@ public class FDModelUtils {
 			typeref = ((FDField)elem).getTarget().getType();
 		} else if (elem instanceof FDArray) {
 			typeref = ((FDArray)elem).getTarget().getElementType();
-		}
+		} 		
 		
 		// get type from type reference
 		if (typeref==null)
 			return null;
 		else
 			return typeref.getDerived();
+	}
+	
+	/**
+	 * Get the first segment for a component instance, the so called root. 
+	 */
+	public static FCComponent getRootOfComponentInstance(FDComponentInstance instance) {
+		FDComponentInstance temp = instance;
+		while (temp.getParent() != null)
+			temp = temp.getParent();
+		return temp.getTarget();
 	}
 }

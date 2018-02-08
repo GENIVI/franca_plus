@@ -30,6 +30,7 @@ import org.franca.compmodel.dsl.fcomp.FCModel
 import org.franca.compmodel.dsl.fcomp.FCTagDecl
 import org.franca.compmodel.dsl.fcomp.Import
 import org.franca.core.utils.FrancaIDLUtils
+import java.util.ArrayList
 
 class FCompProposalProvider extends AbstractFCompProposalProvider {
 	
@@ -52,24 +53,25 @@ class FCompProposalProvider extends AbstractFCompProposalProvider {
 			fcmodel = model.eContainer as FCModel
 		
 		val importedUris = fcmodel.imports.map[it.importURI]
-		val platformResources = newArrayList()
-		val classpathResources = newArrayList()
+		val platformResources = new ArrayList<URI>()
+		val classpathResources = new ArrayList<URI>()
 		var xtextresourceSet = model.eResource.resourceSet as XtextResourceSet
 		var containers = containerManager.getVisibleContainers(
 			descriptionManager.getResourceDescription(model.eResource),
 			provider.getResourceDescriptions(model.eResource))
 
-		var classPathContext = xtextresourceSet.classpathURIContext
-		if (classPathContext instanceof JavaProject) {
-			containers.forEach [
-				it.resourceDescriptions.filter[
-					it.URI.toString != model.eResource.URI.toString && 
-						extensionsForImportURIScope.contains(it.URI.fileExtension)].forEach [
+		val classPathContext = xtextresourceSet.classpathURIContext
+		
+		containers.forEach [
+			it.resourceDescriptions.filter[
+				it.URI.toString != model.eResource.URI.toString && 
+					extensionsForImportURIScope.contains(it.URI.fileExtension)].forEach [
+				platformResources += it.URI
+				if (classPathContext instanceof JavaProject) 
 					classpathResources += it.URI
-					platformResources += it.URI
-				]
 			]
-		}
+		]
+		
 
 		if (context.prefix.contains("classpath:")) {
 			classpathResources.forEach [

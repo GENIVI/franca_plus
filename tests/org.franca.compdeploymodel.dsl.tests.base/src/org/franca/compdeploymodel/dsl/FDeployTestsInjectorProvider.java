@@ -8,6 +8,7 @@
 package org.franca.compdeploymodel.dsl;
 
 import org.franca.compdeploymodel.dsl.FDeployInjectorProvider;
+import org.franca.compmodel.dsl.FCompStandaloneSetup;
 import org.franca.core.dsl.FrancaIDLStandaloneSetup;
 
 import com.google.inject.Injector;
@@ -18,25 +19,12 @@ import com.google.inject.Injector;
  */
 public class FDeployTestsInjectorProvider extends FDeployInjectorProvider {
 
-	private Injector francaInjector = null;
-	
 	@Override
-	public Injector getInjector() {
-		if (francaInjector == null) {
-			francaInjector = new FrancaIDLStandaloneSetup().createInjectorAndDoEMFRegistration();
-		}
-		return super.getInjector();
-	}
-	
-	protected Injector internalCreateInjector() {
-	    return new FDeployTestsStandaloneSetup().createInjectorAndDoEMFRegistration();
-	}
+	protected Injector internalCreateInjector() 
+	{
+		new FrancaIDLStandaloneSetup().createInjectorAndDoEMFRegistration();
+		new FCompStandaloneSetup().createInjectorAndDoEMFRegistration();
+		return super.internalCreateInjector();
 
-	@Override
-	public void setupRegistry() {
-		if (francaInjector != null) {
-			new FrancaIDLStandaloneSetup().register(francaInjector);
-		}
-		super.setupRegistry();
 	}
 }

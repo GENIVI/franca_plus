@@ -6,15 +6,14 @@ tag String @org mandatory
 tag String @responsible
 
 // architecture
-tag String @root
-tag String @framework
-tag String @cluster
-tag String @dienst
+tag String @system
+tag String @domain
+tag String @part
+tag String @application
 
 // details
 tag String @level
-tag String @facade
-tag String @subselect
+tag String @filter
 
 // tooling
-tag String @eaguid
+tag String @guid

@@ -1,10 +1,11 @@
+package testcases
 // deployment definition
 
 import "12-SpecPropertyInterfaceRef.fdepl"
 import "../fidl/01-EmptyInterface.fidl"
 import "../fidl/05-CoverageInterface.fidl"
 
-define a.b.c.MySpec12 for interface fidl.CoverageInterface {
+define testcases.a.b.c.MySpec12 for interface fidl.CoverageInterface {
 	method aMethod {
 		// mandatory properties
 		InterfaceRefMandatory = &fidl.EmptyInterface

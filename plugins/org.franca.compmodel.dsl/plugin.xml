@@ -4,13 +4,6 @@
 <plugin>
    <extension-point id="francaplusValidator" name="Franca Plus Validator" schema="schema/francaplusValidator.exsd"/>
 
-  <extension point="org.eclipse.emf.ecore.generated_package">
-    <package 
-       uri = "http://org.franca.FComp" 
-       class = "org.franca.fComp.FCompPackage"
-       genModel = "model/generated/FComp.genmodel" /> 
-	
-  </extension>
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated FComp -->
       <package

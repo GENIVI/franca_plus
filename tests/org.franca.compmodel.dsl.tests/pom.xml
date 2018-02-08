@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>org.franca</groupId>
 		<artifactId>org.francaplus.parent</artifactId>
-		<version>0.11.1-SNAPSHOT</version>
+		<version>0.12.0-SNAPSHOT</version>
 		<relativePath>../../releng/org.francaplus.parent/pom.xml</relativePath>
 	</parent>
 
 	<groupId>org.franca</groupId>
 	<artifactId>org.franca.compmodel.dsl.tests</artifactId>
-	<version>0.11.1-SNAPSHOT</version>
+	<version>0.12.0-SNAPSHOT</version>
 	<packaging>eclipse-test-plugin</packaging>
 	<dependencies>
 		<!-- It is important to have JUnit >= 4.7 as dependency to select the right JUnit Provider see http://maven.apache.org/plugins/maven-surefire-plugin/examples/junit.html -->
@@ -32,11 +32,11 @@
 					<execution>
 						<goals>
 							<goal>compile</goal>
+							<goal>testCompile</goal>
 						</goals>
 					</execution>
 				</executions>
 			</plugin>
-            <!-- Got severe problems running plain unit tests with tycho-surefire-plugin, so disabled and using maven surefire plugin -->
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>

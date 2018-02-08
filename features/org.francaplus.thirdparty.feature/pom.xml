@@ -4,11 +4,15 @@
 	<parent>
 		<groupId>org.franca</groupId>
 		<artifactId>org.francaplus.parent</artifactId>
-		<version>0.11.1-SNAPSHOT</version>
+		<version>0.12.0-SNAPSHOT</version>
 		<relativePath>../../releng/org.francaplus.parent/pom.xml</relativePath>
 	</parent>
 
 	<groupId>org.franca</groupId>
 	<artifactId>org.francaplus.thirdparty.feature</artifactId>
 	<packaging>eclipse-feature</packaging>
+	
+	<properties>
+        <skip.deployment>false</skip.deployment>
+    </properties>
 </project>

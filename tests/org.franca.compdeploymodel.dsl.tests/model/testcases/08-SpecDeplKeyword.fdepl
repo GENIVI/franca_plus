@@ -1,4 +1,4 @@
-
+package testcases
 // Deployment specification for testing the clash of fidl identifiers
 // with deployment DSL keywords (see 80-InterfaceWithDeplKeywords.fidl).
 

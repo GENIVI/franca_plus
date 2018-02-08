@@ -74,7 +74,10 @@ public class FDeployProposalProvider extends AbstractFDeployProposalProvider  {
 	
 	protected final static String[] preconfiguredDeploymentSpec = new String [] {
 			"platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl",
-			"platform:/plugin/org.genivi.commonapi.core/deployment/CommonAPI_deployment_spec.fdepl"
+			"platform:/plugin/org.genivi.commonapi.core/deployment/CommonAPI_deployment_spec.fdepl",
+			"platform:/plugin/org.franca.architecture/deployment/architecture_deployment_spec.fdepl",
+			"platform:/plugin/org.franca.architecture/deployment/network_CAN_deployment_spec.fdepl",
+			"platform:/plugin/org.franca.architecture/deployment/network_SOMEIP_deployment_spec.fdepl"
 	};
 
 	static {
@@ -130,7 +133,7 @@ public class FDeployProposalProvider extends AbstractFDeployProposalProvider  {
 			fdmodel = (FDModel)model.eContainer();
 		}
 		EList<Import> imports = fdmodel.getImports();
-		List<String> importedUris = Lists.newArrayList();
+		List<String> importedUris = new ArrayList<String>();
 		for (Import import1 : imports) {
 			importedUris.add(import1.getImportURI());	
 		}

@@ -1,4 +1,4 @@
-
+package testcases
 // deployment specification with struct/union-related property hosts
 
 specification org.example.spec.SpecCompoundHosts {

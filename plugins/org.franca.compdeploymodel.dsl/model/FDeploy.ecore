@@ -69,6 +69,10 @@
     <eLiterals name="required_ports" value="25" literal="required_ports"/>
     <eLiterals name="devices" value="26" literal="devices"/>
     <eLiterals name="variants" value="27"/>
+    <eLiterals name="attribute_setters" value="28" literal="attribute_setters"/>
+    <eLiterals name="attribute_getters" value="29" literal="attribute_getters"/>
+    <eLiterals name="attribute_notifiers" value="30" literal="attribute_notifiers"/>
+    <eLiterals name="adapters" value="31" literal="adapters"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FDTypeRef">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="predefined" eType="#//FDPredefinedTypeId"/>
@@ -111,10 +115,11 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="instances" upperBound="-1"
         eType="#//FDInterfaceInstance" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FDRequiredPort" eSuperTypes="#//FDElement">
+  <eClassifiers xsi:type="ecore:EClass" name="FDPort" eSuperTypes="#//FDRootElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="FDRequiredPort" eSuperTypes="#//FDPort">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="ecore:EClass ../../org.franca.compmodel.dsl/model/generated/FComp.ecore#//FCRequiredPort"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FDProvidedPort" eSuperTypes="#//FDElement">
+  <eClassifiers xsi:type="ecore:EClass" name="FDProvidedPort" eSuperTypes="#//FDPort">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="ecore:EClass ../../org.franca.compmodel.dsl/model/generated/FComp.ecore#//FCProvidedPort"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FDComponent" eSuperTypes="#//FDRootElement">
@@ -125,23 +130,21 @@
         eType="#//FDRequiredPort" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FDService" eSuperTypes="#//FDRootElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//FDComponentInstance"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//FDComponentInstance"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="providedPorts" upperBound="-1"
         eType="#//FDProvidedPort" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requiredPorts" upperBound="-1"
         eType="#//FDRequiredPort" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FDDevice" eSuperTypes="#//FDRootElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="ecore:EClass ../../org.franca.compmodel.dsl/model/generated/FComp.ecore#//FCDevice"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="services" upperBound="-1"
-        eType="#//FDService" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
+        eType="ecore:EClass ../../org.franca.compmodel.dsl/model/generated/FComp.ecore#//FCDevice"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="adapters" upperBound="-1"
+        eType="#//FDComAdapter" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FDDeployment" eSuperTypes="#//FDElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//FDComponentInstance"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="device" eType="ecore:EClass ../../org.franca.compmodel.dsl/model/generated/FComp.ecore#//FCDevice"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="spec" eType="#//FDSpecification"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="def" eType="#//FDService"/>
+  <eClassifiers xsi:type="ecore:EClass" name="FDComAdapter" eSuperTypes="#//FDRootElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="ecore:EClass ../../org.franca.compmodel.dsl/model/generated/FComp.ecore#//FCComAdapter"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FDComponentInstance">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -150,14 +153,12 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//FDComponentInstance"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FDVariant" eSuperTypes="#//FDRootElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="root" eType="ecore:EClass ../../org.franca.compmodel.dsl/model/generated/FComp.ecore#//FCComponent"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FDInterfaceInstance" eSuperTypes="#//FDElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="ecore:EClass ../../org.franca.core/model/franca.ecore#//FInterface"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FDVariant" eSuperTypes="#//FDRootElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="ecore:EClass ../../org.franca.compmodel.dsl/model/generated/FComp.ecore#//FCSystem"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="deployments" upperBound="-1"
-        eType="#//FDDeployment" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FDTypes" eSuperTypes="#//FDRootElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="ecore:EClass ../../org.franca.core/model/franca.ecore#//FTypeCollection"/>

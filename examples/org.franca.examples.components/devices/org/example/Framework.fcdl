@@ -4,8 +4,8 @@ import model "classpath:/Tags.fcdl"
 import model "Node.fcdl"
 
 <** 
- ** @framework 
- ** @eaguid: {000-x-x-x-fc}
+ ** @domain 
+ ** @guid: {000-x-x-x-fc}
  **> 
 component Framework {
 	contains org.example.Node as N1

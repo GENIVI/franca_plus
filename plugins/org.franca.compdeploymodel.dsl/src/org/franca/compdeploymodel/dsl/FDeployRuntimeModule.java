@@ -8,6 +8,7 @@
 package org.franca.compdeploymodel.dsl;
 
 import org.eclipse.xtext.conversion.IValueConverterService;
+import org.eclipse.xtext.generator.IGenerator.NullGenerator;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.franca.compdeploymodel.dsl.generator.internal.ImportManager;
 import org.franca.compdeploymodel.dsl.valueconverter.FDeployValueConverters;
@@ -35,4 +36,14 @@ public class FDeployRuntimeModule extends AbstractFDeployRuntimeModule {
     public Class<? extends IQualifiedNameProvider> bindIQualifiedNameProvider() {
         return org.franca.compdeploymodel.dsl.scoping.FDeployDeclarativeNameProvider.class;
     }
+	
+	@Override 
+	public Class<? extends org.eclipse.xtext.generator.IGenerator> bindIGenerator() {
+		String noFDeployGenerator = System.getProperty( "noFDeployGenerator");
+		if (noFDeployGenerator != null)
+			return NullGenerator.class;
+		else 
+			return super.bindIGenerator();
+	}
+
 }

@@ -7,6 +7,9 @@
  */
 package org.franca.compmodel.dsl;
 
+import org.eclipse.emf.ecore.EPackage;
+import com.google.inject.Injector;
+
 /**
  * Initialization support for running Xtext languages 
  * without equinox extension registry
@@ -16,4 +19,12 @@ public class FCompStandaloneSetup extends FCompStandaloneSetupGenerated{
 	public static void doSetup() {
 		new FCompStandaloneSetup().createInjectorAndDoEMFRegistration();
 	}
+	
+	public Injector createInjectorAndDoEMFRegistration() {
+		if (!EPackage.Registry.INSTANCE.containsKey("http://org.franca.compmodel.dsl")) {
+			EPackage.Registry.INSTANCE.put("http://org.franca.compmodel.dsl", org.franca.compmodel.dsl.fcomp.FcompPackage.eINSTANCE);
+		}
+		return super.createInjectorAndDoEMFRegistration();
+	}
+	
 }

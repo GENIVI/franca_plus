@@ -1,9 +1,10 @@
+package testcases
 // deployment definition
 
 import "11-SpecPropertyArrayTypes.fdepl"
 import "../fidl/05-CoverageInterface.fidl"
 
-define a.b.c.MySpec11 for interface fidl.CoverageInterface {
+define testcases.a.b.c.MySpec11 for interface fidl.CoverageInterface {
 	method aMethod {
 		// mandatory properties
 		BooleanPropMandatory = { true }

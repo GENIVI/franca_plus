@@ -4,6 +4,6 @@ import model "classpath:/Tags.fcdl"
 import model "Framework.fcdl"
 
 
-component Root {
+root component Root {
 	contains org.example.Framework as Framework
 }

@@ -3,10 +3,10 @@ package org.example
 import model "classpath:/Tags.fcdl"
 
 
-<** @dienst **>
+<** @application **>
 service component Leaf {}
 
-<** @cluster **>
+<** @part **>
 component Node {
 	contains Leaf as L1
 	contains Leaf as L2 
@@ -14,19 +14,16 @@ component Node {
 }
 
 <** 
- ** @framework 
- ** @eaguid: {000-x-x-x-fc}
+ ** @domain 
+ ** @guid: {000-x-x-x-fc}
  **> 
 component Framework {
 	contains Node as N1
 	contains Node as N2
 }
 
-component Root {
+root component Root {
 	contains Framework
 }
 
-system System with root Root
-{
-	device D
-}
+device D

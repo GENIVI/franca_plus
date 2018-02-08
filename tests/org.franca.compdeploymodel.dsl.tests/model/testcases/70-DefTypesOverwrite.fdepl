@@ -1,9 +1,10 @@
 // deployment definition with overwrites for interface
+package testcases
 
 import "60-SpecCompoundHosts.fdepl"
 import "../fidl/35-InterfaceUsingTypes.fidl"
 
-define org.example.spec.SpecCompoundHosts for interface fidl.InterfaceUsingTypes {
+define testcases.org.example.spec.SpecCompoundHosts for interface fidl.InterfaceUsingTypes {
 
 	// deployment for the basic types defined in the interface
 	

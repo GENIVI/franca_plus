@@ -18,6 +18,7 @@ import org.franca.compmodel.dsl.fcomp.FCPrototypeInjection
 
 class FCompUtils {
 
+
 	public def static getComponentForObject(EObject obj) {
 		var EObject o = obj
 		while (o.eContainer !== null) {
@@ -46,7 +47,11 @@ class FCompUtils {
 				ports += comp.providedPorts
 			else 
 				ports += comp.requiredPorts
-				
+			
+			//Since Xtext follows the rule of lazy instantiation it happens that the port names are null because the Interfaces aren't instantiated yet.
+			//The following call triggers this so the name value for the ports won't be null anymore
+			ports.forEach[it.interface]
+			
 			if (comp.superType !== null)
 				collectInheritedPorts(comp.superType, pt, ports)
 		}	
@@ -90,5 +95,20 @@ class FCompUtils {
 		return null
 	}
 	
+	/*
+	 * Check if Component a is derived from component b.
+	 * Deliver true is a i derived from b or a equals b. Else false
+	 */
+	 public def static boolean isDerivedFrom(FCComponent a, FCComponent b) {
+	 	if (a === b)
+	 		return true
+	 	var parent = a.superType
+	 	while (parent !== null) {
+	 		if (parent === b)
+	 			return true
+	 		else parent = parent.superType
+		}
+	 	return false
+	 }
 	
 }

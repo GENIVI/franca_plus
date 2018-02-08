@@ -1,4 +1,4 @@
-
+package testcases
 // deployment specification with property declarations for instance types
 
 specification a.b.c.MySpec18 {

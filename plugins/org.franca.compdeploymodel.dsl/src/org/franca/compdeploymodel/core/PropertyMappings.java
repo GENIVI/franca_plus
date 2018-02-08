@@ -11,18 +11,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
-import org.franca.core.framework.FrancaHelpers;
-import org.franca.core.franca.FArrayType;
-import org.franca.core.franca.FEnumerationType;
-import org.franca.core.franca.FStructType;
-import org.franca.core.franca.FType;
-import org.franca.core.franca.FTypeRef;
-import org.franca.core.franca.FTypedElement;
-import org.franca.core.franca.FUnionType;
 import org.franca.compdeploymodel.dsl.fDeploy.FDArgument;
 import org.franca.compdeploymodel.dsl.fDeploy.FDArray;
 import org.franca.compdeploymodel.dsl.fDeploy.FDAttribute;
 import org.franca.compdeploymodel.dsl.fDeploy.FDBroadcast;
+import org.franca.compdeploymodel.dsl.fDeploy.FDComAdapter;
 import org.franca.compdeploymodel.dsl.fDeploy.FDComponent;
 import org.franca.compdeploymodel.dsl.fDeploy.FDDeclaration;
 import org.franca.compdeploymodel.dsl.fDeploy.FDDevice;
@@ -47,6 +40,15 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDTypedef;
 import org.franca.compdeploymodel.dsl.fDeploy.FDTypes;
 import org.franca.compdeploymodel.dsl.fDeploy.FDUnion;
 import org.franca.compdeploymodel.dsl.fDeploy.FDUnionOverwrites;
+import org.franca.core.framework.FrancaHelpers;
+import org.franca.core.franca.FArrayType;
+import org.franca.core.franca.FAttribute;
+import org.franca.core.franca.FEnumerationType;
+import org.franca.core.franca.FStructType;
+import org.franca.core.franca.FType;
+import org.franca.core.franca.FTypeRef;
+import org.franca.core.franca.FTypedElement;
+import org.franca.core.franca.FUnionType;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -90,11 +92,19 @@ public class PropertyMappings {
 		FTypeRef typeRef = null;
 		boolean isInlineArray = false;
 		if (elem instanceof FDAttribute) {
-			FTypedElement te = ((FDAttribute) elem).getTarget();
-			typeRef = te.getType();
-			if (te.isArray())
+			FAttribute fa = ((FDAttribute) elem).getTarget();
+			typeRef = fa.getType();
+			if (fa.isArray())
 				isInlineArray = true;
-		} else if (elem instanceof FDArgument) {
+			
+			if(fa.isNoRead() == false) 
+				hosts.add(FDPropertyHost.ATTRIBUTE_GETTERS);
+			if (fa.isReadonly() == false) 
+				hosts.add(FDPropertyHost.ATTRIBUTE_SETTERS);				
+			if(fa.isNoSubscriptions() == false ) 
+				hosts.add(FDPropertyHost.ATTRIBUTE_NOTIFIERS);
+		} 
+		else if (elem instanceof FDArgument) {
 			FTypedElement te = ((FDArgument) elem).getTarget();
 			typeRef = te.getType();
 			if (te.isArray())
@@ -246,8 +256,11 @@ public class PropertyMappings {
 			return FDPropertyHost.REQUIRED_PORTS;
 		} else if (elem instanceof FDDevice) {
 			return FDPropertyHost.DEVICES;
+		} else if (elem instanceof FDComAdapter) {
+			return FDPropertyHost.ADAPTERS;
 		}
-
+		
+	
 		return null;
 	}
 
@@ -304,5 +317,4 @@ public class PropertyMappings {
 		}
 		return true;
 	}
-
 }

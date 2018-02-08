@@ -3,15 +3,16 @@ package org.example
 import org.example.* from "HelloWorld.fidl"
 
 service component HelloWorldServer {
-	contains SubOrdinateService as InnerStructure
+	contains PartService as InnerStructure
 	provides HelloWorld2 as AskMePort
+	provides HelloWorld as AskMePortCan
 }
 
 service component HelloWorldClient {
 	requires org.example.HelloWorld2 as AnswerMePort
 }
 
-service component SubOrdinateService {}
+service component PartService {}
 
 
 component MeetingPoint {
@@ -24,7 +25,9 @@ component MeetingPoint {
 	connect Client2.AnswerMePort to Service.AskMePort
 }
 
-component System {
+root component World {
 	contains MeetingPoint as Room1
 	contains MeetingPoint as Room2
 }
+
+root component Universe extends World

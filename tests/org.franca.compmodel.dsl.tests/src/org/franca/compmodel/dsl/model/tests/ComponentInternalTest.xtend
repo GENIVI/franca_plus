@@ -29,7 +29,7 @@ class ComponentInternalTest
 	
 	var model = null as FCModel
 	
-	var COMPONENT_TO_TEST = 2 //BodyCluster
+	var COMPONENT_TO_TEST = 2
 	
 	@Before
 	def void init()

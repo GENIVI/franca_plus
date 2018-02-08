@@ -1,3 +1,10 @@
+/* Copyright (C) 2017 BMW Group
+ * Author: Bernhard Hennlich (bernhard.hennlich@bmw.de)
+ * This Source Code Form is subject to the terms of the Eclipse Public
+ * License, v. 1.0. If a copy of the EPL was not distributed with this
+ * file, You can obtain one at https://www.eclipse.org/legal/epl-v10.html. 
+ */
+
 package org.franca.compdeploymodel.dsl.ui.contentassist;
 
 import java.util.List;
@@ -10,7 +17,6 @@ import org.eclipse.xtext.resource.IContainer.Manager;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
-import org.eclipse.xtext.scoping.IGlobalScopeProvider;
 import org.eclipse.xtext.scoping.impl.DefaultGlobalScopeProvider;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
 
@@ -23,8 +29,6 @@ import com.google.inject.Inject;
  */
 public class ContainerUtil {
 
-	@Inject
-	private IGlobalScopeProvider globalScopeProvider;
 	@Inject
 	private IResourceDescription.Manager descriptionManager;
 	@Inject

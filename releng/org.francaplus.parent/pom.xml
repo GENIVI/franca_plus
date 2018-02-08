@@ -9,18 +9,26 @@
 
 	<groupId>org.franca</groupId>
 	<artifactId>org.francaplus.parent</artifactId>
-	<version>0.11.1-SNAPSHOT</version>
+	<version>0.12.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<parent>
+	<!--parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
 		<version>7</version>
-	</parent>
+	</parent-->
+	
+	<distributionManagement>
+  <repository>
+      <id>ascent.artifactory.server</id>
+      <name>ascent.artifactory.server</name>
+      <url>https://asc-repoa.bmwgroup.net/artifactory/franca-local/</url>
+  </repository>
+	</distributionManagement>
 
 	<properties>
 		<eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
-		<platform-version-name>luna</platform-version-name>
+		<platform-version-name>neon</platform-version-name>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 		<tycho-version>0.22.0</tycho-version>
 		<junit-version>4.8.1</junit-version>
@@ -38,19 +46,24 @@
 		<module>../../plugins/org.franca.compdeploymodel.dsl.ui</module>
 
 		<!-- deployment specification files -->
-		<module>../../plugins/org.genivi.commonapi.core</module>
-		<module>../../plugins/org.genivi.commonapi.someip</module>
+		
+		
+		<module>../../plugins/org.franca.architecture</module>
 
 		<!-- test modules -->
 		<module>../../tests/org.franca.compmodel.dsl.tests</module>
+		<module>../../tests/org.franca.compdeploymodel.dsl.tests.base</module>
+		<module>../../tests/org.franca.compdeploymodel.dsl.tests</module>
 		<!-- product modules -->
-		<module>../../releng/org.francaplus.product</module>
+		<module>../../releng/org.${target-product}</module>
 
 		<!-- feature modules -->
 		<module>../../features/org.francaplus.feature</module>
 		<module>../../features/org.francaplus.thirdparty.feature</module>
-		<module>../../features/org.genivi.commonapi.core.feature</module>
-		<module>../../features/org.genivi.commonapi.someip.feature</module>
+		
+		
+		<module>../../features/org.franca.architecture.feature</module>
+		<module>../../features/org.francaplus.feature.sdk</module>
 		<!-- update site -->
 		<module>../../releng/org.francaplus.updatesite</module>
 	</modules>
@@ -158,7 +171,7 @@
 					<artifactId>tycho-compiler-plugin</artifactId>
 					<version>${tycho-version}</version>
 					<configuration>
-						<encoding>UTF-8</encoding>
+						<encoding>ISO-8859-1</encoding>
 						<source>6.0</source>
 						<target>6.0</target>
 					</configuration>
@@ -333,9 +346,8 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<pluginRepositories>
-		<!--pluginRepository> <id>tycho-0.14.0-staged</id> <url>https://oss.sonatype.org/content/repositories/orgeclipsetycho-004/</url> 
-			</pluginRepository -->
+	<!--pluginRepositories>
+
 		<pluginRepository>
 			<id>sonatype</id>
 			<url>http://repository.sonatype.org/content/groups/sonatype-public-grid/</url>
@@ -350,8 +362,7 @@
 			<id>xtend</id>
 			<url>http://repo.maven.apache.org/maven2</url>
 		</pluginRepository>
-	</pluginRepositories>
-
+	</pluginRepositories-->
 	<repositories>
 		<repository>
 			<id>maven.eclipse.org</id>
@@ -364,30 +375,58 @@
 	</repositories>
 
 	<profiles>
-		<profile>
-			<id>macosx-jvm-flags</id>
-			<activation>
-				<os>
-					<family>mac</family>
-				</os>
-			</activation>
-			<properties>
-				<os-jvm-flags>-XstartOnFirstThread</os-jvm-flags>
-			</properties>
-		</profile>
-		<profile>
-			<id>non-macosx-jvm-flags</id>
-			<activation>
-				<os>
-					<family>!mac</family>
-				</os>
-			</activation>
-			<properties>
-				<os-jvm-flags>
-				</os-jvm-flags>
-			</properties>
-		</profile>
+		 <profile>
+             <id>macosx-jvm-flags</id>
+		       <activation>
+                        <os>
+                           <family>mac</family>
+                        </os>
+               </activation>
+                  <properties>
+                        <os-jvm-flags>-XstartOnFirstThread</os-jvm-flags>
+                  </properties>
+         </profile>
+         <profile>
+                <id>non-macosx-jvm-flags</id>
+	                 <activation>
+    	                   <os>
+	                           <family>!mac</family>
+	                       </os>
+                      </activation>
+                       <properties>
+                               <os-jvm-flags>
+                               </os-jvm-flags>
+                       </properties>
+               </profile>
 
+        <profile>
+            <id>x86</id>
+            <activation>
+                <property>
+        			<name>!x64</name>
+      			</property>
+            </activation>
+            <properties>
+                <target-file-name>franca-${platform-version-name}.target</target-file-name>
+                <target-classifier>franca-${platform-version-name}</target-classifier>
+				<target-arch>x86</target-arch>
+				<target-product>francaplus.product</target-product>
+            </properties>
+        </profile>
+        <profile>
+            <id>x64</id>
+            <activation>
+                <property>
+        			<name>x64</name>
+      			</property>
+            </activation>
+            <properties>
+                <target-file-name>franca-${platform-version-name}.target</target-file-name>
+                <target-classifier>franca-${platform-version-name}</target-classifier>
+				<target-arch>x86_64</target-arch>
+				<target-product>francaplus_x64.product</target-product>
+            </properties>
+        </profile>
 
 		<profile>
 			<id>release-sign-artifacts</id>
@@ -442,12 +481,10 @@
 						<version>${tycho-version}</version>
 						<configuration>
 							<environments>
-								<!-- <environment> <os>win32</os> <ws>win32</ws> <arch>x86_64</arch> 
-									</environment> -->
-								<environment>
-									<os>win32</os>
-									<ws>win32</ws>
-									<arch>x86</arch>
+ 								<environment> 
+ 									<os>win32</os> 
+ 									<ws>win32</ws> 
+ 									<arch>${target-arch}</arch> 
 								</environment>
 								<!-- <environment> <os>macosx</os> <ws>cocoa</ws> <arch>x86_64</arch> 
 									</environment> <environment> <os>linux</os> <ws>gtk</ws> <arch>x86_64</arch> 
@@ -483,7 +520,7 @@
 									<groupId>org.franca</groupId>
 									<artifactId>org.francaplus.targetplatform</artifactId>
 									<version>${project.version}</version>
-									<classifier>franca-${platform-version-name}</classifier>
+									<classifier>${target-classifier}</classifier>
 								</artifact>
 							</target>
 							<filters>
@@ -494,14 +531,9 @@
 								<environment>
 									<os>win32</os>
 									<ws>win32</ws>
-									<arch>x86</arch>
+									<arch>${target-arch}</arch>
 								</environment>
-								<environment>
-									<os>win32</os>
-									<ws>win32</ws>
-									<arch>x86_64</arch>
-								</environment>
-								<environment>
+								<!--<environment>
 									<os>macosx</os>
 									<ws>cocoa</ws>
 									<arch>x86_64</arch>
@@ -520,7 +552,7 @@
 									<os>linux</os>
 									<ws>gtk</ws>
 									<arch>x86_64</arch>
-								</environment>
+								</environment>-->
 							</environments>
 						</configuration>
 					</plugin>

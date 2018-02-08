@@ -7,6 +7,7 @@
  *******************************************************************************/
 package org.franca.compdeploymodel.dsl.validation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
@@ -15,20 +16,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
-import org.franca.core.FrancaModelExtensions;
-import org.franca.core.franca.FArgument;
-import org.franca.core.franca.FArrayType;
-import org.franca.core.franca.FAttribute;
-import org.franca.core.franca.FBroadcast;
-import org.franca.core.franca.FEnumerationType;
-import org.franca.core.franca.FEnumerator;
-import org.franca.core.franca.FField;
-import org.franca.core.franca.FInterface;
-import org.franca.core.franca.FMethod;
-import org.franca.core.franca.FStructType;
-import org.franca.core.franca.FType;
-import org.franca.core.franca.FTypeDef;
-import org.franca.core.franca.FUnionType;
 import org.franca.compdeploymodel.core.FDModelUtils;
 import org.franca.compdeploymodel.core.PropertyMappings;
 import org.franca.compdeploymodel.dsl.FDMapper;
@@ -39,6 +26,7 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDAttribute;
 import org.franca.compdeploymodel.dsl.fDeploy.FDBoolean;
 import org.franca.compdeploymodel.dsl.fDeploy.FDBroadcast;
 import org.franca.compdeploymodel.dsl.fDeploy.FDComplexValue;
+import org.franca.compdeploymodel.dsl.fDeploy.FDComponentInstance;
 import org.franca.compdeploymodel.dsl.fDeploy.FDElement;
 import org.franca.compdeploymodel.dsl.fDeploy.FDEnumType;
 import org.franca.compdeploymodel.dsl.fDeploy.FDEnumValue;
@@ -54,14 +42,17 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDMethod;
 import org.franca.compdeploymodel.dsl.fDeploy.FDModel;
 import org.franca.compdeploymodel.dsl.fDeploy.FDOverwriteElement;
 import org.franca.compdeploymodel.dsl.fDeploy.FDPlainTypeOverwrites;
+import org.franca.compdeploymodel.dsl.fDeploy.FDPort;
 import org.franca.compdeploymodel.dsl.fDeploy.FDPredefinedTypeId;
 import org.franca.compdeploymodel.dsl.fDeploy.FDProperty;
 import org.franca.compdeploymodel.dsl.fDeploy.FDPropertyDecl;
 import org.franca.compdeploymodel.dsl.fDeploy.FDPropertyFlag;
 import org.franca.compdeploymodel.dsl.fDeploy.FDPropertyHost;
 import org.franca.compdeploymodel.dsl.fDeploy.FDPropertySet;
+import org.franca.compdeploymodel.dsl.fDeploy.FDProvidedPort;
 import org.franca.compdeploymodel.dsl.fDeploy.FDProvider;
 import org.franca.compdeploymodel.dsl.fDeploy.FDRootElement;
+import org.franca.compdeploymodel.dsl.fDeploy.FDService;
 import org.franca.compdeploymodel.dsl.fDeploy.FDSpecification;
 import org.franca.compdeploymodel.dsl.fDeploy.FDString;
 import org.franca.compdeploymodel.dsl.fDeploy.FDStruct;
@@ -75,10 +66,24 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDUnion;
 import org.franca.compdeploymodel.dsl.fDeploy.FDUnionOverwrites;
 import org.franca.compdeploymodel.dsl.fDeploy.FDValue;
 import org.franca.compdeploymodel.dsl.fDeploy.FDValueArray;
+import org.franca.compdeploymodel.dsl.fDeploy.FDVariant;
 import org.franca.compdeploymodel.dsl.fDeploy.FDeployPackage;
 import org.franca.compdeploymodel.dsl.validation.internal.ValidatorRegistry;
-
-import com.google.common.collect.Lists;
+import org.franca.compmodel.dsl.fcomp.FCGenericPrototype;
+import org.franca.core.FrancaModelExtensions;
+import org.franca.core.franca.FArgument;
+import org.franca.core.franca.FArrayType;
+import org.franca.core.franca.FAttribute;
+import org.franca.core.franca.FBroadcast;
+import org.franca.core.franca.FEnumerationType;
+import org.franca.core.franca.FEnumerator;
+import org.franca.core.franca.FField;
+import org.franca.core.franca.FInterface;
+import org.franca.core.franca.FMethod;
+import org.franca.core.franca.FStructType;
+import org.franca.core.franca.FType;
+import org.franca.core.franca.FTypeDef;
+import org.franca.core.franca.FUnionType;
 
 /*******************************************************************************
  * Copyright (c) 2013 itemis AG (http://www.itemis.de).
@@ -643,7 +648,7 @@ public class FDeployJavaValidator extends AbstractFDeployJavaValidator
 	private boolean checkSpecificationElementProperties(FDSpecification spec, FDElement elem, EStructuralFeature feature, String elementName)
 	{
 		List<FDPropertyDecl> decls = PropertyMappings.getAllPropertyDecls(spec, elem);
-		List<String> missing = Lists.newArrayList();
+		List<String> missing = new ArrayList<String>();
 		for(FDPropertyDecl decl : decls) {
 			if (PropertyMappings.isMandatory(decl)) {
 				if (!contains(elem.getProperties().getItems(), decl)) {
@@ -804,7 +809,74 @@ public class FDeployJavaValidator extends AbstractFDeployJavaValidator
 			i++;
 		}
 	}
+	
+	// ========================================================================
+	// Component Model Deployment Checks
+	
+	/**
+	 * Check if a service target points to a component with stereotype <service>
+	 * @param instance: component instance to check for being service
+	 */
+	@Check
+	public void checkComponentInstance4ServiceNature(FDService service) {
+		
+		if (service.getTarget() != null) {
+		    FDComponentInstance instance = service.getTarget();
+			if (instance.getPrototype() == null) {
+				if (instance.getTarget() != null ) {
+					if (instance.getTarget().isService() == false)
+						error("Component is no service!", FDeployPackage.Literals.FD_SERVICE__TARGET);
+				}
+			}
+			else {
+				FCGenericPrototype proto = instance.getPrototype();
+				if (proto.getComponent().isService() == false)
+					error("Component is no service!", FDeployPackage.Literals.FD_SERVICE__TARGET); 
+			}
+		}
+	}
+	
+	/**
+	 * A service name must be unique in the context of a variant
+	 * @param instance: component instance to check for being service
+	@Check
+	public void checkServiceNameUniqueness(FDService service) {
+		if (deployValidator.checkServiceHasUniqueName( service) == false)
+			error("Service instance with same fully qualified name already defined!", FDeployPackage.Literals.FD_SERVICE__TARGET);
+	}
+	*/
 
+	/**
+	 * A provided port must not be deployed twice	
+	 * @param instance: provided port
+	 */
+	@Check
+	public void checkDuplicatePortDeployment(FDProvidedPort pp) {
+		if (deployValidator.checkDuplicatePortDeployment( pp) == false)
+			error("Port is already deployed!", FDeployPackage.Literals.FD_PROVIDED_PORT__TARGET);
+	}
+	
+	
+	/**
+	 * In a variant all used devices shall only host services from the same root. 	
+	 * @param instance: provided port
+	 */
+	@Check
+	public void checkRootCompatibilityOfUsedDevicesInVariant(FDVariant variant) {
+		if (deployValidator.checkRootCompatibilityOfUsedDevicesInVariant( variant) == false)
+			warning("Variant contains services with incompatible root!", FDeployPackage.Literals.FD_VARIANT__ROOT);
+	}
+	
+	/**
+	 * Report a warning if a port in a service uses an interface deployment and in the component the same port also has an interface deployment
+	 * @param port
+	 */
+	@Check
+	public void checkForUniqueInterfaceDeployment(FDPort port) {
+		if (deployValidator.checkForUniqueInterfaceDeployment(port) == false)
+			warning("Port has multiple interface deployments!", FDeployPackage.Literals.FD_ROOT_ELEMENT__USE);
+			
+	}
 	
 	// *****************************************************************************
 	// ValidationMessageReporter interface

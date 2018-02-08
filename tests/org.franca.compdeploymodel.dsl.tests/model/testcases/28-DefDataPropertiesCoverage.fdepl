@@ -1,9 +1,10 @@
+package testcases
 // deployment definition
 
 import "03-SpecDataHostsSimple.fdepl"
 import "../fidl/05-CoverageInterface.fidl"
 
-define a.b.c.MySpec03 for interface fidl.CoverageInterface {
+define testcases.a.b.c.MySpec03 for interface fidl.CoverageInterface {
 
 	attribute someInt8 {
 		PropInteger = 0

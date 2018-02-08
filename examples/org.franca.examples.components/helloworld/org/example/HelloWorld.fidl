@@ -1,12 +1,13 @@
 package org.example
 
-import HelloWorldTypes from "HelloWorldTypes.fidl"
+import org.example.* from "HelloWorldTypes.fidl"
+import model "HelloWorldTypes.fidl"
 
 interface HelloWorld2 extends HelloWorld {
   version {major 1 minor 0}
   broadcast isThereSomeBody {
     out {
-       org.example.Request request
+        Request request
     }
   }
   attribute org.example.KnownPeople knownPeople readonly
@@ -20,7 +21,7 @@ interface HelloWorld {
       String name
     }
     out {
-      String message
+      org.example.Answer message
     }
   }
 } 

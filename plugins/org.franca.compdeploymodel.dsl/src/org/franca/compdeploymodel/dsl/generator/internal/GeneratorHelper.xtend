@@ -32,7 +32,7 @@ class GeneratorHelper {
 					FDEnumType: "Enum"
 				}
 			}
-		if (typeRef.array!==null)
+		if (typeRef.array===null)
 			single
 		else
 			single + "Array"

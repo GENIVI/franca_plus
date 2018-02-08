@@ -6,19 +6,19 @@ import org.example.* from "classpath:/org/example/MediaPlayer.fidl"
 //=====================================================
 // service definitions
 
-<** @dienst **>
+<** @application **>
 service component Component1 {}
 
 
 //=====================================================
 // architecture structure definitions
 
-<** @cluster **>
+<** @part **>
 component OrphanedComponent {
 	contains Component1 as Comp1Inst1Orphaned	
 }
 
-<** @framework **>
+<** @domain **>
 component Component2 {
 	version { major 1 minor 0 }
 	contains Component1 as ComponentInst1
@@ -29,24 +29,21 @@ component Component2 {
 <** 
  ** @author: bernhard hennlich
  **>
-component VehicleFuture
+root component VehicleFuture
 {
 	contains InfotainmentFrameworkFuture as InfotainmentFramework2030
 }
 
-<** @framework **>
+<** @domain **>
 component InfotainmentFrameworkFuture {
 	contains AudioCluster 
 }
 
-<** @cluster **>
+<** @part **>
 component AudioCluster {
 	contains Component2 as Component2Inst1
 }
 
-//=====================================================
-// partitioning
-system Vehicle with root VehicleFuture {
-	device HeadUnit
-	device Amplifier
-}
+// devices 
+device Amplifier
+device HeadUnit

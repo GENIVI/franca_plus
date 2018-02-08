@@ -77,6 +77,7 @@ class CodeGeneratorTest extends GeneratorTestBase {
 		)
 	}
 	
+	@Ignore
 	@Test
 	def void test_60_SpecCompoundHosts() {
 		val root = loadModel("testcases/60-SpecCompoundHosts.fdepl");
@@ -102,6 +103,7 @@ class CodeGeneratorTest extends GeneratorTestBase {
 		assertTrue(isEqualJava(expected, generated))
 	}
 
+	@Ignore
 	@Test
 	def void test_61_SpecTypeCollection() {
 		val root = loadModel("testcases/61-SpecTypeCollection.fdepl");

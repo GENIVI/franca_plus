@@ -1,9 +1,10 @@
+package testcases
 // deployment definition with overwrites for interface
 
 import "60-SpecCompoundHosts.fdepl"
 import "../fidl/30-InterfaceUsingCompounds.fidl"
 
-define org.example.spec.SpecCompoundHosts for interface fidl.InterfaceUsingCompounds {
+define testcases.org.example.spec.SpecCompoundHosts for interface fidl.InterfaceUsingCompounds {
 
 	attribute attr1 {
 		StringProp = u

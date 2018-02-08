@@ -1,9 +1,10 @@
+package testcases
 // deployment definition with overwrites for typeCollection
 
 import "60-SpecCompoundHosts.fdepl"
 import "../fidl/31-TypeCollectionUsingCompounds.fidl"
 
-define org.example.spec.SpecCompoundHosts for typeCollection fidl.TCUsingCompounds {
+define testcases.org.example.spec.SpecCompoundHosts for typeCollection fidl.TCUsingCompounds {
 
 	struct StructA {
 		StructProp = 111

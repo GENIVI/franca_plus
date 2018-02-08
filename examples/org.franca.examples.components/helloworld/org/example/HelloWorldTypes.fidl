@@ -1,18 +1,21 @@
 package org.example
  
 typeCollection {
-  	version {major 1 minor 0}
-	
-	enumeration Location {
+  	enumeration Location {
 		Europe,
 		Asia,
 		America
 	}
-	struct Person {
+	
+	map Greeting { Person to Location }
+
+	union Person {
 		String name
 		Location location
 	}
+	
 	typedef Request is UInt8
+	
 	array KnownPeople of Person 
 	
 	struct Answer {

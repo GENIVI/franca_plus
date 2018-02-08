@@ -34,8 +34,19 @@
       <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPropertyHost/byte_buffers"/>
       <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPropertyHost/fields"/>
       <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPropertyHost/components"/>
-      <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPropertyHost/required_ports"/>
+      <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPropertyHost/services"/>
       <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPropertyHost/provided_ports"/>
+      <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPropertyHost/required_ports"/>
+      <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPropertyHost/devices"/>
+      <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPropertyHost/variants"/>
+      <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPropertyHost/attribute_setters"/>
+      <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPropertyHost/attribute_getters"/>
+      <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPropertyHost/attribute_notifiers"/>
+      <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPropertyHost/provided_methods"/>
+      <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPropertyHost/provided_broadcasts"/>
+      <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPropertyHost/provided_attributes"/>
+      <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPropertyHost/provided_arguments"/>
+      <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPropertyHost/adapters"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="FDeploy.ecore#//FDPredefinedTypeId">
       <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPredefinedTypeId/Integer"/>
@@ -47,6 +58,7 @@
       <genEnumLiterals ecoreEnumLiteral="FDeploy.ecore#//FDPredefinedTypeId/Constant"/>
     </genEnums>
     <genClasses ecoreClass="FDeploy.ecore#//FDModel">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FDeploy.ecore#//FDModel/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDModel/imports"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDModel/specifications"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDModel/deployments"/>
@@ -72,6 +84,7 @@
     <genClasses ecoreClass="FDeploy.ecore#//FDPropertyFlag">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FDeploy.ecore#//FDPropertyFlag/optional"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDPropertyFlag/default"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FDeploy.ecore#//FDPropertyFlag/typed"/>
     </genClasses>
     <genClasses ecoreClass="FDeploy.ecore#//FDTypeRef">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FDeploy.ecore#//FDTypeRef/predefined"/>
@@ -99,6 +112,41 @@
     <genClasses ecoreClass="FDeploy.ecore#//FDProvider">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDProvider/instances"/>
     </genClasses>
+    <genClasses ecoreClass="FDeploy.ecore#//FDRequiredPort">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDRequiredPort/target"/>
+    </genClasses>
+    <genClasses ecoreClass="FDeploy.ecore#//FDProvidedPort">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDProvidedPort/target"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDProvidedPort/methods"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDProvidedPort/attributes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDProvidedPort/broadcasts"/>
+    </genClasses>
+    <genClasses ecoreClass="FDeploy.ecore#//FDComponent">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDComponent/target"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDComponent/providedPorts"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDComponent/requiredPorts"/>
+    </genClasses>
+    <genClasses ecoreClass="FDeploy.ecore#//FDService">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDService/target"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDService/providedPorts"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDService/requiredPorts"/>
+    </genClasses>
+    <genClasses ecoreClass="FDeploy.ecore#//FDDevice">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDDevice/target"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDDevice/adapters"/>
+    </genClasses>
+    <genClasses ecoreClass="FDeploy.ecore#//FDComAdapter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDComAdapter/target"/>
+    </genClasses>
+    <genClasses ecoreClass="FDeploy.ecore#//FDComponentInstance">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FDeploy.ecore#//FDComponentInstance/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDComponentInstance/target"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDComponentInstance/prototype"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDComponentInstance/parent"/>
+    </genClasses>
+    <genClasses ecoreClass="FDeploy.ecore#//FDVariant">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDVariant/root"/>
+    </genClasses>
     <genClasses ecoreClass="FDeploy.ecore#//FDInterfaceInstance">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDInterfaceInstance/target"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FDeploy.ecore#//FDInterfaceInstance/name"/>
@@ -117,6 +165,9 @@
     <genClasses ecoreClass="FDeploy.ecore#//FDAttribute">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDAttribute/target"/>
     </genClasses>
+    <genClasses ecoreClass="FDeploy.ecore#//FDProvidedAttribute">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDProvidedAttribute/target"/>
+    </genClasses>
     <genClasses ecoreClass="FDeploy.ecore#//FDOperation">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDOperation/outArguments"/>
     </genClasses>
@@ -124,14 +175,29 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDMethod/target"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDMethod/inArguments"/>
     </genClasses>
+    <genClasses ecoreClass="FDeploy.ecore#//FDProvidedMethod">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDProvidedMethod/target"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDProvidedMethod/inArguments"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDProvidedMethod/outArguments"/>
+    </genClasses>
     <genClasses ecoreClass="FDeploy.ecore#//FDBroadcast">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDBroadcast/target"/>
+    </genClasses>
+    <genClasses ecoreClass="FDeploy.ecore#//FDProvidedBroadcast">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDProvidedBroadcast/target"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDProvidedBroadcast/outArguments"/>
     </genClasses>
     <genClasses ecoreClass="FDeploy.ecore#//FDArgumentList">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDArgumentList/arguments"/>
     </genClasses>
+    <genClasses ecoreClass="FDeploy.ecore#//FDProvidedArgumentList">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDProvidedArgumentList/arguments"/>
+    </genClasses>
     <genClasses ecoreClass="FDeploy.ecore#//FDArgument">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDArgument/target"/>
+    </genClasses>
+    <genClasses ecoreClass="FDeploy.ecore#//FDProvidedArgument">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDProvidedArgument/target"/>
     </genClasses>
     <genClasses ecoreClass="FDeploy.ecore#//FDTypeDefinition"/>
     <genClasses ecoreClass="FDeploy.ecore#//FDCompound">
@@ -193,6 +259,12 @@
     </genClasses>
     <genClasses ecoreClass="FDeploy.ecore#//FDInterfaceRef">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDInterfaceRef/value"/>
+    </genClasses>
+    <genClasses ecoreClass="FDeploy.ecore#//FDEnumeratorRef">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDEnumeratorRef/value"/>
+    </genClasses>
+    <genClasses ecoreClass="FDeploy.ecore#//FDConstantDefRef">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDConstantDefRef/value"/>
     </genClasses>
     <genClasses ecoreClass="FDeploy.ecore#//FDGeneric">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FDeploy.ecore#//FDGeneric/value"/>

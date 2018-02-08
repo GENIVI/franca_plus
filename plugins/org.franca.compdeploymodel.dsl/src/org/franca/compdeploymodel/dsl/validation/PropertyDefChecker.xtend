@@ -8,6 +8,8 @@
 package org.franca.compdeploymodel.dsl.validation
 
 import java.util.List
+import org.franca.compdeploymodel.dsl.FDSpecificationExtender
+import org.franca.compdeploymodel.dsl.fDeploy.FDPropertyHost
 import org.franca.core.franca.FArgument
 import org.franca.core.franca.FArrayType
 import org.franca.core.franca.FAttribute
@@ -19,8 +21,6 @@ import org.franca.core.franca.FStructType
 import org.franca.core.franca.FTypeDef
 import org.franca.core.franca.FTypeRef
 import org.franca.core.franca.FUnionType
-import org.franca.compdeploymodel.dsl.FDSpecificationExtender
-import org.franca.compdeploymodel.dsl.fDeploy.FDPropertyHost
 
 import static org.franca.compdeploymodel.dsl.fDeploy.FDPropertyHost.*
 
@@ -48,8 +48,8 @@ class PropertyDefChecker {
 		if (specHelper.isMandatory(METHODS)) return true
 		if (inArgs.empty && outArgs.empty) return false
 		if (specHelper.isMandatory(ARGUMENTS)) return true
-		if (inArgs.findFirst[mustBeDefined()]!=null) return true
-		if (outArgs.findFirst[mustBeDefined()]!=null) return true
+		if (inArgs.findFirst[mustBeDefined()]!==null) return true
+		if (outArgs.findFirst[mustBeDefined()]!==null) return true
 		false
 	}
 	
@@ -57,7 +57,7 @@ class PropertyDefChecker {
 		if (specHelper.isMandatory(BROADCASTS)) return true
 		if (outArgs.empty) return false
 		if (specHelper.isMandatory(ARGUMENTS)) return true
-		if (outArgs.findFirst[mustBeDefined()]!=null) return true
+		if (outArgs.findFirst[mustBeDefined()]!==null) return true
 		false
 	}
 	
@@ -78,7 +78,7 @@ class PropertyDefChecker {
 	def mustBeDefined (List<FField> it, FDPropertyHost host) {
 		if (empty) return false
 		if (specHelper.isMandatory(host)) return true
-		if (findFirst[mustBeDefined]!=null) return true
+		if (findFirst[mustBeDefined]!==null) return true
 		false
 	}
 	
@@ -93,15 +93,14 @@ class PropertyDefChecker {
 		specHelper.isMandatory(TYPEDEFS)
 	}
 	
-
 	def mustBeDefined (FAttribute it) {
 		specHelper.isMandatory(ATTRIBUTES) || type.mustBeDefined(array)
 	}
-
+	
 	def mustBeDefined (FArgument it) {
 		specHelper.isMandatory(ARGUMENTS) || type.mustBeDefined(array)
 	}
-
+	
 	def mustBeDefined (FField it) {
 		val isStruct = eContainer instanceof FStructType
 		val host = if (isStruct) STRUCT_FIELDS else UNION_FIELDS

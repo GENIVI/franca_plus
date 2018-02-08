@@ -350,5 +350,203 @@ class FCompValidatorTest
 			"Component \'" + model.components.get(0).prototypes.get(0).component.name + "\' must not contain prototype of component, which is already present in hierarchy"
 		)
 	}
+
+
+	@Test
+	def void TestForSelfContainmentWithSuperTypePrototype()
+	{
+		var model = '''
+		package org.example
+		import org.example.* from "testfidls/WindowLifter.fidl"
+				
+		service component WindowLifterMaster{}
+				
+		service component WindowLifter extends WindowLifterMaster{
+		contains WindowLifterMaster	
+		}
+		'''.parse
+		
+		model.assertError(FcompPackage.Literals.FC_PROTOTYPE, null,
+			"Component \'" + model.components.get(1).name + "\' must not contain prototype of parent component '" + model.components.get(1).superType.name + "', which is already present in hierarchy"
+		)
+	}
+	
+	@Test
+	def void TestForSelfContainmentWithExtendedSuperTypePrototype()
+	{
+		var model = '''
+		package org.example
+		import org.example.* from "testfidls/WindowLifter.fidl"
+				
+		service component WindowLifterMaster{}
+		
+		service component WindowLifterSlave extends WindowLifterMaster{}
+				
+		service component WindowLifter extends WindowLifterSlave{
+		contains WindowLifterMaster	
+		}
+
+		'''.parse
+		
+		model.assertError(FcompPackage.Literals.FC_PROTOTYPE, null,
+			"Component \'" + model.components.get(2).name + "\' must not contain prototype of parent component '" + model.components.get(2).superType.superType.name + "', which is already present in hierarchy"
+		)
+
+	}
+	
+//	@Test
+//	def void TestForConnectionsAtMandatoryRequiredPorts(){
+//		
+//		var model = '''
+//		package org.example
+//		import org.example.* from "testfidls/WindowLifter.fidl"
+//						
+//		service component WindowLifter {
+//			requires WindowLifter as RPort	
+//		}
+//		
+//		component WindowLifterMaster {
+//			contains WindowLifter as MyWindowLifterComponent
+//			
+//		}
+//		
+//		'''.parse
+//		
+//		
+//		model.assertWarning(FcompPackage::eINSTANCE.FCRequiredPort, null,
+//			"Required port not properly connected. Delegation- or assembly-connector broken at: [MyWindowLifterComponent,RPort]"
+//		)
+//		
+//		
+//		/**
+//		 * Unconnected optional (required) ports shouldn't cause a warning, therefore the next model should be valid
+//		 */
+//		
+//		model = '''
+//		package org.example
+//		import org.example.* from "testfidls/WindowLifter.fidl"
+//						
+//		service component WindowLifter {
+//			optional requires WindowLifter as RPort	
+//		}
+//		
+//		component WindowLifterMaster {
+//			contains WindowLifter as MyWindowLifterComponent
+//			
+//		}
+//		
+//		'''.parse
+//		
+//		Assert::assertTrue("Unconnected optional (required) ports shouldn't cause a warning, therefore the next model should be valid", model.validate.size == 0)
+//		
+//		
+//		/**
+//		 * The following model is used to verify that if a mandatory required port is properly connected (ASSEMBLY CONNECTOR) no warning should be given. 
+//		 */
+//		
+//		model = '''
+//		package org.example
+//		import org.example.* from "testfidls/WindowLifter.fidl"
+//		
+//		service component WindowLifterProvider {
+//			provides WindowLifter as PPort
+//		}
+//						
+//		service component WindowLifter {
+//			requires WindowLifter as RPort	
+//		}
+//		
+//		component WindowLifterMaster {
+//			contains WindowLifter as MyWindowLifterComponent
+//			contains WindowLifterProvider as MyWindowLifterProvider
+//			
+//			connect MyWindowLifterComponent.RPort to MyWindowLifterProvider.PPort
+//		}
+//		'''.parse
+//		
+//		Assert::assertTrue("Properly connected required ports (here: assembly connected) shouldn't cause any warnings", model.validate.size == 0)
+//		
+//		
+//		/**
+//		 * A more complex model to show that missing connections are also detected on 'higher' levels of the composition structure
+//		 * Here, the delegation connector between SuperComfortCluster's 'RDriverPort' and its prototype component 'InternalComfortCluster's 'RDriverPort' is missing. 
+//		 * Therefore a warning should be given at the ports 'RDriverPort' at component 'ComfortCluster' and 'WindowLifterMaster' (both having the same warning message though)
+//		 */
+//		
+//		model = '''
+//		package org.example
+//		
+//		import model "classpath:/Tags.fcdl"
+//		import org.example.* from "WindowLifter.fidl"
+//		
+//		<** 
+//		    @description: Steuert Motor fuer Fenster
+//		    @dienst 
+//		 **>
+//		service component WindowLifter {
+//			
+//			provides WindowLifter as PPort
+//		}
+//		
+//		<** @dienst **>
+//		service component WindowLifterMaster {
+//			requires WindowLifter as RDriverPort
+//			requires WindowLifter as RCoDriverPort
+//		}
+//		
+//		
+//		<** @cluster **>
+//		component BodyCluster {
+//			provides WindowLifter as PDriverPort
+//		    provides WindowLifter as PCoDriverPort
+//		    	
+//			contains WindowLifter as DriverWindowLifterPrototype
+//			contains WindowLifter as CoDriverWindowLifterPrototype
+//			
+//			contains WindowLifterMaster as WindowLifterMasterPrototype
+//				
+//			connect WindowLifterMasterPrototype.RDriverPort to DriverWindowLifterPrototype.PPort
+//			connect WindowLifterMasterPrototype.RCoDriverPort to CoDriverWindowLifterPrototype.PPort
+//			
+//			delegate provided PDriverPort to DriverWindowLifterPrototype.PPort
+//			delegate provided PCoDriverPort to CoDriverWindowLifterPrototype.PPort
+//		}
+//		
+//		<** @cluster **>
+//		component ComfortCluster {
+//			requires WindowLifter as RDriverPort
+//			requires WindowLifter as RCoDriverPort
+//			
+//			contains WindowLifterMaster as WindowLifterClient
+//			
+//			delegate required RDriverPort to WindowLifterClient.RDriverPort
+//			delegate required RCoDriverPort to WindowLifterClient.RCoDriverPort	
+//		}
+//		
+//		<** @cluster **>
+//		component SuperComfortCluster {
+//			requires WindowLifter as RDriverPort
+//			requires WindowLifter as RCoDriverPort
+//			
+//			contains ComfortCluster as InternalComfortCluster
+//			
+//			delegate required RCoDriverPort to InternalComfortCluster.RCoDriverPort	
+//		}
+//		
+//		<** @framework **>
+//		component BodyFramework {
+//			contains BodyCluster
+//			contains SuperComfortCluster
+//			
+//			connect SuperComfortCluster.RDriverPort to BodyCluster.PDriverPort	
+//			connect SuperComfortCluster.RCoDriverPort to BodyCluster.PCoDriverPort
+//		}
+//		'''.parse
+//		
+//		model.assertWarning(FcompPackage::eINSTANCE.FCRequiredPort, null,
+//			"Required port not properly connected. Delegation- or assembly-connector broken at: [InternalComfortCluster,RDriverPort]"
+//		)
+//		
+//	}
 }
 	

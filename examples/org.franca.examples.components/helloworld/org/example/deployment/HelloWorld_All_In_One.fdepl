@@ -1,71 +1,161 @@
 package org.example.deployment
 
-import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "platform:/plugin/org.franca.architecture/deployment/network_SOMEIP_deployment_spec.fdepl"
+import "platform:/plugin/org.franca.architecture/deployment/architecture_deployment_spec.fdepl"
+import "platform:/plugin/org.franca.architecture/deployment/network_CAN_deployment_spec.fdepl"
 import "classpath:/org/example/HelloWorld.fidl"
 import "../HelloWorld.fcdl"
-import "../HelloWorldSystem.fcdl"
+import "../HelloWorldTypes.fidl"
+import "../HelloWorldDevices.fcdl"
 
-define org.genivi.commonapi.someip.deployment for device org.example.TUT.HelloServerECU {
-	// some SOME/IP specific stuff
-    SomeIpDeviceUnicastAddress = "127.0.0.1"
+// deployment for types
+define network.someip for typeCollection org.example as HelloWorldTypesDeployment {
+	enumeration Location { 
+		EnumBackingType = UInt32
+	}
+	array KnownPeople {
+		SomeIpArrayMaxLength = 128
+	}
 }
 
-define org.genivi.commonapi.someip.deployment for service System.Room1.Service {
-	provide AskMePort  {	
-		SomeIpInstanceID = 1
-        SomeIpReliableUnicastPort = 30506
-        SomeIpUnreliableUnicastPort = 0
-   	}
-}
-
-define variant AIO for system org.example.TUT {
-	deploy System.Room1.Service to HelloServerECU 
-	deploy System.Room1.Client1 to HelloClientECU 
-	deploy System.Room1.Client2 to HelloClientECU
-	deploy System.Room2.Client1 to HelloClientECU
-}
-
-define org.genivi.commonapi.someip.deployment for device org.example.TUT.HelloClientECU {
-	// some SOME/IP specific stuff
-	SomeIpDeviceUnicastAddress = "127.0.0.1"
-}
+// deployment for the interface type for some/ip
+define network.someip for interface org.example.HelloWorld {
+	use org.example.deployment.HelloWorldTypesDeployment
 	
-	// deployment for a hosted client instance 
-define org.genivi.commonapi.someip.deployment for service System.Room1.Client1 { 
-		require AnswerMePort  {	
-			SomeIpInstanceID = 1
-	        SomeIpUnicastAddress = "160.48.199.99"
-	        SomeIpReliableUnicastPort = 30506
-	        SomeIpUnreliableUnicastPort = 0
-	        
-	    }
-	}    
-define org.genivi.commonapi.someip.deployment for service System.Room1.Client2 {
-		require AnswerMePort  {	
-			SomeIpInstanceID = 1
-	        SomeIpUnicastAddress = "160.48.199.99"
-	        SomeIpReliableUnicastPort = 30506
-	        SomeIpUnreliableUnicastPort = 0
-	    }
-	}	
+	SomeIpServiceID = 124
 
-
-// deployment for the service type 
-define org.genivi.commonapi.someip.deployment for component org.example.HelloWorldClient {
-	require AnswerMePort {	
-		SomeIpInstanceID = 1
-        SomeIpUnicastAddress = "160.48.199.99"
-        SomeIpReliableUnicastPort = 30506
-        SomeIpUnreliableUnicastPort = 0
-	}    
+	method sayHello {
+		SomeIpMethodID = 4
+	}
+	
 }
 
 
-// deployment for the interface type
-define org.genivi.commonapi.someip.deployment for interface org.example.HelloWorld2 {
+// deployment for the interface type for some/ip
+define network.someip for interface org.example.HelloWorld2 as SomeIpDeployment4HelloWorld2 {
 	SomeIpServiceID = 123
 
 	broadcast isThereSomeBody {
 		SomeIpEventID = 5
+		SomeIpReliable = true
+		SomeIpEventGroups = { 1 , 2}
 	}
+	attribute knownPeople {
+		AttributeNotifierUpdateMode = Cyclic
+		SomeIpGetterID = 6
+		SomeIpNotifierID = 7
+		SomeIpNotifierEventGroups = { 1 }
+		# {
+			SomeIpArrayLengthWidth = 13
+		}
+	}
+	method sayHello {
+		SomeIpMethodID = 4
+	}
+}
+
+define network.can for interface org.example.HelloWorld2 as CanDeployment4Helloworld2 {
+    attribute knownPeople { 
+		AttributeToBusSignals = { "KNOWN_PLP_SIG" }
+		AttributeToPDU = "KNOWN_PLP_PDU"
+	}
+	broadcast isThereSomeBody {
+		out {
+			request {
+				ArgumentToBusSignals = { "IS_THERE_SIG" }
+
+			}
+			
+		}
+	}
+}
+
+define network.can for interface org.example.HelloWorld as CanDeployment4Helloworld {
+	method sayHello {
+		out {
+			message {
+				ArgumentToBusSignals = { "SAY_HELLO_SIGNAL" }
+				#struct {
+					greeting {
+						// write here your deployment for the argument detail
+					}
+				}
+			}
+		}
+	}
+}
+
+// optional component deployment 
+define network.someip for component org.example.HelloWorldServer {
+	provide AskMePort {
+		use org.example.deployment.SomeIpDeployment4HelloWorld2
+	}
+}
+
+// deployment for the component type 
+define network.someip for component org.example.HelloWorldServer as ServiceComponentDeployment  {
+	provide AskMePort on network.someip {
+		// use org.example.deployment.SomeIpDeployment4HelloWorld2
+		use org.example.deployment.HelloWorld_depl
+	}
+	
+	 provide AskMePortCan on network.can {
+	 	use org.example.deployment.CanDeployment4Helloworld
+	 }
+}
+
+/*
+ * here starts the deployment of defined service component instances
+ */
+define network.someip for service World.Room1.Service as Service {
+	use org.example.deployment.ServiceComponentDeployment
+	StartupAtSystemInit = true
+	provide AskMePort {	
+		use org.example.deployment.SomeIpDeployment4HelloWorld2
+		SomeIpInstanceID = 1
+        SomeIpReliableUnicastPort = 30506
+        SomeIpUnreliableUnicastPort = 0
+   	}
+   	provide AskMePortCan on network.can
+}
+
+// optional deployment for a hosted client instances
+define system.architecture for service World.Room1.Client1 as Client1 {
+	require AnswerMePort on network.someip
+}    
+
+define system.architecture for service World.Room2.Client2 as Client2
+
+// deployment of the server ECU with partitioning of Service to device by "use"
+define system.architecture for device org.example.HelloServerECU as ServerECU {
+	use org.example.deployment.Service
+	
+	// SOME/IP adapters
+	adapter EthernetCard1 on network.someip {
+		use org.example.deployment.Service.AskMePort
+		AdapterIsDefault = true 
+	    SomeIpUnicastAddress = "10.0.0.1"
+	}
+	
+	// CAN adapter
+	adapter CAN_TX_1 on network.can {
+		use org.example.deployment.Service.AskMePortCan
+	}
+}
+
+// deployment of the client ECU with partitioning of Client* to device by "use"
+define system.architecture for device org.example.HelloClientECU as HellorClientECU {
+	use org.example.deployment.Client1
+	use org.example.deployment.Client2
+	
+	// some SOME/IP specific stuff
+	adapter EthernetCard on network.someip {
+		SomeIpUnicastAddress = "10.0.0.3"
+	}
+}
+
+// a variant is system configuration build by a set of used devices  
+define variant AIO for root World {
+	use org.example.deployment.HellorClientECU
+	use org.example.deployment.ServerECU
 }

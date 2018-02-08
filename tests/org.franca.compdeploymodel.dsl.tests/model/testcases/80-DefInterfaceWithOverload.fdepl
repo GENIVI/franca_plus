@@ -1,8 +1,9 @@
+package testcases
 
 import "41-SpecSimple.fdepl"
 import "../fidl/40-InterfaceWithOverloading.fidl"
 
-define SpecSimple41 for interface fidl.InterfaceWithOverloading {
+define testcases.SpecSimple41 for interface fidl.InterfaceWithOverloading {
 
 	method method1:a {
 		MethodProp = ""

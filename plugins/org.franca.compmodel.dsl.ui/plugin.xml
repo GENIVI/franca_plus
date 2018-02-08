@@ -2,6 +2,7 @@
 <?eclipse version="3.0"?>
 
 <plugin>
+   <extension-point id="CompProposalProvider" name="CompProposalProvider" schema="schema/CompProposalProvider.exsd"/>
 
     <extension
             point="org.eclipse.ui.editors">

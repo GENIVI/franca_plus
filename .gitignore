@@ -2,6 +2,7 @@
 *.MF_gen
 .DS_Store
 target
+.settings
 *.class
 *._trace
 *.g

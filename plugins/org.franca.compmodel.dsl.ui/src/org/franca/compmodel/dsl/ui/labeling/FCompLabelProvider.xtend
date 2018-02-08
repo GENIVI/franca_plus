@@ -21,7 +21,6 @@ import org.franca.compmodel.dsl.fcomp.FCAnnotationType
 import org.franca.compmodel.dsl.fcomp.FCAssemblyConnector
 import org.franca.compmodel.dsl.fcomp.FCComponent
 import org.franca.compmodel.dsl.fcomp.FCDelegateConnector
-import org.franca.compmodel.dsl.fcomp.FCDevice
 import org.franca.compmodel.dsl.fcomp.FCPort
 import org.franca.compmodel.dsl.fcomp.FCPrototype
 import org.franca.compmodel.dsl.fcomp.FCPrototypeInjection
@@ -32,8 +31,8 @@ import org.franca.compmodel.dsl.fcomp.Import
 import org.franca.compmodel.dsl.fcomp.FCModel
 import org.franca.compmodel.dsl.fcomp.FCTagsDeclaration
 import org.franca.compmodel.dsl.fcomp.FCTagDecl
-import org.franca.compmodel.dsl.fcomp.FCSystem
-import org.franca.compmodel.dsl.fcomp.FCRoot
+import org.franca.compmodel.dsl.fcomp.FCDevice
+import org.franca.compmodel.dsl.fcomp.FCComAdapter
 
 /**
  * Provides labels for EObjects.
@@ -77,10 +76,6 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 			text += "<root> "
 		
 		text + element.name.split('\\.').last
-	}
-	
-	public def text(FCDevice element) {
-		element.name
 	}
 
 	public def String text(FCAssemblyConnector element) {
@@ -127,11 +122,8 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 		else 
 			imported = '*' 
 		imported + " from " + element.importURI
-	}
-	
-	public def String text(FCRoot element) {
-		element.component.name
-	}      
+	}     
+
 	
 	// ******** icons *********
 	
@@ -158,7 +150,7 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 			
 			// TODO: test if label is present in file system	
 			val found = tags.findFirst[datags.contains(it)]
-			if (found != null)
+			if (found !== null)
 				return found + ".png"			
 		}
 		"component.png"
@@ -166,14 +158,6 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 
 	public def String image(FCPrototype element) {
 		"prototype.png"
-	}
-
-	public def String image(FCSystem element) {
-		"system.png"
-	}
-	
-	public def String image(FCRoot element) {
-		"root.png"
 	}
 
 	public def String image(FCRequiredPort element) {
@@ -200,10 +184,6 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 		"import.gif"
 	}
 
-	public def String image(FCDevice element) {
-		"device.png"
-	}
-
 	public def String image(FCVersion element) {
 		"version.gif"
 	}
@@ -218,5 +198,13 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 	
 	public def String image(FCTagDecl element) {
 		"bluelabel.png"
+	}
+	
+	public def String image(FCDevice element) {
+		"device.png"
+	}	
+	
+	public def String image(FCComAdapter element) {
+		"adapter.png"
 	}
 }

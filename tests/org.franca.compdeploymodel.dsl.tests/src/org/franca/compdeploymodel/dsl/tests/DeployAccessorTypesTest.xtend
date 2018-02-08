@@ -31,8 +31,8 @@ import static org.junit.Assert.*
 
 import static extension org.franca.core.framework.FrancaHelpers.*
 
-@RunWith(typeof(XtextRunner2))
-@InjectWith(typeof(FDeployTestsInjectorProvider))
+@RunWith(XtextRunner2)
+@InjectWith(FDeployTestsInjectorProvider)
 class DeployAccessorTypesTest extends DeployAccessorTestBase {
 
 	FInterface fidl

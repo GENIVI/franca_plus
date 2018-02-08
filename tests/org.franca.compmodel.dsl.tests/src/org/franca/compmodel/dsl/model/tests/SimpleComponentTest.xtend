@@ -128,6 +128,139 @@ class SimpleComponentTest
 		Assert.assertEquals("compSuper", comp.superType.name)
 	}
 	
+	@Test
+	def void Devices()
+	{
+		val model = '''
+		package org.example
+		
+		device HelloServerECU { 
+			adapter EthernetCard1
+			adapter EthernetCard2
+			adapter CAN_TX_1
+		}
+		
+		device HelloClientECU {
+			device Core_1
+			adapter EthernetCard
+		}
+		'''.parse
+		
+		model.assertNoErrors
+		
+		var adapter1 = model.devices.get(1).adapters.get(0)
+		
+		Assert.assertEquals("EthernetCard", adapter1.name)
+	}
+	
+	@Test
+	def void HelloWorld()
+	{
+		val model = '''
+		package org.example
+		
+		import org.example.* from "testfidls/HelloWorld.fidl"
+		
+		service component HelloWorldServer {
+			contains SubOrdinateService as InnerStructure
+			provides HelloWorld2 as AskMePort
+			provides HelloWorld as AskMePortCan
+		}
+		
+		service component HelloWorldClient {
+			requires org.example.HelloWorld2 as AnswerMePort
+		}
+		
+		service component SubOrdinateService {}
+		
+		
+		component MeetingPoint {
+			contains HelloWorldServer as Service
+			
+			contains HelloWorldClient as Client1
+			contains HelloWorldClient as Client2 
+			
+			connect Client1.AnswerMePort to Service.AskMePort
+			connect Client2.AnswerMePort to Service.AskMePort
+		}
+		
+		root component World {
+			contains MeetingPoint as Room1
+			contains MeetingPoint as Room2
+		}
+		
+		root component Universe extends World
+		
+		component MeetingPointET extends MeetingPoint {
+			provides HelloWorld as HelloThereOutInSpace
+			delegate provided HelloThereOutInSpace to Service.AskMePortCan
+		}
+		
+		service root component Galaxy {
+			contains MeetingPoint as Room1
+			contains MeetingPointET as Room2
+			
+			provides HelloWorld as HalloGalaxy
+			delegate provided HalloGalaxy to Room2.HelloThereOutInSpace
+		}
+		
+		'''.parse
+		
+		model.assertNoErrors
+	}
+
+	
+	@Test
+	def void HelloWorldInjection()
+	{
+		val model = '''
+		package org.example
+		
+		import org.example.* from "testfidls/HelloWorld.fidl"
+		
+		service component HelloWorldServer {
+			provides HelloWorld2 as AskMePort
+		}
+		
+		service component ChatterClient {}
+		
+		component GenericClient {
+			version { major 1 minor 2 }
+			contains ChatterClient as GenericChatterClient
+		}
+		
+		abstract component HelloWorldClient extends GenericClient {
+			requires org.example.HelloWorld2 as AnswerMePort
+			contains ChatterClient as HyperActiveChatterClient
+			contains ChatterClient as BoringChatterClient
+			contains ChatterClient as AdditionalChatterClient
+		}
+		
+		
+		component MeetingPoint {
+			contains HelloWorldServer as Service
+			
+			contains HelloWorldClient as Client1
+			contains DerivedHelloWorldClient2 as DerivedClient2 
+			
+			connect Client1.AnswerMePort to Service.AskMePort
+			connect DerivedClient2.AnswerMePort to Service.AskMePort
+		}
+		
+		// now implement in derived classes for derived types
+		service component DerivedChatterClient extends ChatterClient {}
+		
+		component DerivedHelloWorldClient extends HelloWorldClient {
+			implement HyperActiveChatterClient as InjectedHyperActiveChatterClient by DerivedChatterClient   
+			implement BoringChatterClient as InjectedBoringChatterClient by DerivedChatterClient finally
+		}
+		
+		component DerivedHelloWorldClient2 extends DerivedHelloWorldClient {}
+		'''.parse
+		
+		model.assertNoErrors
+	}
+	
 	@Ignore
 	@Test
 	def void FullDiensteComponent()
@@ -136,23 +269,13 @@ class SimpleComponentTest
 		val model = '''
 		package test
 		import model "testfcdls/Tags.fcdl"
-		import org.example.* from "testfidls/example1.fidl"
-		import org.example.* from "testfidls/example2.fidl"
-		
-		<**@dienst **>
+				
+		<**@framework **>
 		component comp
-		{
-			requires FirstTestInterface as interface1
-			provides SecondTestInterface as interface2
-		}
 		'''.parse
 		
 		model.assertNoErrors
 		
-		Assert.assertEquals("FirstTestInterface", model.components.get(0).requiredPorts.get(0).interface.name)
-		Assert.assertEquals("interface1", model.components.get(0).requiredPorts.get(0).name)
-		Assert.assertEquals("SecondTestInterface", model.components.get(1).requiredPorts.get(1).interface.name)
-		Assert.assertEquals("interface2", model.components.get(1).requiredPorts.get(1).name)
 	}
 	
 }

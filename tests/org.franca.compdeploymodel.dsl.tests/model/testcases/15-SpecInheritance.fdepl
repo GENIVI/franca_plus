@@ -1,4 +1,4 @@
-
+package testcases
 // deployment specification inheritqnce
 
 specification a.b.c.MySpec15_Base {
@@ -8,7 +8,7 @@ specification a.b.c.MySpec15_Base {
 	}
 }
 
-specification a.b.c.MySpec15_Derived extends a.b.c.MySpec15_Base {
+specification a.b.c.MySpec15_Derived extends testcases.a.b.c.MySpec15_Base {
 	for attributes {
 		PropDerived1 : String;
 		PropDerived2 : String;
