@@ -1,0 +1,13 @@
+package org.example
+
+device HelloServerECU { 
+	adapter EthernetCard1
+	adapter EthernetCard2
+	adapter CAN_TX_1
+}
+
+device HelloClientECU {
+	device Core_1
+	adapter EthernetCard
+}
+

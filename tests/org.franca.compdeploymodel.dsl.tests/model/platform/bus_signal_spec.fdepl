@@ -1,0 +1,19 @@
+package platform
+
+specification bus_signal_spec {
+	for arguments {
+		BusArgument : String ;
+	}
+	for attributes {
+		BusAttribute : String ;
+	}
+	for broadcasts {
+		BusBroadcast : String ;
+	}
+	for methods {
+		BusMethods : String ;
+	}
+	for struct_fields {
+		BusMapping : String ;
+	}
+}

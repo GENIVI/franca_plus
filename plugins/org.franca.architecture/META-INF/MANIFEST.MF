@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: architecture
+Bundle-SymbolicName: org.franca.architecture
+Bundle-Version: 0.12.0.qualifier
+Bundle-Vendor: BMW
