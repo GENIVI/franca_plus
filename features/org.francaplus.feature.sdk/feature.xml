@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.francaplus.feature.sdk"
+      label="%featureName"
+      version="0.12.0.qualifier"
+      provider-name="%providerName">
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <includes
+         id="org.francaplus.feature"
+         version="0.0.0"
+         name="Franca+ SDK"/>
+
+   <plugin
+         id="org.franca.compdeploymodel.dsl.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.franca.compmodel.dsl.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.franca.compdeploymodel.dsl.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.franca.compmodel.dsl.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.12.0"
+         unpack="false"/>
+
+</feature>

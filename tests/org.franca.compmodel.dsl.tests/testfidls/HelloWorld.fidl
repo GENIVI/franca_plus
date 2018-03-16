@@ -1,0 +1,27 @@
+package org.example
+
+import org.example.* from "HelloWorldTypes.fidl"
+import model "HelloWorldTypes.fidl"
+
+interface HelloWorld2 extends HelloWorld {
+  version {major 1 minor 0}
+  broadcast isThereSomeBody {
+    out {
+        Request request
+    }
+  }
+  attribute org.example.KnownPeople knownPeople readonly
+} 
+ 
+ 
+interface HelloWorld {
+  version {major 1 minor 0}
+  method sayHello {
+    in {
+      String name
+    }
+    out {
+      org.example.Answer message
+    }
+  }
+} 

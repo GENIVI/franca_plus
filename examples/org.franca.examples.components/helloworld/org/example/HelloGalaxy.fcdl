@@ -1,0 +1,17 @@
+package org.example
+
+import org.example.* from "HelloWorld.fidl"
+import org.example.* from "HelloWorld.fcdl"
+
+component SpaceControl extends MeetingPoint  {
+	provides HelloWorld as HelloThereOutInSpace
+	delegate provided HelloThereOutInSpace to Service.AskMePortCan
+}
+
+service root component Galaxy {
+	contains MeetingPoint as Room1
+	contains SpaceControl
+	
+	provides HelloWorld as HalloGalaxy
+	delegate provided HalloGalaxy to SpaceControl.HelloThereOutInSpace
+}

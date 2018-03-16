@@ -1,0 +1,101 @@
+/**
+ * Copyright (C) 2017 Bayerische Motoren Werke AG (BMW).
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * 
+ * Version 1.0
+ *
+ * This is the Franca deployment specification to be used for system architecture.
+ * It contains all available configuration parameters for the
+ * network agnostic system architecture deployment.
+ */
+ 
+package ^system
+
+specification architecture {
+
+
+    for methods {
+        /*
+         * timeout for method calls in ms.
+         * If timeout is defined with a value > 0, then a method call will return with a timeout error
+         * in case no result arrived before the timeout elapsed.
+         * 0 means no timeout.
+         * This parameter is not used for fire and forget methods!
+         */
+        MethodTimeout				: Integer (default: 0);
+    }
+
+    for attribute_setters {
+        /*
+         * timeout for setter calls in ms.
+         * If timeout is defined with value > 0, then the setter call will return with a timeout error
+         * in case no result arrived before the timeout elapsed.
+         * 0 means no timeout.
+         */
+        AttributeSetterTimeout		: Integer (default: 0);
+    }
+
+    for attribute_getters {
+        /*
+         * timeout for getter calls in ms.
+         * If timeout is defined with value > 0, then the getter call will return with a timeout error
+         * in case no result arrived before the timeout elapsed.
+         * 0 means no timeout.
+         */
+        AttributeGetterTimeout		: Integer (default: 0);
+    }
+
+    for attribute_notifiers {
+        /*
+         * timeout for notifier calls in ms.
+         * If timeout is defined with value > 0, then the call will return with a timeout error
+         * in case no result arrived before the timeout elapsed.
+         * 0 means no timeout.
+         */
+        AttributeNotifierTimeout		: Integer (default: 0);
+        AttributeNotifierUpdateMode	: { Cyclic, OnChange } (default: OnChange);
+    }
+    
+    for enumerations {
+        /*
+         * define the enumeration backing type on CommonAPI C++ level for a specific enumeration.
+         * If not specified use "ApiDefaultEnumBackingType".
+         */
+        EnumBackingType : {UInt8, UInt16, UInt32, UInt64, Int8, Int16, Int32, Int64} (optional);
+	}
+	
+	for enumerators {
+        /*
+         * Enumerations may be used as error parameters in Franca / CommonAPI.
+         * In this case ErrorType may be used to specify the severity of each enumerator for use in
+         * trace analysis or viewer tools, e.g. to use different colors to highlight traces. 
+         */
+        ErrorType : { Error, Warning, Info, NoError } (default:NoError);
+    }
+    
+    for structs {
+    	/*
+    	 * encode a struct datatype as bitfield.
+    	 * Note this feature only works for ranged integers and boolean typed struct members.
+    	 */
+    	StructBitField : Boolean ( default: false );
+    }
+    
+    for services {
+    	/*
+    	 * example Attribute for services
+    	 */
+    	StartupAtSystemInit: Boolean (default: false);
+    }
+    
+    for adapters {
+    	/*
+    	 * All unmapped ports default to this adapter
+    	 */
+    	AdapterIsDefault: Boolean (default: false);
+    }
+}
+
