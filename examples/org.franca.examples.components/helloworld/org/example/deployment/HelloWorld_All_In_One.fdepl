@@ -89,6 +89,7 @@ define network.can for interface org.example.HelloWorld as CanDeployment4Hellowo
 define network.someip for component org.example.HelloWorldServer {
 	provide AskMePort {
 		use org.example.deployment.SomeIpDeployment4HelloWorld2
+		SomeIpInstanceID = 2
 	}
 }
 
@@ -97,6 +98,7 @@ define network.someip for component org.example.HelloWorldServer as ServiceCompo
 	provide AskMePort on network.someip {
 		// use org.example.deployment.SomeIpDeployment4HelloWorld2
 		use org.example.deployment.HelloWorld_depl
+		SomeIpInstanceID = 3
 	}
 	
 	 provide AskMePortCan on network.can {

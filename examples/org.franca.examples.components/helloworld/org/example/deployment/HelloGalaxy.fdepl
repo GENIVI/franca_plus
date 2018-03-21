@@ -12,7 +12,9 @@ import "../HelloGalaxy.fcdl"
 
 
 define network.someip for component org.example.Galaxy as MyGalaxyComponentDeployment {
-	provide HalloGalaxy on network.someip
+	provide HalloGalaxy on network.someip {
+		SomeIpInstanceID = 1
+	}
 }
 
 define network.someip for service Galaxy as MyGalaxyDeployment {
