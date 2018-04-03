@@ -6,7 +6,8 @@
          <meta.schema plugin="org.franca.compmodel.dsl.ui" id="CompProposalProvider" name="CompProposalProvider"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         This extension provides access to the given ProposalProvider implementation. The FDeployProposalProvider class needs to be extend for external usage.
+         Currently the corresponding extension could only be implemented once.  
       </documentation>
    </annotation>
 

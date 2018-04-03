@@ -8,20 +8,19 @@
 
 package org.franca.compmodel.dsl.validator.tests;
 
-
+import com.google.inject.Inject
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.testing.util.ParseHelper
+import org.eclipse.xtext.testing.validation.ValidationTestHelper
+import org.franca.compmodel.dsl.fcomp.FCModel
+import org.franca.compmodel.dsl.fcomp.FcompPackage
+import org.franca.compmodel.dsl.tests.util.MultiInjectorProvider
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipse.xtext.junit4.InjectWith
-import com.google.inject.Inject
-import org.eclipse.xtext.junit4.validation.ValidationTestHelper
-import org.eclipse.xtext.junit4.util.ParseHelper
-import org.franca.compmodel.dsl.fcomp.FCModel
-import org.eclipselabs.xtext.utils.unittesting.XtextRunner2
-import org.franca.compmodel.dsl.tests.util.MultiInjectorProvider
-import org.franca.compmodel.dsl.fcomp.FcompPackage
-import org.junit.Assert
 
-@RunWith(XtextRunner2)
+@RunWith(XtextRunner)
 @InjectWith(MultiInjectorProvider)
 class FCompValidatorTest
 {
@@ -327,7 +326,6 @@ class FCompValidatorTest
 		}
 		'''.parse
 		model.validate
-		println(model.components.get(0).providedPorts.get(0).name)
 		model.assertError(FcompPackage.Literals.FC_PROVIDED_PORT, null,
 			"Implicit port name must be simple name. No namespace separators allowed in '" + model.components.get(0).providedPorts.get(0).name + "'"
 		)

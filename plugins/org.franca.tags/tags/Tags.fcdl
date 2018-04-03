@@ -1,0 +1,20 @@
+package tags
+
+// organization
+tag String @orgframework
+tag String @responsible
+tag String @layer
+tag String @fbalias
+
+// architecture
+tag String @servicearchitecture
+tag String @framework
+tag String @cluster
+tag String @dienst
+
+// details
+tag String @level
+
+//Interface Subselect und Private
+tag String @subselect
+tag String @private

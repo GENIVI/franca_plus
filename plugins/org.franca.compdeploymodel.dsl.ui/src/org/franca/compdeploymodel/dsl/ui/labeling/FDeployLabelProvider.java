@@ -18,6 +18,8 @@ import org.eclipse.xtext.ui.label.StylerFactory;
 import org.franca.compdeploymodel.core.FDModelUtils;
 import org.franca.compdeploymodel.core.GenericPropertyAccessor;
 import org.franca.compdeploymodel.core.PropertyMappings;
+import org.franca.compdeploymodel.dsl.fDeploy.FDAnnotation;
+import org.franca.compdeploymodel.dsl.fDeploy.FDAnnotationBlock;
 import org.franca.compdeploymodel.dsl.fDeploy.FDArgument;
 import org.franca.compdeploymodel.dsl.fDeploy.FDArray;
 import org.franca.compdeploymodel.dsl.fDeploy.FDAttribute;
@@ -28,7 +30,6 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDComponent;
 import org.franca.compdeploymodel.dsl.fDeploy.FDComponentInstance;
 import org.franca.compdeploymodel.dsl.fDeploy.FDDeclaration;
 import org.franca.compdeploymodel.dsl.fDeploy.FDDevice;
-import org.franca.compdeploymodel.dsl.fDeploy.FDElement;
 import org.franca.compdeploymodel.dsl.fDeploy.FDEnumeration;
 import org.franca.compdeploymodel.dsl.fDeploy.FDEnumerator;
 import org.franca.compdeploymodel.dsl.fDeploy.FDField;
@@ -44,6 +45,7 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDPropertySet;
 import org.franca.compdeploymodel.dsl.fDeploy.FDProvidedPort;
 import org.franca.compdeploymodel.dsl.fDeploy.FDRequiredPort;
 import org.franca.compdeploymodel.dsl.fDeploy.FDService;
+import org.franca.compdeploymodel.dsl.fDeploy.FDSpecification;
 import org.franca.compdeploymodel.dsl.fDeploy.FDString;
 import org.franca.compdeploymodel.dsl.fDeploy.FDStruct;
 import org.franca.compdeploymodel.dsl.fDeploy.FDTypeOverwrites;
@@ -52,6 +54,7 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDTypes;
 import org.franca.compdeploymodel.dsl.fDeploy.FDUnion;
 import org.franca.compdeploymodel.dsl.fDeploy.FDVariant;
 import org.franca.compdeploymodel.dsl.fDeploy.Import;
+import org.franca.core.franca.FAnnotation;
 import org.franca.core.franca.FType;
 
 import com.google.inject.Inject;
@@ -199,21 +202,21 @@ public class FDeployLabelProvider extends DefaultEObjectLabelProvider {
 	}
 
 	public StyledString text(FDRequiredPort element) {
-		return getStyledStringForElement(element.getName(), 
-				element.getSpec() != null ? element.getSpec().getName() : 
-					FDModelUtils.getRootElement(((FDElement)element.eContainer())).getSpec().getName());
+		FDSpecification spec = FDModelUtils.getSpecification(element);
+		String specName = spec != null ? spec.getName() : "unknown";
+		return getStyledStringForElement(element.getName(), specName);
 	}
 
 	public StyledString text(FDProvidedPort element) {
-		return getStyledStringForElement(element.getName(), 
-				element.getSpec() != null ? element.getSpec().getName() : 
-					FDModelUtils.getRootElement(((FDElement)element.eContainer())).getSpec().getName());
+		FDSpecification spec = FDModelUtils.getSpecification(element);
+		String specName = spec != null ? spec.getName() : "unknown";
+		return getStyledStringForElement(element.getName(), specName);
 	}
 
 	public StyledString text(FDComponent element) {
-		return getStyledStringForElement(element.getName(), 
-				element.getSpec() != null ? element.getSpec().getName() : 
-					FDModelUtils.getRootElement(((FDElement)element.eContainer())).getSpec().getName());
+		FDSpecification spec = FDModelUtils.getSpecification(element);
+		String specName = spec != null ? spec.getName() : "unknown";
+		return getStyledStringForElement(element.getName(), specName);
 	}
 
 	public String text(FDPropertySet element) {
@@ -249,7 +252,28 @@ public class FDeployLabelProvider extends DefaultEObjectLabelProvider {
 
 		return styledString;
 	}
+	
+	public String text(FDAnnotationBlock element) {
+		return "annotations";
+	}
 
+	public String text(FDAnnotation element) {
+		return ((FAnnotation) element).getType().toString()
+				.replaceFirst("@", "")
+				+ ":" + ((FDAnnotation) element).getComment();
+	}
+
+
+	public String image(FDAnnotationBlock element) 
+	{ 
+		return "annotation.png"; 
+	}
+	
+	public String image(FDAnnotation element) 
+	{ 
+		return "@.png"; 
+	}
+	
 	public String image(FDInterface element) {
 		return "interface.png";
 	}

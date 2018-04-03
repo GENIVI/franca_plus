@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 BMW Group
+/* Copyright (C) 2018 BMW Group
  * Author: Bernhard Hennlich (bernhard.hennlich@bmw.de)
  * Author: Manfred Bathelt (manfred.bathelt@bmw.de)
  * This Source Code Form is subject to the terms of the Eclipse Public
@@ -33,7 +33,7 @@ class FDeployDeclarativeNameProvider extends DefaultDeclarativeQualifiedNameProv
 					obj.name = segments.get(1)
 			}
 			// default name provisioning for anonymous deployments:
-			// <current deployment package>.<short name of deployed entity>_<entity type>_depl
+			// <current deployment package>.<short name of deployed entity>_depl
 			FDService,
 			FDComponent,
 			FDDevice,

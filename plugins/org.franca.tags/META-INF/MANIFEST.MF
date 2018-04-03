@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tags
+Bundle-SymbolicName: org.franca.tags
+Bundle-Version: 0.12.0.qualifier

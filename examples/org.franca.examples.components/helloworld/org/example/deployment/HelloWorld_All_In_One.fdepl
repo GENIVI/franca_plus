@@ -1,8 +1,7 @@
 package org.example.deployment
-
-import "platform:/plugin/org.franca.architecture/deployment/network_SOMEIP_deployment_spec.fdepl"
+import "platform:/plugin/org.franca.someip/deployment/network_SOMEIP_deployment_spec.fdepl"
 import "platform:/plugin/org.franca.architecture/deployment/architecture_deployment_spec.fdepl"
-import "platform:/plugin/org.franca.architecture/deployment/network_CAN_deployment_spec.fdepl"
+import "platform:/plugin/org.franca.signal/deployment/network_Signal_deployment_spec.fdepl"
 import "classpath:/org/example/HelloWorld.fidl"
 import "../HelloWorld.fcdl"
 import "../HelloWorldTypes.fidl"
@@ -10,41 +9,46 @@ import "../HelloWorldDevices.fcdl"
 
 // deployment for types
 define network.someip for typeCollection org.example as HelloWorldTypesDeployment {
-	enumeration Location { 
+	enumeration Location {
 		EnumBackingType = UInt32
-	}
+	} 
 	array KnownPeople {
 		SomeIpArrayMaxLength = 128
 	}
 }
 
-// deployment for the interface type for some/ip
+// deployment for the base interface type for some/ip
 define network.someip for interface org.example.HelloWorld {
 	use org.example.deployment.HelloWorldTypesDeployment
-	
 	SomeIpServiceID = 124
-
 	method sayHello {
 		SomeIpMethodID = 4
 	}
-	
 }
 
-
-// deployment for the interface type for some/ip
+/*
+ *  deployment for the derived interface type for some/ip
+ */
+<**
+    @details: one more fact 
+    @author: somebody
+**>
 define network.someip for interface org.example.HelloWorld2 as SomeIpDeployment4HelloWorld2 {
 	SomeIpServiceID = 123
-
 	broadcast isThereSomeBody {
 		SomeIpEventID = 5
 		SomeIpReliable = true
-		SomeIpEventGroups = { 1 , 2}
+		SomeIpEventGroups = {
+			1, 2
+		}
 	}
 	attribute knownPeople {
 		AttributeNotifierUpdateMode = Cyclic
 		SomeIpGetterID = 6
 		SomeIpNotifierID = 7
-		SomeIpNotifierEventGroups = { 1 }
+		SomeIpNotifierEventGroups = {
+			1
+		}
 		# {
 			SomeIpArrayLengthWidth = 13
 		}
@@ -54,30 +58,40 @@ define network.someip for interface org.example.HelloWorld2 as SomeIpDeployment4
 	}
 }
 
-define network.can for interface org.example.HelloWorld2 as CanDeployment4Helloworld2 {
-    attribute knownPeople { 
-		AttributeToBusSignals = { "KNOWN_PLP_SIG" }
-		AttributeToPDU = "KNOWN_PLP_PDU"
+/*
+ * can-bus deployment 
+ */
+define network.signal for interface org.example.HelloWorld2 as CanDeployment4Helloworld2 {
+	attribute knownPeople {
+		MappedBusSignals = {
+			"KNOWN_PLP_SIG"
+		}
 	}
 	broadcast isThereSomeBody {
 		out {
 			request {
-				ArgumentToBusSignals = { "IS_THERE_SIG" }
-
+				MappedBusSignals = {
+					"IS_THERE_SIG"
+				}
 			}
-			
 		}
 	}
 }
 
-define network.can for interface org.example.HelloWorld as CanDeployment4Helloworld {
+/*
+ * can-bus deployment 
+ */
+define network.signal for interface org.example.HelloWorld as CanDeployment4Helloworld {
 	method sayHello {
 		out {
 			message {
-				ArgumentToBusSignals = { "SAY_HELLO_SIGNAL" }
+				MappedBusSignals = {
+					"SAY_HELLO_SIGNAL"
+				}
 				#struct {
 					greeting {
-						// write here your deployment for the argument detail
+					// write here your deployment for the argument detail
+
 					}
 				}
 			}
@@ -89,21 +103,24 @@ define network.can for interface org.example.HelloWorld as CanDeployment4Hellowo
 define network.someip for component org.example.HelloWorldServer {
 	provide AskMePort {
 		use org.example.deployment.SomeIpDeployment4HelloWorld2
-		SomeIpInstanceID = 2
+		SomeIpInstanceID = 333
 	}
 }
 
 // deployment for the component type 
-define network.someip for component org.example.HelloWorldServer as ServiceComponentDeployment  {
+<**
+    @details: one more fact 
+    @author: somebody
+**>
+define network.someip for component org.example.HelloWorldServer as ServiceComponentDeployment {
 	provide AskMePort on network.someip {
 		// use org.example.deployment.SomeIpDeployment4HelloWorld2
 		use org.example.deployment.HelloWorld_depl
-		SomeIpInstanceID = 3
+		SomeIpInstanceID = 444
 	}
-	
-	 provide AskMePortCan on network.can {
-	 	use org.example.deployment.CanDeployment4Helloworld
-	 }
+	provide AskMePortCan on network.signal {
+		use org.example.deployment.CanDeployment4Helloworld
+	}
 }
 
 /*
@@ -112,13 +129,13 @@ define network.someip for component org.example.HelloWorldServer as ServiceCompo
 define network.someip for service World.Room1.Service as Service {
 	use org.example.deployment.ServiceComponentDeployment
 	StartupAtSystemInit = true
-	provide AskMePort {	
+	provide AskMePort {
 		use org.example.deployment.SomeIpDeployment4HelloWorld2
 		SomeIpInstanceID = 1
-        SomeIpReliableUnicastPort = 30506
-        SomeIpUnreliableUnicastPort = 0
-   	}
-   	provide AskMePortCan on network.can
+		SomeIpReliableUnicastPort = 30506
+		SomeIpUnreliableUnicastPort = 0
+	}
+	provide AskMePortCan on network.signal
 }
 
 // optional deployment for a hosted client instances
@@ -131,16 +148,16 @@ define system.architecture for service World.Room2.Client2 as Client2
 // deployment of the server ECU with partitioning of Service to device by "use"
 define system.architecture for device org.example.HelloServerECU as ServerECU {
 	use org.example.deployment.Service
-	
+
 	// SOME/IP adapters
 	adapter EthernetCard1 on network.someip {
 		use org.example.deployment.Service.AskMePort
-		AdapterIsDefault = true 
-	    SomeIpUnicastAddress = "10.0.0.1"
+		AdapterIsDefault = true
+		SomeIpUnicastAddress = "10.0.0.1"
 	}
-	
+
 	// CAN adapter
-	adapter CAN_TX_1 on network.can {
+	adapter CAN_TX_1 on network.signal {
 		use org.example.deployment.Service.AskMePortCan
 	}
 }
@@ -149,7 +166,7 @@ define system.architecture for device org.example.HelloServerECU as ServerECU {
 define system.architecture for device org.example.HelloClientECU as HellorClientECU {
 	use org.example.deployment.Client1
 	use org.example.deployment.Client2
-	
+
 	// some SOME/IP specific stuff
 	adapter EthernetCard on network.someip {
 		SomeIpUnicastAddress = "10.0.0.3"

@@ -81,6 +81,7 @@ define network.someip for component org.example.HelloWorldServer as ServiceCompo
 	provide AskMePort on network.someip {
 		use org.example.deployment.SomeIpDeployment4HelloWorld
 		use org.example.deployment.SomeIpDeployment4HelloWorld2
+		SomeIpInstanceID = 222
 	}
 	
 	 provide AskMePortCan on network.can {
@@ -94,11 +95,9 @@ define network.someip for component org.example.HelloWorldServer as ServiceCompo
 define network.someip for service World.Room1.Service as Service {
 	use org.example.deployment.ServiceComponentDeployment
 	StartupAtSystemInit = true
-	provide AskMePort {	
-		SomeIpInstanceID = 1
-        SomeIpReliableUnicastPort = 30506
-        SomeIpUnreliableUnicastPort = 0
-   	}
+	provide AskMePort {
+		SomeIpInstanceID = 999
+	}
    	provide AskMePortCan on network.can
 }
 

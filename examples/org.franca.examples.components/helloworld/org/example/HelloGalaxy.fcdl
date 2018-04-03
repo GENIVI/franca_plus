@@ -3,6 +3,12 @@ package org.example
 import org.example.* from "HelloWorld.fidl"
 import org.example.* from "HelloWorld.fcdl"
 
+<** @author: me
+@description: all good things 
+are three 
+lines 
+**>
+/* Some Comment */
 component SpaceControl extends MeetingPoint  {
 	provides HelloWorld as HelloThereOutInSpace
 	delegate provided HelloThereOutInSpace to Service.AskMePortCan

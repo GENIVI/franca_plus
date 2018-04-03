@@ -1,2 +1,3 @@
 /target
 .*.jar
+xtend-gen

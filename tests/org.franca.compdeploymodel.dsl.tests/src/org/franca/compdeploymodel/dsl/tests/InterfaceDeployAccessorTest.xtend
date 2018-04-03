@@ -7,20 +7,20 @@
  *******************************************************************************/
 package org.franca.compdeploymodel.dsl.tests
 
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipselabs.xtext.utils.unittesting.XtextRunner2
-import org.example.spec.SpecCompoundHostsRef.IDataPropertyAccessor
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.example.spec.SpecCompoundHostsRef.Enums.StringProp
+import org.example.spec.SpecCompoundHostsRef.IDataPropertyAccessor
 import org.example.spec.SpecCompoundHostsRef.InterfacePropertyAccessor
+import org.franca.compdeploymodel.core.FDeployedInterface
+import org.franca.compdeploymodel.dsl.FDeployTestsInjectorProvider
+import org.franca.compdeploymodel.dsl.fDeploy.FDInterface
+import org.franca.compdeploymodel.dsl.fDeploy.FDModel
 import org.franca.core.franca.FField
 import org.franca.core.franca.FInterface
 import org.franca.core.franca.FStructType
 import org.franca.core.franca.FTypeRef
 import org.franca.core.franca.FUnionType
-import org.franca.compdeploymodel.core.FDeployedInterface
-import org.franca.compdeploymodel.dsl.FDeployTestsInjectorProvider
-import org.franca.compdeploymodel.dsl.fDeploy.FDInterface
-import org.franca.compdeploymodel.dsl.fDeploy.FDModel
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -29,8 +29,9 @@ import static org.junit.Assert.*
 
 import static extension org.franca.core.framework.FrancaHelpers.*
 
-@RunWith(typeof(XtextRunner2))
-@InjectWith(typeof(FDeployTestsInjectorProvider))
+@RunWith(XtextRunner)
+@InjectWith(FDeployTestsInjectorProvider)
+
 class InterfaceDeployAccessorTest extends DeployAccessorTestBase {
 
 	FInterface fidl

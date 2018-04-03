@@ -85,6 +85,7 @@ import org.franca.core.franca.FUnionType
 import static extension org.eclipse.xtext.scoping.Scopes.*
 import static extension org.franca.compdeploymodel.core.FDModelUtils.*
 import static extension org.franca.core.FrancaModelExtensions.*
+import org.eclipse.emf.ecore.util.EcoreUtil
 
 class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 
@@ -272,6 +273,10 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 		owner.getPropertyDecls
 	}
 	
+	def scope_FDProperty_decl(FDComponent owner, EReference ref) {
+		owner.getPropertyDecls
+	}
+		
 	def scope_FDProperty_decl(FDService owner, EReference ref) {
 		owner.getPropertyDecls
 	}
@@ -370,17 +375,19 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 
 	def private IScope getPropertyDecls(FDElement elem) {
-		var root = FDModelUtils::getRootElement(elem)
-		if (root.spec === null)
-			root = FDModelUtils::getRootElement(root.eContainer as FDElement)
-		PropertyMappings::getAllPropertyDecls(root.getSpec, elem).scopeFor
+		val spec = FDModelUtils::getSpecification(elem)
+		if (spec !==  null)
+			PropertyMappings::getAllPropertyDecls(spec, elem).scopeFor
+		else 
+			IScope::NULLSCOPE 
 	}
 
 	def private IScope getPropertyDecls(FDElement some, FType elem) {
-		var root = FDModelUtils::getRootElement(some)
-		if (root.spec === null)
-			root = FDModelUtils::getRootElement(root.eContainer as FDElement)
-		PropertyMappings::getAllPropertyDecls(root.getSpec, elem).scopeFor
+		val spec = FDModelUtils::getSpecification(some)
+		if (spec !==  null)
+			PropertyMappings::getAllPropertyDecls(spec, elem).scopeFor
+		else 
+			IScope::NULLSCOPE 
 	}
 
 	// *****************************************************************************
@@ -523,6 +530,14 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 	
 	// *******************************************************************************************
 	
+	private def getResolvedObjectFromDescription(IEObjectDescription od, EObject context) {
+		val oop = od.EObjectOrProxy
+		if (oop.eIsProxy())
+			EcoreUtil.resolve(oop, context)
+		else 
+			oop
+	}
+	
 	/**
 	 * Component Instance starting point scoping: limit to root components
 	 */
@@ -530,7 +545,7 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 		
 		val List<IEObjectDescription> rootComponents = <IEObjectDescription>newArrayList
 		for (od: delegateGetScope(service, ref).allElements) {
-			val comp = od.EObjectOrProxy
+			val comp = getResolvedObjectFromDescription(od, service)
 			if (comp instanceof FCComponent) {
 				if (comp.root)
 					rootComponents.add(new EObjectDescription(qnConverter.toQualifiedName(comp.name), comp, null))
@@ -563,7 +578,9 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 	
 	/**
-	 * Limit scope to service for use on a device
+	 * Limit scope for use on a device to 
+	 * - deployed services
+	 * - deployed contained devices 
 	 */
 	def IScope scope_FDRootElement_use(FDDevice device, EReference ref) {
 
@@ -571,7 +588,11 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 		val Predicate<IEObjectDescription> filter = new Predicate<IEObjectDescription>() {
 			override boolean apply(IEObjectDescription od) {
 				val obj = od.EObjectOrProxy
-				obj instanceof FDService
+				switch obj {
+					FDService: true
+					FDDevice: device.target.devices.contains(obj.target)
+					default: false 
+				}
 			}
 		}
 		new FilteringScope(delegateScope, filter)
@@ -609,14 +630,14 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 
 		val List<IEObjectDescription> rootComponents = <IEObjectDescription>newArrayList
 		for (od: delegateGetScope(variant, ref).allElements) {
-			val comp = od.EObjectOrProxy
+			val comp = getResolvedObjectFromDescription(od, variant)
 			if (comp instanceof FCComponent) {
 				if (comp.root)
 					rootComponents.add(new EObjectDescription(qnConverter.toQualifiedName(comp.name), comp, null))
 			}
 		}
 		val scope = new SimpleScope(rootComponents)
-		// dump(scope, "scope_FDComponentInstance_target")
+		// dump(scope, "scope_FDVariant_root")
 		scope
 	}
 	
@@ -746,13 +767,8 @@ class FDeployScopeProvider extends AbstractDeclarativeScopeProvider {
 	 * or child spec is derived from parent spec.
 	 */
 	def private haveCompatibleSpecs (FDRootElement parent, FDRootElement child) {
-		var parentSpec = parent.spec
-		if (parentSpec === null)
-			parentSpec = getRootElement(parent.eContainer as FDElement)?.spec
-		
-		var check = child.spec
-		if (check === null)
-			check = getRootElement(child.eContainer as FDElement)?.spec
+		val parentSpec = FDModelUtils.getSpecification(parent)
+		var check = FDModelUtils.getSpecification(child)
 		
 		while (check !== null) {
 			if (parentSpec == check)

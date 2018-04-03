@@ -8,16 +8,22 @@
 package org.franca.compdeploymodel.dsl.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
+import org.eclipse.xtext.ide.editor.syntaxcoloring.ISemanticHighlightingCalculator;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher;
+import org.eclipse.xtext.ui.editor.contentassist.XtextContentAssistProcessor;
 import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory;
 import org.eclipse.xtext.ui.editor.model.ResourceForIEditorInputFactory;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
 import org.eclipse.xtext.ui.resource.SimpleResourceSetProvider;
 import org.eclipse.xtext.ui.shared.Access;
 import org.franca.compdeploymodel.dsl.ui.contentassist.FCompDeployProposalPrefixMatcher;
+import org.franca.compdeploymodel.dsl.ui.contentassist.FCompDeployDocumentationProvider;
+import org.franca.compdeploymodel.dsl.ui.highlighting.FCompDeployHighlightingConfiguration;
+import org.franca.compdeploymodel.dsl.ui.highlighting.FCompDeploySemanticHighlightingCalculator;
 
-import org.eclipse.xtext.ui.editor.contentassist.XtextContentAssistProcessor;
 import com.google.inject.Binder;
 import com.google.inject.Provider;
 
@@ -63,5 +69,19 @@ public class FDeployUiModuleWithoutJDT extends FDeployUiModule {
 	@Override
 	public Class<? extends PrefixMatcher> bindPrefixMatcher() {
 		return FCompDeployProposalPrefixMatcher.class;
+	}
+	
+	public Class<? extends IEObjectDocumentationProvider> bindIEObjectDocumentationProviderr() {
+        return FCompDeployDocumentationProvider.class;
+    }
+	
+	// inject own highlighting configuration
+	public Class<? extends IHighlightingConfiguration> bindSemanticConfig() {
+		return FCompDeployHighlightingConfiguration.class;
+	}
+
+	// inject own semantic highlighting
+	public Class<? extends ISemanticHighlightingCalculator> bindSemanticHighlightingCalculator() {
+		return FCompDeploySemanticHighlightingCalculator.class;
 	}
 }

@@ -1,120 +1,60 @@
-/* Copyright (C) 2017 BMW Group
- * Author: Bernhard Hennlich (bernhard.hennlich@bmw.de)
- * Author: Manfred Bathelt (manfred.bathelt@bmw.de)
- * This Source Code Form is subject to the terms of the Eclipse Public
- * License, v. 1.0. If a copy of the EPL was not distributed with this
- * file, You can obtain one at https://www.eclipse.org/legal/epl-v10.html. 
- */
 module org.franca.compmodel.dsl.GenerateFComp
 
-import org.eclipse.emf.mwe.utils.*
-import org.eclipse.xtext.generator.*
-import org.eclipse.xtext.ui.generator.*
+import org.eclipse.xtext.xtext.generator.*
+import org.eclipse.xtext.xtext.generator.model.project.*
 
-var grammarURI = "classpath:/org/franca/compmodel/dsl/FComp.xtext"
-var fileExtensions = "fcdl"
-var projectName = "org.franca.compmodel.dsl"
-var runtimeProject = "../${projectName}"
-var generateXtendStub = true
-var encoding = "ISO-8859-1"
+var rootPath = ".."
 
 Workflow {
-    bean = StandaloneSetup {
-    	scanClassPath = true
-    	platformUri = "${runtimeProject}/.."
-    	
-    	registerGeneratedEPackage = "org.franca.core.franca.FrancaPackage"
-        registerGenModelFile = "platform:/resource/org.franca.core/model/franca.genmodel" 
-    }
-    
-    component = DirectoryCleaner {
-    	directory = "${runtimeProject}/src-gen"
-    }
-    
-    component = DirectoryCleaner {
-    	directory = "${runtimeProject}/model/generated"
-    }
-   
-    component = DirectoryCleaner {
-    	directory = "${runtimeProject}.ui/src-gen"
-    }
-    
-    component = DirectoryCleaner {
-    	directory = "../../tests/${projectName}.tests/src-gen"
-    }
-    
-    component = Generator {
-    	pathRtProject = runtimeProject
-    	pathUiProject = "${runtimeProject}.ui"
-    	pathTestProject = "../../tests/${projectName}.tests"
-    	projectNameRt = projectName
-    	projectNameUi = "${projectName}.ui"
-    	encoding = encoding
-    	language = auto-inject {
-    		uri = grammarURI
-    		fileExtensions = fileExtensions
-    
-    		// Java API to access grammar elements (required by several other fragments)
-    		fragment = grammarAccess.GrammarAccessFragment auto-inject {}
-    
-    		// generates Java API for the generated EPackages
-    		fragment = ecore.EMFGeneratorFragment auto-inject {}
-    
-    		// serializer 2.0
-    		fragment = serializer.SerializerFragment auto-inject {
-    			generateStub = false
-    		}
-    
-    		// a custom ResourceFactory for use with EMF
-    		fragment = resourceFactory.ResourceFactoryFragment auto-inject {}
-    
-    		// The antlr parser generator fragment.
-    		fragment = parser.antlr.XtextAntlrGeneratorFragment auto-inject {}
-    
-    		// generates a more lightweight Antlr parser and lexer tailored for content assist
-    		fragment = parser.antlr.XtextAntlrUiGeneratorFragment auto-inject {}
-    		
-    		// Xtend-based API for validation
-    		fragment = validation.ValidatorFragment auto-inject {
-    			composedCheck = "org.eclipse.xtext.validation.ImportUriValidator"
-    		}
-    
-    		// scoping and exporting API
-    		fragment = scoping.ImportURIScopingFragment auto-inject {
-            	generateXtendStub = true
+	
+	component = XtextGenerator {
+		configuration = {
+			project = StandardProjectConfig {
+				baseName = "org.franca.compmodel.dsl"
+				rootPath = rootPath
+				runtimeTest = {
+					root =  "../../tests/org.franca.compmodel.dsl.tests"
+					enabled = true
+				}
+				eclipsePlugin = {
+					enabled = true
+				}
+				eclipsePluginTest = {
+					enabled = false
+				}
+				genericIde = {
+					enabled = true
+		        }
+				createEclipseMetaData = true	
 			}
-			fragment = scoping.ImportNamespacesScopingFragment auto-inject {}
-    		fragment = exporting.QualifiedNamesFragment auto-inject {}
-    		fragment = builder.BuilderIntegrationFragment auto-inject {}
-    
-    		// generator API
-    		fragment = generator.GeneratorFragment auto-inject {}
-    
-    		// formatter API
-    		fragment = formatting.FormatterFragment auto-inject {}
-    
-    		// labeling API
-    		fragment = labeling.LabelProviderFragment auto-inject {}
-    
-    		// outline API
-    		fragment = outline.OutlineTreeProviderFragment auto-inject {}
-    		fragment = outline.QuickOutlineFragment auto-inject {}
-    
-    		// quickfix API
-    		fragment = quickfix.QuickfixProviderFragment auto-inject {}
-    
-    		// content assist API
-    		fragment = contentAssist.ContentAssistFragment auto-inject {}
-    
-    
-    		// generates junit test support classes into Generator#pathTestProject
-    		fragment = junit.Junit4Fragment auto-inject {}
-    
-    		// provides a compare view
-			fragment = compare.CompareFragment {
-                fileExtensions = fileExtensions
-            }    	
-    	}
-    }
-}
+			code = {
+				encoding = "ISO-8859-1"
+				lineDelimiter = "\r\n"
+				fileHeader = "/* Copyright (C) 2018 BMW Group
+ * Author: Bernhard Hennlich (bernhard.hennlich@bmw.de)
+ * This Source Code Form is subject to the terms of the Eclipse Public
+ * License, v. 1.0. If a copy of the EPL was not distributed with this
+ * file, You can obtain one at https://www.eclipse.org/legal/epl-v10.html.
+ */"
+			}
+		}
+		language = StandardLanguage {
+			referencedResource = "platform:/resource/org.franca.core/model/franca.genmodel"
+			name = "org.franca.compmodel.dsl.FComp"
+			fileExtensions = "fcdl"
+			
+			serializer = {
+				generateStub = false
+			}
 
+			formatter = {
+				generateStub = true
+			}
+			
+			validator = {
+				composedCheck = "org.eclipse.xtext.validation.ImportUriValidator"
+				//composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
+			}
+		}
+	}
+}

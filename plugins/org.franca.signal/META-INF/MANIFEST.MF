@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Signal
+Bundle-SymbolicName: org.franca.signal
+Bundle-Version: 0.12.0.qualifier

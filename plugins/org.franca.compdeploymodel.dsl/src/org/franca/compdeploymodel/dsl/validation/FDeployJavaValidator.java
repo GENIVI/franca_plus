@@ -7,7 +7,6 @@
  *******************************************************************************/
 package org.franca.compdeploymodel.dsl.validation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
@@ -25,8 +24,11 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDArray;
 import org.franca.compdeploymodel.dsl.fDeploy.FDAttribute;
 import org.franca.compdeploymodel.dsl.fDeploy.FDBoolean;
 import org.franca.compdeploymodel.dsl.fDeploy.FDBroadcast;
+import org.franca.compdeploymodel.dsl.fDeploy.FDComAdapter;
 import org.franca.compdeploymodel.dsl.fDeploy.FDComplexValue;
+import org.franca.compdeploymodel.dsl.fDeploy.FDComponent;
 import org.franca.compdeploymodel.dsl.fDeploy.FDComponentInstance;
+import org.franca.compdeploymodel.dsl.fDeploy.FDDevice;
 import org.franca.compdeploymodel.dsl.fDeploy.FDElement;
 import org.franca.compdeploymodel.dsl.fDeploy.FDEnumType;
 import org.franca.compdeploymodel.dsl.fDeploy.FDEnumValue;
@@ -51,6 +53,7 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDPropertyHost;
 import org.franca.compdeploymodel.dsl.fDeploy.FDPropertySet;
 import org.franca.compdeploymodel.dsl.fDeploy.FDProvidedPort;
 import org.franca.compdeploymodel.dsl.fDeploy.FDProvider;
+import org.franca.compdeploymodel.dsl.fDeploy.FDRequiredPort;
 import org.franca.compdeploymodel.dsl.fDeploy.FDRootElement;
 import org.franca.compdeploymodel.dsl.fDeploy.FDService;
 import org.franca.compdeploymodel.dsl.fDeploy.FDSpecification;
@@ -111,7 +114,7 @@ public class FDeployJavaValidator extends AbstractFDeployJavaValidator
 	public static final String ENUMERATOR_ENUM_QUICKFIX_MESSAGE = "Enumerator element is missing for enum ";
 	
 	public static final String MANDATORY_PROPERTY_QUICKFIX  = "MANDATORY_PROPERTIES_QUICKFIX";
-	public static final String MANDATORY_PROPERTY_QUICKFIX_MESSAGE  = "Mandatory properties are missing for element ";
+	public static final String MANDATORY_PROPERTY_QUICKFIX_MESSAGE  = "Mandatory properties are missing for ";
 	
 	public static final String DEPLOYMENT_ELEMENT_QUICKFIX  = "DEPLOYMENT_ELEMENT_QUICKFIX";
 	public static final String DEPLOYMENT_ELEMENT_QUICKFIX_MESSAGE  = "Missing specification element ";
@@ -233,14 +236,14 @@ public class FDeployJavaValidator extends AbstractFDeployJavaValidator
 	public void checkPropertiesComplete(FDProvider elem) {
 		// check own properties
 		FDSpecification spec = FDModelUtils.getRootElement(elem).getSpec();
-		checkSpecificationElementProperties(spec, elem, FDeployPackage.Literals.FD_ROOT_ELEMENT__NAME, spec.getName());
+		checkSpecificationElementProperties(spec, elem, FDeployPackage.Literals.FD_ROOT_ELEMENT__NAME, elem.getName());
 	}
 	
 	@Check
 	public void checkPropertiesComplete(FDTypes elem) {
 		// check own properties
 		FDSpecification spec = FDModelUtils.getRootElement(elem).getSpec();
-		checkSpecificationElementProperties(spec, elem, FDeployPackage.Literals.FD_TYPES__TARGET, spec.getName());
+		checkSpecificationElementProperties(spec, elem, FDeployPackage.Literals.FD_TYPES__TARGET, elem.getName());
 
 		// check child elements recursively
 		FDSpecificationExtender specHelper = new FDSpecificationExtender(spec);
@@ -258,7 +261,7 @@ public class FDeployJavaValidator extends AbstractFDeployJavaValidator
 		int lowerLevelErrors = 0;
 		// check own properties
 		FDSpecification spec = FDModelUtils.getRootElement(elem).getSpec();
-		if (checkSpecificationElementProperties(spec, elem, FDeployPackage.Literals.FD_INTERFACE__TARGET, spec.getName())) {
+		if (checkSpecificationElementProperties(spec, elem, FDeployPackage.Literals.FD_INTERFACE__TARGET, elem.getName())) {
 			lowerLevelErrors++;
 		}
 		
@@ -633,7 +636,51 @@ public class FDeployJavaValidator extends AbstractFDeployJavaValidator
 	public void checkPropertiesComplete (FDInterfaceInstance elem) {
 		// check own properties
 		FDSpecification spec = FDModelUtils.getRootElement(elem).getSpec();
-		checkSpecificationElementProperties(spec, elem, FDeployPackage.Literals.FD_INTERFACE_INSTANCE__TARGET, spec.getName());
+		checkSpecificationElementProperties(spec, elem, FDeployPackage.Literals.FD_INTERFACE_INSTANCE__TARGET, elem.getName());
+	}
+	
+	@Check
+	public void checkPropertiesComplete (FDProvidedPort elem) {
+		// check own properties
+		FDSpecification spec = FDModelUtils.getSpecification(elem);
+		if (spec != null)
+			checkSpecificationElementProperties(spec, elem, FDeployPackage.Literals.FD_PROVIDED_PORT__TARGET, elem.getName());
+	}
+	
+	@Check
+	public void checkPropertiesComplete (FDRequiredPort elem) {
+		// check own properties
+		FDSpecification spec = FDModelUtils.getSpecification(elem);	
+		if (spec != null)
+			checkSpecificationElementProperties(spec, elem, FDeployPackage.Literals.FD_REQUIRED_PORT__TARGET, elem.getName());
+	}
+	
+	@Check
+	public void checkPropertiesComplete (FDService elem) {
+		// check own properties
+		FDSpecification spec = FDModelUtils.getRootElement(elem).getSpec();
+		checkSpecificationElementProperties(spec, elem, FDeployPackage.Literals.FD_SERVICE__TARGET, elem.getName());
+	}
+	
+	@Check
+	public void checkPropertiesComplete (FDDevice elem) {
+		// check own properties
+		FDSpecification spec = FDModelUtils.getRootElement(elem).getSpec();
+		checkSpecificationElementProperties(spec, elem, FDeployPackage.Literals.FD_DEVICE__TARGET, elem.getName());
+	}
+	
+	@Check
+	public void checkPropertiesComplete (FDComAdapter elem) {
+		// check own properties
+		FDSpecification spec = FDModelUtils.getRootElement(elem).getSpec();
+		checkSpecificationElementProperties(spec, elem, FDeployPackage.Literals.FD_COM_ADAPTER__TARGET, elem.getName());
+	}
+	
+	@Check
+	public void checkPropertiesComplete (FDComponent elem) {
+		// check own properties
+		FDSpecification spec = FDModelUtils.getRootElement(elem).getSpec();
+		checkSpecificationElementProperties(spec, elem, FDeployPackage.Literals.FD_COMPONENT__TARGET, elem.getName());
 	}
 	
 	/**
@@ -648,19 +695,20 @@ public class FDeployJavaValidator extends AbstractFDeployJavaValidator
 	private boolean checkSpecificationElementProperties(FDSpecification spec, FDElement elem, EStructuralFeature feature, String elementName)
 	{
 		List<FDPropertyDecl> decls = PropertyMappings.getAllPropertyDecls(spec, elem);
-		List<String> missing = new ArrayList<String>();
+		StringBuilder missingPorperties = new StringBuilder();
 		for(FDPropertyDecl decl : decls) {
 			if (PropertyMappings.isMandatory(decl)) {
-				if (!contains(elem.getProperties().getItems(), decl)) {
-					missing.add(decl.getName());
+				if (elem.getProperties() == null || !contains(elem.getProperties().getItems(), decl)) {
+					if (missingPorperties.length() > 0)
+						missingPorperties.append(", ");
+					missingPorperties.append(decl.getName());
 				}
 			}
 		}
 		
-		if (!missing.isEmpty()) {
-			error(MANDATORY_PROPERTY_QUICKFIX_MESSAGE + "'" + elementName + "'", elem, feature, -1,
-					MANDATORY_PROPERTY_QUICKFIX, elementName);
-//			error(MANDATORY_PROPERTY_QUICKFIX_MESSAGE + "'" + elementName + "'", elem, feature, -1);
+		if (missingPorperties.length() > 0) {
+			error(MANDATORY_PROPERTY_QUICKFIX_MESSAGE + "'" + elementName + "': " + missingPorperties, elem, 
+					feature, -1, MANDATORY_PROPERTY_QUICKFIX, elementName);
 			return true;
 		}
 		

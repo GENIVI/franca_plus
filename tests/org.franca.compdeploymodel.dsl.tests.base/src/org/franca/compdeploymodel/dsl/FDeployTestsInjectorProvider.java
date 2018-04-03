@@ -7,7 +7,7 @@
  *******************************************************************************/
 package org.franca.compdeploymodel.dsl;
 
-import org.franca.compdeploymodel.dsl.FDeployInjectorProvider;
+import org.franca.compdeploymodel.dsl.FDeployInjectorProvider__DUMMY_until_deployment_is_migrated_to_new_test;
 import org.franca.compmodel.dsl.FCompStandaloneSetup;
 import org.franca.core.dsl.FrancaIDLStandaloneSetup;
 
@@ -17,7 +17,7 @@ import com.google.inject.Injector;
  * InjectorProvider for Franca deployment tests.
  * @author Klaus Birken
  */
-public class FDeployTestsInjectorProvider extends FDeployInjectorProvider {
+public class FDeployTestsInjectorProvider extends FDeployInjectorProvider__DUMMY_until_deployment_is_migrated_to_new_test {
 
 	@Override
 	protected Injector internalCreateInjector() 

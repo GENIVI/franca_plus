@@ -4,12 +4,15 @@ import "../../platform/network_SOMEIP_deployment_spec.fdepl"
 import "../../fidl/70-HelloWorld.fidl"
 
 // deployment for the interface type
+<** 
+   @description: a interface 
+   @details: some details
+   and more 
+ **>
 define network.someip for interface org.example.HelloWorld2 {
 	SomeIpServiceID = 123
-
+	<** @deprecated: **>
 	broadcast isThereSomeBody {
 		SomeIpEventID = 5
 	}
 }
-
-

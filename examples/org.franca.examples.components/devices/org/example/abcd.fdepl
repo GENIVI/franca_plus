@@ -1,15 +1,14 @@
 package org.example
-
-import "platform:/plugin/org.franca.architecture/deployment/network_SOMEIP_deployment_spec.fdepl"
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
 import "abcd.fcdl"
 
 
 
-define network.someip for service Root.Framework.N1.L1 as L1 {}
-define network.someip for service Root.Framework.N1.L2 as L2 {}
-define network.someip for service Root.Framework.N1.L3 as L3 {} 
+define org.genivi.commonapi.someip.deployment for service Root.Framework.N1.L1 as L1 {}
+define org.genivi.commonapi.someip.deployment for service Root.Framework.N1.L2 as L2 {}
+define org.genivi.commonapi.someip.deployment for service Root.Framework.N1.L3 as L3 {} 
 
-define network.someip for device org.example.D as D {
+define org.genivi.commonapi.someip.deployment for device org.example.D as D {
 	use org.example.L1
 	use org.example.L2 
 	use org.example.L3

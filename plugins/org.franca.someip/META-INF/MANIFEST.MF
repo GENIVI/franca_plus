@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Someip
+Bundle-SymbolicName: org.franca.someip
+Bundle-Version: 0.12.0.qualifier

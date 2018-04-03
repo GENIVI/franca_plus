@@ -8,19 +8,19 @@
  
 package org.franca.compmodel.dsl.model.tests;
 
+import javax.inject.Inject
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.testing.util.ParseHelper
+import org.eclipse.xtext.testing.validation.ValidationTestHelper
+import org.franca.compmodel.dsl.fcomp.FCModel
+import org.franca.compmodel.dsl.tests.util.MultiInjectorProvider
+import org.junit.Assert
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipse.xtext.junit4.InjectWith
-import com.google.inject.Inject
-import org.eclipse.xtext.junit4.validation.ValidationTestHelper
-import org.eclipse.xtext.junit4.util.ParseHelper
-import org.franca.compmodel.dsl.fcomp.FCModel
-import org.junit.Assert
-import org.eclipselabs.xtext.utils.unittesting.XtextRunner2
-import org.franca.compmodel.dsl.tests.util.MultiInjectorProvider
-import org.junit.Ignore
 
-@RunWith(XtextRunner2)
+@RunWith(XtextRunner)
 @InjectWith(MultiInjectorProvider)
 class SimpleComponentTest
 {

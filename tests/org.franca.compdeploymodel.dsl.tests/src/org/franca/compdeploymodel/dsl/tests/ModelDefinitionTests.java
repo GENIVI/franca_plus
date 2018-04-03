@@ -7,23 +7,23 @@
  *******************************************************************************/
 package org.franca.compdeploymodel.dsl.tests;
 
-import org.eclipse.xtext.junit4.InjectWith;
-import org.eclipselabs.xtext.utils.unittesting.XtextRunner2;
+import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.XtextRunner;
 import org.eclipselabs.xtext.utils.unittesting.XtextTest;
 import org.franca.compdeploymodel.dsl.FDeployTestsInjectorProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-@RunWith(XtextRunner2.class)
+@RunWith(XtextRunner.class)
 @InjectWith(FDeployTestsInjectorProvider.class)
+
 public class ModelDefinitionTests extends XtextTest {
 
     @Before
     public void before() {
         suppressSerialization();
     }
-
 
     @Test
     public void test_20_DefEmpty() {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.francaplus.thirdparty.feature"
-      label="thirdparty"
+      label="%featureName"
       version="0.12.0.qualifier"
       provider-name="%providerName">
 
@@ -21,73 +21,92 @@
          id="org.franca.core.dsl"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="0.12.0.201801261637"
          unpack="false"/>
 
    <plugin
          id="org.franca.core.dsl.ui"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="0.12.0.201801261637"
          unpack="false"/>
 
    <plugin
          id="org.franca.core"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="0.12.0.201801261637"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.xtend.typesystem.emf"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.v201603220642"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.xpand"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.v201603220642"
          unpack="false"/>
 
    <plugin
          id="org.junit"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="4.12.0.v201504281640"/>
 
    <plugin
          id="org.eclipse.jdt.junit.runners"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="0.1.0.201411181552"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.xtend"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.v201603220642"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.equinox.concurrent"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.1.0.v20130327-1442"
          unpack="false"/>
 
    <plugin
          id="org.apache.commons.lang"
          download-size="0"
          install-size="0"
+         version="2.6.0.v201404270220"
+         unpack="false"/>
+
+   <plugin
+         id="com.google.guava"
+         download-size="0"
+         install-size="0"
+         version="15.0.0.v201403281430"/>
+
+   <plugin
+         id="com.google.inject"
+         download-size="0"
+         install-size="0"
+         version="3.0.0.v201605172100"/>
+
+   <plugin
+         id="com.google.guava"
+         download-size="0"
+         install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="com.google.inject"
+         id="com.google.guava"
          download-size="0"
          install-size="0"
          version="0.0.0"

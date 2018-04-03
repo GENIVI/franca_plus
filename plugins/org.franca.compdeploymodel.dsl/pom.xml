@@ -109,8 +109,5 @@
             </plugin>
 		</plugins>
 	</build>
-    <properties>
-        <skip.deployment>false</skip.deployment>
-    </properties>
     <version>0.12.0-SNAPSHOT</version>
 </project>

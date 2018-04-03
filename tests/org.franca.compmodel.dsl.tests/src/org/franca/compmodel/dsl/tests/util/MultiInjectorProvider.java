@@ -8,7 +8,7 @@
 
 package org.franca.compmodel.dsl.tests.util;
 
-import org.franca.compmodel.dsl.FCompInjectorProvider;
+import org.franca.compmodel.dsl.tests.FCompInjectorProvider;
 import org.franca.core.dsl.FrancaIDLTestsInjectorProvider;
 
 import com.google.inject.Injector;

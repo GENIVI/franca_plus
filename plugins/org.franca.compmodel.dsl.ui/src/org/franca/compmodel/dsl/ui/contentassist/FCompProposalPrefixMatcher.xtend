@@ -8,7 +8,6 @@
 package org.franca.compmodel.dsl.ui.contentassist
 
 import org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher
-import org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher.LastSegmentFinder
 
 class FCompProposalPrefixMatcher extends FQNPrefixMatcher {
 	

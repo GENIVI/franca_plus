@@ -13,10 +13,11 @@ import org.eclipse.xtext.RuleCall
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper
 import org.eclipse.xtext.resource.XtextResource
-import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightedPositionAcceptor
-import org.eclipse.xtext.ui.editor.syntaxcoloring.ISemanticHighlightingCalculator
+import org.eclipse.xtext.ide.editor.syntaxcoloring.IHighlightedPositionAcceptor
+import org.eclipse.xtext.ide.editor.syntaxcoloring.ISemanticHighlightingCalculator
 import org.franca.compmodel.dsl.services.FCompGrammarAccess
 import org.franca.compmodel.dsl.fcomp.FCTagDecl
+import org.eclipse.xtext.util.CancelIndicator
 
 /* see also https://github.com/mn-mikke/Model-driven-Pretty-Printer-for-Xtext-Framework.wiki.git */
 public class FCompSemanticHighlightCalculator implements ISemanticHighlightingCalculator {
@@ -27,7 +28,7 @@ public class FCompSemanticHighlightCalculator implements ISemanticHighlightingCa
 	@Inject
 	private EObjectAtOffsetHelper helper
 
-	override void provideHighlightingFor(XtextResource resource, IHighlightedPositionAcceptor acceptor) {
+	override void provideHighlightingFor(XtextResource resource, IHighlightedPositionAcceptor acceptor, CancelIndicator cancelIndicator) {
 		if (resource === null || resource.getParseResult() === null)
 			return;
 

@@ -7,27 +7,27 @@
  *******************************************************************************/
 package org.franca.compdeploymodel.dsl.tests
 
-import com.google.inject.Inject
 import java.util.ArrayList
 import java.util.Arrays
+import javax.inject.Inject
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.InMemoryFileSystemAccess
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipselabs.xtext.utils.unittesting.XtextRunner2
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.franca.compdeploymodel.dsl.FDeployTestsInjectorProvider
 import org.franca.compdeploymodel.dsl.tests.memcompiler.ClassAnalyzer
 import org.franca.compdeploymodel.dsl.tests.memcompiler.InMemoryFileSystemAccessCompiler
 import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.franca.compdeploymodel.dsl.tests.GeneratorTestBase
 
 import static org.junit.Assert.*
 
-@RunWith(typeof(XtextRunner2))
-@InjectWith(typeof(FDeployTestsInjectorProvider))
+@RunWith(typeof(XtextRunner))
+@InjectWith(FDeployTestsInjectorProvider)
+
 class CodeGeneratorTest extends GeneratorTestBase {
 
 	@Inject

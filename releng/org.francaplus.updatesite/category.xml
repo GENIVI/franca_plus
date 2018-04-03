@@ -3,6 +3,9 @@
    <feature url="features/org.francaplus.feature_0.12.0.qualifier.jar" id="org.francaplus.feature" version="0.12.0.qualifier">
       <category name="francaplus.feature"/>
    </feature>
+   <feature id="org.francaplus.feature.source" version="0.12.0.qualifier">
+      <category name="francaplus.feature"/>
+   </feature>
    <feature url="features/org.genivi.commonapi.core.feature_0.12.0.qualifier.jar" id="org.genivi.commonapi.core.feature" version="0.12.0.qualifier">
       <category name="deployment.specification"/>
    </feature>
@@ -14,9 +17,6 @@
    </feature>
    <feature url="features/org.franca.architecture.feature_0.12.0.qualifier.jar" id="org.franca.architecture.feature" version="0.12.0.qualifier">
       <category name="architecture"/>
-   </feature>
-   <feature url="features/org.francaplus.feature.sdk_0.12.0.qualifier.jar" id="org.francaplus.feature.sdk" version="0.12.0.qualifier">
-      <category name="francaplus.feature"/>
    </feature>
    <category-def name="francaplus.feature" label="Franca Plus DSL">
       <description>

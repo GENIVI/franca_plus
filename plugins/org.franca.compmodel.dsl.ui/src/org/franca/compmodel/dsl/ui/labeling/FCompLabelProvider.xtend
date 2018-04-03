@@ -79,11 +79,11 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 	}
 
 	public def String text(FCAssemblyConnector element) {
-		element.from.port.name + " to " + element.to.port.name // + ' \u221E ' + element.to.port.name + "." + element.to.port.name 
+		element.from.port.name + " to " + element.to.port.name 
 	}
 
 	public def String text(FCDelegateConnector element) {
-		element.inner.port.name + " to " + element.outer.port.name // + ' \u221E ' + element.outer.port.name
+		element.outer.port.name + " to " + element.inner.port.name
 	}
 	
 	public def String text(FCAnnotationBlock element) {

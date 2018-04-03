@@ -44,7 +44,7 @@ abstract class AccessMethodGenerator {
 
 
 	def private genProperties(FDDeclaration decl, boolean forInterfaces, org.franca.compdeploymodel.dsl.generator.internal.ICodeContext context) '''
-		«IF decl.properties.size > 0 && decl.host.getFrancaType(forInterfaces)!=null»
+		«IF decl.properties.size > 0 && decl.host.getFrancaType(forInterfaces)!==null»
 			// host '«decl.host.getName»'
 			«FOR p : decl.properties»
 				«p.genProperty(decl.host, forInterfaces, context)»

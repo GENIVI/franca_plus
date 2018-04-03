@@ -25,19 +25,15 @@ public class ExternalTestValidator implements IFCompExternalValidator
 		
 		EList<FCComponent> list = arg0.getComponents();
 		
-		for(FCComponent comp : list)
-		{
-			if(comp.getComment() == null)
-			{
+		for(FCComponent comp : list) {
+			if(comp.getComment() == null) {
 				arg1.acceptError("A comment section is required", comp,
 						FcompPackage.Literals.FC_COMPONENT__NAME, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
 			}
-			else
-			{
+			else {
 				 FCAnnotationBlock annotation = comp.getComment();
 				 EList<FCAnnotation>annotationsFragments = annotation.getElements();
-				if(annotationsFragments.isEmpty())
-				{
+				if(annotationsFragments.isEmpty()) {
 					arg1.acceptError("A Tag is required inside the comment section", annotation,
 							FcompPackage.Literals.FC_ANNOTATION_BLOCK__ELEMENTS, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
 				}

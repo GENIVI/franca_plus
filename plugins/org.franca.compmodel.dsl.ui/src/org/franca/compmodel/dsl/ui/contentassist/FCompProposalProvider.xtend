@@ -1,7 +1,5 @@
 /* Copyright (C) 2017 BMW Group
  * Author: Bernhard Hennlich (bernhard.hennlich@bmw.de)
- * based on the work of Klaus Birken (itemis AG)
- * 
  * This Source Code Form is subject to the terms of the Eclipse Public
  * License, v. 1.0. If a copy of the EPL was not distributed with this
  * file, You can obtain one at https://www.eclipse.org/legal/epl-v10.html. 
@@ -10,7 +8,11 @@ package org.franca.compmodel.dsl.ui.contentassist
 
 import com.google.common.base.Joiner
 import com.google.inject.Inject
+import java.net.URL
+import java.util.ArrayList
+import java.util.Enumeration
 import java.util.List
+import org.eclipse.core.runtime.Platform
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.jdt.internal.core.JavaProject
@@ -30,7 +32,7 @@ import org.franca.compmodel.dsl.fcomp.FCModel
 import org.franca.compmodel.dsl.fcomp.FCTagDecl
 import org.franca.compmodel.dsl.fcomp.Import
 import org.franca.core.utils.FrancaIDLUtils
-import java.util.ArrayList
+import org.osgi.framework.Bundle
 
 class FCompProposalProvider extends AbstractFCompProposalProvider {
 	
@@ -42,6 +44,13 @@ class FCompProposalProvider extends AbstractFCompProposalProvider {
 	private IContainer.Manager containerManager;
 	@Inject
 	private ResourceDescriptionsProvider provider;
+	
+	/**
+	 * Configure the available predefined components and tags by setting this parameter as 
+	 * JVM argument pointing to a plugin with the fcdls.
+	 * Multiple plugins can be given, separated by a comma.
+	 */
+	private val componentBundles = "componentBundles"
 
 	public override completeImport_ImportURI(EObject model, Assignment assignment, ContentAssistContext context,
 		ICompletionProposalAcceptor acceptor) {
@@ -53,7 +62,7 @@ class FCompProposalProvider extends AbstractFCompProposalProvider {
 			fcmodel = model.eContainer as FCModel
 		
 		val importedUris = fcmodel.imports.map[it.importURI]
-		val platformResources = new ArrayList<URI>()
+		val workspaceResources = new ArrayList<URI>()
 		val classpathResources = new ArrayList<URI>()
 		var xtextresourceSet = model.eResource.resourceSet as XtextResourceSet
 		var containers = containerManager.getVisibleContainers(
@@ -66,23 +75,51 @@ class FCompProposalProvider extends AbstractFCompProposalProvider {
 			it.resourceDescriptions.filter[
 				it.URI.toString != model.eResource.URI.toString && 
 					extensionsForImportURIScope.contains(it.URI.fileExtension)].forEach [
-				platformResources += it.URI
+				workspaceResources += it.URI
 				if (classPathContext instanceof JavaProject) 
 					classpathResources += it.URI
 			]
 		]
 		
 
-		if (context.prefix.contains("classpath:")) {
+		if ("platform".startsWith(context.getPrefix())) {
+			createPlatformProposals(context, acceptor, importedUris) 
+		}
+		else if ("classpath".startsWith(context.prefix)) {
 			classpathResources.forEach [
 				it.createClasspathProposal(modelUri,context, acceptor,importedUris)
 			]
-		} else {
-			platformResources.forEach [
-				it.createFilenameProposal(modelUri,context,acceptor,importedUris)
-			]
 		}
+		workspaceResources.forEach [
+			it.createFilenameProposal(modelUri,context,acceptor,importedUris)
+			]
 		super.completeImport_ImportURI(model, assignment, context, acceptor)
+	}
+	
+	def createPlatformProposals(ContentAssistContext context, ICompletionProposalAcceptor acceptor, List<String> importedUris) {
+		val bundleNames = System.getProperty(componentBundles)
+		if (bundleNames !== null ) {
+			val String [] bundles = bundleNames.split(",")
+			for (bundleName: bundles) {
+				val Bundle plugin = Platform.getBundle(bundleName.trim);
+				try {
+					val Enumeration<URL> urls = plugin.findEntries("/", "*.fdepl", true)
+					while (urls.hasMoreElements()) {
+						val URL url = urls.nextElement();
+						val specName = "platform:/plugin/" + bundleName.trim + url.getPath();
+						if(!importedUris.contains(specName)){
+							val String[] segments = specName.split("/");
+							val String displayString = segments.get(segments.length -1) + " - " + specName;
+							createProposal(specName, displayString, context, acceptor);
+						}
+					}
+				} 
+				catch (Exception e) {
+					System.err.println(
+						"cannot get specifications from plugin '" + bundleName + "':" + e.getMessage());	
+				}
+			}
+		}
 	}
 	
 	def void createClasspathProposal(URI uri,URI model, ContentAssistContext context, ICompletionProposalAcceptor acceptor,List<String> importedUris)
@@ -152,7 +189,6 @@ class FCompProposalProvider extends AbstractFCompProposalProvider {
 				acceptor.accept(proposal)
 			}
 		}
-		
 		super.complete_FCAnnotation(model, ruleCall, context, acceptor)
 	}
 }

@@ -8,9 +8,18 @@
 package org.franca.compdeploymodel.dsl.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
+import org.eclipse.xtext.ide.editor.syntaxcoloring.ISemanticHighlightingCalculator;
 import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher;
 import org.eclipse.xtext.ui.editor.contentassist.XtextContentAssistProcessor;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
 import org.franca.compdeploymodel.dsl.ui.contentassist.FCompDeployProposalPrefixMatcher;
+import org.franca.compdeploymodel.dsl.ui.contentassist.FCompDeployDocumentationProvider;
+import org.franca.compdeploymodel.dsl.ui.highlighting.FCompDeployHighlightingConfiguration;
+import org.franca.compdeploymodel.dsl.ui.highlighting.FCompDeploySemanticHighlightingCalculator;
+import org.eclipse.xtext.ui.editor.contentassist.IContentProposalProvider;
+import org.franca.compdeploymodel.dsl.ui.contentassist.ExternalDeployProposalProviderRegistryLoader;
+import org.franca.compdeploymodel.dsl.ui.contentassist.FDeployProposalProvider;
 
 import com.google.inject.Binder;
 
@@ -57,4 +66,31 @@ public class FDeployUiModule extends org.franca.compdeploymodel.dsl.ui.AbstractF
 	public Class<? extends PrefixMatcher> bindPrefixMatcher() {
 		return FCompDeployProposalPrefixMatcher.class;
 	}
+	
+	public Class<? extends IEObjectDocumentationProvider> bindIEObjectDocumentationProviderr() {
+        return FCompDeployDocumentationProvider.class;
+    }
+	
+	// inject own highlighting configuration
+	public Class<? extends IHighlightingConfiguration> bindSemanticConfig() {
+		return FCompDeployHighlightingConfiguration.class;
+	}
+
+	// inject own semantic highlighting
+	public Class<? extends ISemanticHighlightingCalculator> bindSemanticHighlightingCalculator() {
+		return FCompDeploySemanticHighlightingCalculator.class;
+	}
+	// Load ProposalProvider. If extension is registered, the extension class is loaded, of not the FCompProposalProvider will be loaded.
+		@SuppressWarnings("unchecked")
+		@Override
+		public Class<? extends org.eclipse.xtext.ui.editor.contentassist.IContentProposalProvider> bindIContentProposalProvider() {
+			
+			Object o = ExternalDeployProposalProviderRegistryLoader.externalProposalProviderLoader();
+			
+			if(o != null && o instanceof IContentProposalProvider)
+			{
+				return (Class<? extends IContentProposalProvider>) o.getClass();
+			}
+			return FDeployProposalProvider.class;
+		}
 }

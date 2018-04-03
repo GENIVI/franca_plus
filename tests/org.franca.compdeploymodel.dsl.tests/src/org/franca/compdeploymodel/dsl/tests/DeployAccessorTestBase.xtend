@@ -68,7 +68,7 @@ abstract class DeployAccessorTestBase extends XtextTest {
 		assertEquals(StringProp.u, accessor.getStringProp(f3))
 		assertEquals(0, accessor.getArrayProp(f3))
 		
-		if (acc!=null) {
+		if (acc!==null) {
 			// access including overwrites (if any)
 			assertEquals(pSField1, acc.getSFieldProp(f1))
 			assertEquals(pSField2, acc.getSFieldProp(f2))

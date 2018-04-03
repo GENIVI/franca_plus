@@ -1,11 +1,16 @@
 package org.example.deployment
 
-import "platform:/plugin/org.franca.architecture/deployment/network_SOMEIP_deployment_spec.fdepl"
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
 import "../HelloWorld.fcdl"
 
 // deployment for the service type 
-define network.someip for component org.example.HelloWorldClient as HelloWorldClientComponentDeployment {
-	require AnswerMePort on network.someip 
+define org.genivi.commonapi.someip.deployment for component org.example.HelloWorldClient as HelloWorldClientComponentDeployment {
+	require AnswerMePort on org.genivi.commonapi.someip.deployment {	
+		SomeIpInstanceID = 1
+        SomeIpUnicastAddress = "160.48.199.99"
+        SomeIpReliableUnicastPort = 30506
+        SomeIpUnreliableUnicastPort = 0
+	}    
 }
 
 

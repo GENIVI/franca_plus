@@ -8,7 +8,7 @@
 * 2012-03-06: Klaus Birken (initial version)
 * 2017-07-28: Bernhard Hennlich (BMW AG: extension for component model)
 *******************************************************************************/
-grammar org.franca.compdeploymodel.dsl.FDeploy with org.eclipse.xtext.common.Terminals
+grammar org.franca.compdeploymodel.dsl.FDeploy with org.eclipse.xtext.common.Terminals  
 
 // the fDeploy ecore model (it is not generated from this grammar)
 import "http://www.franca.org/compdeploymodel/dsl/FDeploy"
@@ -107,6 +107,7 @@ FDElement:
 	FDTypeDefinition | FDField | FDEnumeration | FDEnumValue;
 
 FDProvider:
+	comment=FDAnnotationBlock?
 	'define' spec=[FDSpecification|FQN]
 	'for' 'provider' name=FQN
 	'{'
@@ -121,6 +122,7 @@ FDProvider:
 	
 // Additional property hosts for component modeling
 FDService:
+	comment=FDAnnotationBlock?
 	'define' spec=[FDSpecification|FQN]	'for' 'service' target=FDComponentInstance ('as' name=ID)? ('{'
 		('use' use+=[FDComponent|FQN])*
 
@@ -133,13 +135,16 @@ FDService:
 	'}')?;
 	
 FDDevice:
+	comment=FDAnnotationBlock?
 	'define' spec=[FDSpecification|FQN]
 	'for' 'device' target=[fcomp::FCDevice|FQN] ('as' name = ID)?
 	('{'
 		('use' use+=[FDService|FQN])*
-		(adapters+=FDComAdapter)*
-		// the own properties of this service
+		
+		// the own properties of the device
 		properties=FDPropertySet
+		
+		(adapters+=FDComAdapter)*
 	'}')?;
 	
 FDComponentInstance:
@@ -147,7 +152,9 @@ FDComponentInstance:
 	({FDComponentInstance.parent=current} '.' prototype=[fcomp::FCGenericPrototype])*;
 	
 
-FDComAdapter: 'adapter' target=[fcomp::FCComAdapter] 'on' spec=[FDSpecification|FQN]
+FDComAdapter:
+	comment=FDAnnotationBlock? 
+	'adapter' target=[fcomp::FCComAdapter] 'on' spec=[FDSpecification|FQN]
 	('{'
 		('use' use+=[FDProvidedPort|FQN])*
 		properties=FDPropertySet
@@ -155,6 +162,7 @@ FDComAdapter: 'adapter' target=[fcomp::FCComAdapter] 'on' spec=[FDSpecification|
 ;
 
 FDVariant:
+	comment=FDAnnotationBlock?
 	'define' 'variant' name=ID 'for' 'root' root=[fcomp::FCComponent]? 
 	('{'
 		('use' use+=[FDDevice|FQN])*
@@ -162,11 +170,10 @@ FDVariant:
 
 	
 FDComponent:
+	comment=FDAnnotationBlock?
 	'define' spec=[FDSpecification|FQN]
 	'for' 'component' target=[fcomp::FCComponent|FQN] ('as' name=FQN)?
 	'{'
-		// ('use' use+=[FDComponent|FQN])*
-
 		// the own properties of this component
 		properties=FDPropertySet
 		
@@ -178,6 +185,7 @@ FDComponent:
 FDPort: FDProvidedPort | FDRequiredPort;
 
 FDRequiredPort:
+	comment=FDAnnotationBlock?
 	'require' target=[fcomp::FCRequiredPort|FQN] ('on' spec=[FDSpecification|FQN])?
 	('{' 
 		('use' use+=[FDRootElement|FQN])*
@@ -187,6 +195,7 @@ FDRequiredPort:
 	'}')?;
 
 FDProvidedPort:
+	comment=FDAnnotationBlock?
 	'provide' target=[fcomp::FCProvidedPort|FQN] ('on' spec=[FDSpecification|FQN])?
 	('{'
 		('use' use+=[FDInterface|FQN])*
@@ -197,11 +206,13 @@ FDProvidedPort:
 	
 // deployment of plain interfaces w/o components
 FDInterfaceInstance:
+	comment=FDAnnotationBlock?
 	'instance' target=[fidl::FInterface|FQN] ('as' name=FQN)? '{'
 		properties=FDPropertySet
 	'}';
 
 FDTypes:
+	comment=FDAnnotationBlock?
 	'define' spec=[FDSpecification|FQN]
 	'for' 'typeCollection' target=[fidl::FTypeCollection|FQN] ('as' name=FQN)?
 	'{'
@@ -215,6 +226,7 @@ FDTypes:
 	'}';
 
 FDInterface:
+	comment=FDAnnotationBlock?
 	'define' spec=[FDSpecification|FQN]
 	'for' 'interface' target=[fidl::FInterface|FQN]
 	('as' name=FQN)?
@@ -234,6 +246,7 @@ FDInterface:
 	'}';
 
 FDAttribute:
+	comment=FDAnnotationBlock?
 	'attribute' target=[fidl::FAttribute|FQN] '{'
 		properties=FDPropertySet
 		(overwrites=FDTypeOverwrites)?
@@ -243,6 +256,7 @@ FDOperation:
 	FDMethod | FDBroadcast;
 
 FDMethod:
+	comment=FDAnnotationBlock?
 	'method' target=[fidl::FMethod|FQN_WITH_SELECTOR] '{'
 		properties=FDPropertySet
 		('in' inArguments=FDArgumentList)?
@@ -250,6 +264,7 @@ FDMethod:
 	'}';
 
 FDBroadcast:
+	comment=FDAnnotationBlock?
 	'broadcast' target=[fidl::FBroadcast|FQN_WITH_SELECTOR] '{'
 		properties=FDPropertySet
 		('out' outArguments=FDArgumentList)?
@@ -260,6 +275,7 @@ FDArgumentList:
 	'{' arguments+=FDArgument* '}';
 
 FDArgument:
+	comment=FDAnnotationBlock?
 	target=[fidl::FArgument|FQN] '{'
 		properties=FDPropertySet
 		(overwrites=FDTypeOverwrites)?
@@ -269,41 +285,48 @@ FDTypeDefinition: FDArray | FDCompound | FDEnumeration | FDTypedef;
 FDCompound: FDStruct | FDUnion;
 
 FDArray:
+	comment=FDAnnotationBlock?
 	'array' target=[fidl::FArrayType|FQN] '{'
 		properties=FDPropertySet
 		(overwrites=FDTypeOverwrites)?
 	'}';
 	
 FDStruct:
+	comment=FDAnnotationBlock?
 	'struct' target=[fidl::FStructType|FQN] '{'
 		properties=FDPropertySet
 		fields+=FDField*
 	'}';
 
 FDUnion:
+	comment=FDAnnotationBlock?
 	'union' target=[fidl::FUnionType|FQN] '{'
 		properties=FDPropertySet
 		fields+=FDField*
 	'}';
 
 FDTypedef:
+	comment=FDAnnotationBlock?
 	'typedef' target=[fidl::FTypeDef|FQN] '{'
 		properties=FDPropertySet
 	'}';
 	
 FDField:
+	comment=FDAnnotationBlock?
 	target=[fidl::FField|FQN] '{'
 		properties=FDPropertySet
 		(overwrites=FDTypeOverwrites)?
 	'}';
 
 FDEnumeration:
+	comment=FDAnnotationBlock?
 	'enumeration' target=[fidl::FEnumerationType|FQN] '{'
 		properties=FDPropertySet
 		enumerators+=FDEnumValue*
 	'}';
 
 FDEnumValue:
+	comment=FDAnnotationBlock?
 	target=[fidl::FEnumerator|FQN] '{'
 		properties=FDPropertySet
 	'}';
@@ -316,17 +339,20 @@ FDTypeOverwrites:
 
 FDPlainTypeOverwrites:
 	{FDPlainTypeOverwrites}
+	comment=FDAnnotationBlock?
 	'{'
 		properties=FDPropertySet // the actually overwritten properties
 	'}';
 
 FDStructOverwrites:
+	comment=FDAnnotationBlock?
 	'{'
 		properties=FDPropertySet // the actually overwritten properties
 		(fields+=FDField)*
 	'}';
 
 FDUnionOverwrites:
+	comment=FDAnnotationBlock?
 	'{'
 		properties=FDPropertySet // the actually overwritten properties
 		(fields+=FDField)*
@@ -334,6 +360,7 @@ FDUnionOverwrites:
 
 FDEnumerationOverwrites:
 	{FDEnumerationOverwrites}
+	comment=FDAnnotationBlock?
 	'{'
 		properties=FDPropertySet // the actually overwritten properties
 		(enumerators+=FDEnumValue)*
@@ -399,6 +426,16 @@ terminal HEX:
 // terminal rule: binary literal
 terminal BINARY:
 	 ('0b'|'0B')('0'|'1')+;
-	
 
 // **************************************************************
+// annotations
+terminal ANNOTATION_STRING returns ecore::EString:
+	'@' (('a'..'z')|'-')+ (' '|'\t')* ':'
+	( ('\\' ('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\')) | ('\\*'|'\\@') | !('\\'|'*'|'@') )*
+;
+
+FDAnnotationBlock:
+	'<**' (elements+=FDAnnotation)+ '**>';
+
+FDAnnotation:
+	rawText=ANNOTATION_STRING;

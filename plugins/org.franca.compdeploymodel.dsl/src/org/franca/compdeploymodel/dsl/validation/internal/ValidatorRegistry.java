@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.xtext.validation.CheckMode;
 import org.franca.compdeploymodel.dsl.validation.IFDeployExternalValidator;
-import org.franca.core.dsl.validation.IFrancaExternalValidator;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;

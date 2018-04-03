@@ -3,6 +3,35 @@ package de.bmw.bdc.deployment
 import "classpath:/org/example/DefaultDeployTypes.fidl"
 
 specification defaults {
+	
+	for providers {
+		ProviderString:				 String							 (default: "empty");
+	}
+	
+	for instances {
+		InstanceString:				 String							 (default: "empty");
+	}
+	
+	for devices {
+		DeviceString:				 String							 (default: "empty");
+	}
+	
+	for adapters {
+		SomeIpUnicastAddress:        String                          (default: "");
+	}
+	
+	for services {
+		ServiceString:				 String							 (default: "empty");
+	}
+	
+    for provided_ports {
+        SomeIpInstanceID:            Integer                         ;
+	}
+	
+	for required_ports {
+        SomeIpInstanceID:            Integer                         ;
+	}
+	
 	for attributes {
 		
 		// Timeout scopes to any const declaration value from the IDL 

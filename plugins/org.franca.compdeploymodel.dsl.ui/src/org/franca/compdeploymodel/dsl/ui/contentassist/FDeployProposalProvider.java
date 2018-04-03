@@ -3,22 +3,24 @@
  */
 package org.franca.compdeploymodel.dsl.ui.contentassist;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.Assignment;
@@ -28,7 +30,6 @@ import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.resource.IContainer;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.ui.IImageHelper;
 import org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal;
@@ -42,16 +43,15 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDeployPackage;
 import org.franca.compdeploymodel.dsl.fDeploy.Import;
 import org.franca.compdeploymodel.dsl.scoping.DeploySpecProvider;
 import org.franca.compdeploymodel.dsl.scoping.DeploySpecProvider.DeploySpecEntry;
-import org.franca.compdeploymodel.dsl.scoping.FDeployDeclarativeNameProvider;
 import org.franca.core.franca.FEnumerationType;
 import org.franca.core.franca.FStructType;
 import org.franca.core.franca.FType;
 import org.franca.core.franca.FTypeCollection;
 import org.franca.core.franca.FUnionType;
 import org.franca.core.utils.FrancaIDLUtils;
+import org.osgi.framework.Bundle;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -60,7 +60,7 @@ import com.google.inject.Inject;
  * http://www.eclipse.org/Xtext/documentation/latest/xtext.html#contentAssist on
  * how to customize content assistant
  */
-@SuppressWarnings({ "restriction", "unused" })
+@SuppressWarnings({ "unused" })
 public class FDeployProposalProvider extends AbstractFDeployProposalProvider  {
 	@Inject
 	DeploySpecProvider deploySpecProvider;
@@ -68,17 +68,16 @@ public class FDeployProposalProvider extends AbstractFDeployProposalProvider  {
 	ContainerUtil containerUtil;
 	@Inject
 	IImageHelper imageHelper;
-
+	
 	protected final static String[] extensionsForImportURIScope = new String[] {
 			"fidl", "fdepl", "fcdl" };
 	
-	protected final static String[] preconfiguredDeploymentSpec = new String [] {
-			"platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl",
-			"platform:/plugin/org.genivi.commonapi.core/deployment/CommonAPI_deployment_spec.fdepl",
-			"platform:/plugin/org.franca.architecture/deployment/architecture_deployment_spec.fdepl",
-			"platform:/plugin/org.franca.architecture/deployment/network_CAN_deployment_spec.fdepl",
-			"platform:/plugin/org.franca.architecture/deployment/network_SOMEIP_deployment_spec.fdepl"
-	};
+	/**
+	 * Configure the available deployment specification by setting this parameter as 
+	 * JVM argument pointing to a plugin with the fdepls containing the specifications.
+	 * Multiple plugins can be given, separated by a comma.
+	 */
+	private final static String deploymentBundles = "deploymentBundles";
 
 	static {
 		Arrays.sort(extensionsForImportURIScope);
@@ -147,29 +146,40 @@ public class FDeployProposalProvider extends AbstractFDeployProposalProvider  {
 				}
 			}
 		}
-		if (context.getPrefix().contains("platform:")) {
-			createPlatformProposals(context, acceptor, preconfiguredDeploymentSpec, fromURI, importedUris);
+		if ("platform".startsWith(context.getPrefix())) {
+			createPlatformProposals(context, acceptor, fromURI, importedUris);
 		}
-		else if (context.getPrefix().contains("classpath:")) {
+		else if ("classpath".startsWith(context.getPrefix())) {
 			createClasspathProposals(context, acceptor, proposedURIs, fromURI, importedUris);
 		}
-		else {
-			createFileProposals(context, acceptor, proposedURIs, fromURI, importedUris);
-		}
+		createFileProposals(context, acceptor, proposedURIs, fromURI, importedUris);
+		
 		super.completeImport_ImportURI(model, assignment, context, acceptor);
 	}
 
-	private void createPlatformProposals(ContentAssistContext context, ICompletionProposalAcceptor acceptor,
-			String[] preconfigureddeploymentspec, URI fromURI, List<String> importedUris) {
-		
-		for (int i = 0; i < preconfigureddeploymentspec.length; i++) {
-			if(!importedUris.contains(preconfigureddeploymentspec[i])){
-				String[] segments = preconfigureddeploymentspec[i].split("/");
-				String displayString = segments[segments.length -1 ]  + " - " + preconfigureddeploymentspec[i];
-				createProposal(preconfigureddeploymentspec[i], displayString, context, acceptor);
+	private void createPlatformProposals(ContentAssistContext context, ICompletionProposalAcceptor acceptor, URI fromURI, List<String> importedUris) {
+		String specificationBundleNames = System.getProperty(deploymentBundles, "org.franca.architecture");
+		String [] bundles = specificationBundleNames.split(",");
+		for (String bundleName: bundles) {
+			bundleName = bundleName.trim();
+			Bundle plugin = Platform.getBundle(bundleName);
+			try {
+				Enumeration<URL> urls = plugin.findEntries("/", "*.fdepl", true);
+				while (urls.hasMoreElements()) {
+					URL url = urls.nextElement();
+					String specName = "platform:/plugin/" + bundleName + url.getPath();
+					if(!importedUris.contains(specName)){
+						String[] segments = specName.split("/");
+						String displayString = segments[segments.length -1 ]  + " - " + specName;
+						createProposal(specName, displayString, context, acceptor);
+					}
+				}
+			} 
+			catch (Exception e) {
+				System.err.println(
+					"cannot get specifications from plugin '" + bundleName + "':" + e.getMessage());	
 			}
 		}
-		
 	}
 
 	private void createClasspathProposals(ContentAssistContext context,ICompletionProposalAcceptor acceptor,
@@ -320,8 +330,7 @@ public class FDeployProposalProvider extends AbstractFDeployProposalProvider  {
 			filteredKeywords.remove(e);
 		else
 			filteredKeywords.add(e);
-
-		if (struct)
+	if (struct)
 			filteredKeywords.remove(s);
 		else
 			filteredKeywords.add(s);

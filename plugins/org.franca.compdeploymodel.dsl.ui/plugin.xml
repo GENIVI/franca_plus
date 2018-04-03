@@ -2,6 +2,7 @@
 <?eclipse version="3.0"?>
 
 <plugin>
+   <extension-point id="DeployProposalProvider" name="DeployProposalProvider" schema="schema/DeployProposalProvider.exsd"/>
 
     <extension
             point="org.eclipse.ui.editors">

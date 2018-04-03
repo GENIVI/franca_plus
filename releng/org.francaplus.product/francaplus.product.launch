@@ -2,6 +2,7 @@
 <launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
 <setAttribute key="additional_plugins">
 <setEntry value="org.franca.architecture:0.12.0.qualifier:default:true"/>
+<setEntry value="org.franca.compdeploymodel.dsl.tests:0.12.0.qualifier:default:true"/>
 <setEntry value="org.franca.compdeploymodel.dsl.ui:0.12.0.qualifier:default:true"/>
 <setEntry value="org.franca.compdeploymodel.dsl:0.12.0.qualifier:default:true"/>
 <setEntry value="org.franca.compmodel.dsl.ui:0.12.0.qualifier:default:true"/>
@@ -9,10 +10,14 @@
 <setEntry value="org.franca.core.dsl.ui:0.12.0.201801261637:default:true"/>
 <setEntry value="org.franca.core.dsl:0.12.0.201801261637:default:true"/>
 <setEntry value="org.franca.core:0.12.0.201801261637:default:true"/>
-<setEntry value="org.genivi.commonapi.core:0.12.0.qualifier:default:true"/>
-<setEntry value="org.genivi.commonapi.someip:0.12.0.qualifier:default:true"/>
+<setEntry value="org.franca.signal:0.12.0.qualifier:default:true"/>
+<setEntry value="org.franca.someip:0.12.0.qualifier:default:true"/>
+<setEntry value="org.franca.tags:0.12.0.qualifier:default:true"/>
+<setEntry value="org.genivi.commonapi.core:0.12.0.qualifier:default:false"/>
+<setEntry value="org.genivi.commonapi.someip:0.12.0.qualifier:default:false"/>
 </setAttribute>
 <booleanAttribute key="append.args" value="true"/>
+<stringAttribute key="application" value="org.eclipse.ui.ide.workbench"/>
 <booleanAttribute key="askclear" value="true"/>
 <booleanAttribute key="automaticAdd" value="false"/>
 <booleanAttribute key="automaticValidate" value="true"/>
@@ -33,158 +38,21 @@
 <listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} &#13;&#10;-ws ${target.ws} &#13;&#10;-arch ${target.arch} &#13;&#10;-nl ${target.nl} &#13;&#10;-consoleLog &#13;&#10;-clearPersistedState"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -clearPersistedState"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx1024m&#13;&#10;-DnoFDeployGenerator"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx1024m -DdeploymentBundles=org.franca.architecture,org.franca.someip,org.franca.signal -DnoFDeployGenerator"/>
 <stringAttribute key="pde.version" value="3.3"/>
 <stringAttribute key="product" value="org.franca.compmodel.dsl.FComp"/>
 <stringAttribute key="productFile" value="\org.francaplus.product\francaplus.product"/>
 <setAttribute key="selected_features">
-<setEntry value="com.google.eclipse.protobuf:default"/>
-<setEntry value="de.itemis.xtext.antlr.feature:default"/>
-<setEntry value="de.itemis.xtext.antlr.sdk:default"/>
-<setEntry value="de.itemis.xtext.antlr.source.feature:default"/>
-<setEntry value="org.csu.idl:default"/>
-<setEntry value="org.eclipse.cvs.source:default"/>
-<setEntry value="org.eclipse.cvs:default"/>
-<setEntry value="org.eclipse.draw2d.sdk:default"/>
-<setEntry value="org.eclipse.draw2d.source:default"/>
-<setEntry value="org.eclipse.draw2d:default"/>
-<setEntry value="org.eclipse.e4.rcp.source:default"/>
-<setEntry value="org.eclipse.e4.rcp:default"/>
-<setEntry value="org.eclipse.ecf.core.feature:default"/>
-<setEntry value="org.eclipse.ecf.core.source.feature:default"/>
-<setEntry value="org.eclipse.ecf.core.ssl.feature:default"/>
-<setEntry value="org.eclipse.ecf.core.ssl.source.feature:default"/>
-<setEntry value="org.eclipse.ecf.filetransfer.feature:default"/>
-<setEntry value="org.eclipse.ecf.filetransfer.httpclient4.feature:default"/>
-<setEntry value="org.eclipse.ecf.filetransfer.httpclient4.source.feature:default"/>
-<setEntry value="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature:default"/>
-<setEntry value="org.eclipse.ecf.filetransfer.httpclient4.ssl.source.feature:default"/>
-<setEntry value="org.eclipse.ecf.filetransfer.source.feature:default"/>
-<setEntry value="org.eclipse.ecf.filetransfer.ssl.feature:default"/>
-<setEntry value="org.eclipse.ecf.filetransfer.ssl.source.feature:default"/>
-<setEntry value="org.eclipse.egit:default"/>
-<setEntry value="org.eclipse.emf.codegen.ecore.source:default"/>
-<setEntry value="org.eclipse.emf.codegen.ecore.ui.source:default"/>
-<setEntry value="org.eclipse.emf.codegen.ecore.ui:default"/>
-<setEntry value="org.eclipse.emf.codegen.ecore:default"/>
-<setEntry value="org.eclipse.emf.codegen.source:default"/>
-<setEntry value="org.eclipse.emf.codegen.ui.source:default"/>
-<setEntry value="org.eclipse.emf.codegen.ui:default"/>
-<setEntry value="org.eclipse.emf.codegen:default"/>
-<setEntry value="org.eclipse.emf.common.source:default"/>
-<setEntry value="org.eclipse.emf.common.ui.source:default"/>
-<setEntry value="org.eclipse.emf.common.ui:default"/>
-<setEntry value="org.eclipse.emf.common:default"/>
-<setEntry value="org.eclipse.emf.converter.source:default"/>
-<setEntry value="org.eclipse.emf.converter:default"/>
-<setEntry value="org.eclipse.emf.databinding.edit.source:default"/>
-<setEntry value="org.eclipse.emf.databinding.edit:default"/>
-<setEntry value="org.eclipse.emf.databinding.source:default"/>
-<setEntry value="org.eclipse.emf.databinding:default"/>
-<setEntry value="org.eclipse.emf.doc.source:default"/>
-<setEntry value="org.eclipse.emf.doc:default"/>
-<setEntry value="org.eclipse.emf.ecore.edit.source:default"/>
-<setEntry value="org.eclipse.emf.ecore.edit:default"/>
-<setEntry value="org.eclipse.emf.ecore.editor.source:default"/>
-<setEntry value="org.eclipse.emf.ecore.editor:default"/>
-<setEntry value="org.eclipse.emf.ecore.source:default"/>
-<setEntry value="org.eclipse.emf.ecore:default"/>
-<setEntry value="org.eclipse.emf.edit.source:default"/>
-<setEntry value="org.eclipse.emf.edit.ui.source:default"/>
-<setEntry value="org.eclipse.emf.edit.ui:default"/>
-<setEntry value="org.eclipse.emf.edit:default"/>
-<setEntry value="org.eclipse.emf.eef.codegen.ecore-feature:default"/>
-<setEntry value="org.eclipse.emf.eef.edt-feature:default"/>
-<setEntry value="org.eclipse.emf.eef.extended-feature:default"/>
-<setEntry value="org.eclipse.emf.eef.runtime-feature:default"/>
-<setEntry value="org.eclipse.emf.eef.sdk-feature:default"/>
-<setEntry value="org.eclipse.emf.mapping.ecore.editor.source:default"/>
-<setEntry value="org.eclipse.emf.mapping.ecore.editor:default"/>
-<setEntry value="org.eclipse.emf.mapping.ecore.source:default"/>
-<setEntry value="org.eclipse.emf.mapping.ecore:default"/>
-<setEntry value="org.eclipse.emf.mapping.source:default"/>
-<setEntry value="org.eclipse.emf.mapping.ui.source:default"/>
-<setEntry value="org.eclipse.emf.mapping.ui:default"/>
-<setEntry value="org.eclipse.emf.mapping:default"/>
-<setEntry value="org.eclipse.emf.mwe2.language.sdk:default"/>
-<setEntry value="org.eclipse.emf.mwe2.launcher.source:default"/>
-<setEntry value="org.eclipse.emf.mwe2.launcher:default"/>
-<setEntry value="org.eclipse.emf.mwe2.runtime.sdk:default"/>
-<setEntry value="org.eclipse.emf.query.doc:default"/>
-<setEntry value="org.eclipse.emf.query.ocl.source:default"/>
-<setEntry value="org.eclipse.emf.query.ocl:default"/>
-<setEntry value="org.eclipse.emf.query.sdk:default"/>
-<setEntry value="org.eclipse.emf.query.source:default"/>
-<setEntry value="org.eclipse.emf.query:default"/>
-<setEntry value="org.eclipse.emf.sdk:default"/>
-<setEntry value="org.eclipse.emf.source:default"/>
-<setEntry value="org.eclipse.emf.transaction.doc:default"/>
-<setEntry value="org.eclipse.emf.transaction.sdk:default"/>
-<setEntry value="org.eclipse.emf.transaction.source:default"/>
-<setEntry value="org.eclipse.emf.transaction:default"/>
-<setEntry value="org.eclipse.emf.validation.doc:default"/>
-<setEntry value="org.eclipse.emf.validation.ocl.source:default"/>
-<setEntry value="org.eclipse.emf.validation.ocl:default"/>
-<setEntry value="org.eclipse.emf.validation.sdk:default"/>
-<setEntry value="org.eclipse.emf.validation.source:default"/>
-<setEntry value="org.eclipse.emf.validation:default"/>
-<setEntry value="org.eclipse.emf.workspace.doc:default"/>
-<setEntry value="org.eclipse.emf.workspace.source:default"/>
-<setEntry value="org.eclipse.emf.workspace:default"/>
-<setEntry value="org.eclipse.emf:default"/>
-<setEntry value="org.eclipse.equinox.executable:default"/>
-<setEntry value="org.eclipse.equinox.p2.core.feature.source:default"/>
-<setEntry value="org.eclipse.equinox.p2.core.feature:default"/>
-<setEntry value="org.eclipse.equinox.p2.extras.feature.source:default"/>
-<setEntry value="org.eclipse.equinox.p2.extras.feature:default"/>
-<setEntry value="org.eclipse.equinox.p2.rcp.feature.source:default"/>
-<setEntry value="org.eclipse.equinox.p2.rcp.feature:default"/>
-<setEntry value="org.eclipse.equinox.p2.user.ui.source:default"/>
-<setEntry value="org.eclipse.equinox.p2.user.ui:default"/>
-<setEntry value="org.eclipse.gef.sdk:default"/>
-<setEntry value="org.eclipse.gef.source:default"/>
-<setEntry value="org.eclipse.gef:default"/>
-<setEntry value="org.eclipse.help.source:default"/>
-<setEntry value="org.eclipse.help:default"/>
-<setEntry value="org.eclipse.jdt.junit.runners.feature.source:default"/>
-<setEntry value="org.eclipse.jdt.junit.runners.feature:default"/>
-<setEntry value="org.eclipse.jdt.source:default"/>
-<setEntry value="org.eclipse.jdt:default"/>
-<setEntry value="org.eclipse.jgit:default"/>
-<setEntry value="org.eclipse.pde.source:default"/>
-<setEntry value="org.eclipse.pde:default"/>
-<setEntry value="org.eclipse.platform.source:default"/>
-<setEntry value="org.eclipse.platform:default"/>
-<setEntry value="org.eclipse.rcp.source:default"/>
-<setEntry value="org.eclipse.rcp:default"/>
-<setEntry value="org.eclipse.sdk:default"/>
-<setEntry value="org.eclipse.xtend.sdk:default"/>
-<setEntry value="org.eclipse.xtext.docs:default"/>
-<setEntry value="org.eclipse.xtext.examples:default"/>
-<setEntry value="org.eclipse.xtext.redist:default"/>
-<setEntry value="org.eclipse.xtext.runtime:default"/>
-<setEntry value="org.eclipse.xtext.sdk:default"/>
-<setEntry value="org.eclipse.xtext.ui:default"/>
-<setEntry value="org.eclipse.xtext.xbase.lib:default"/>
-<setEntry value="org.eclipse.xtext.xbase:default"/>
-<setEntry value="org.eclipse.xtext.xdoc.feature:default"/>
-<setEntry value="org.eclipse.xtext.xtext.ui:default"/>
-<setEntry value="org.eclipse.zest.sdk:default"/>
-<setEntry value="org.eclipse.zest.source:default"/>
-<setEntry value="org.eclipse.zest:default"/>
-<setEntry value="org.eclipselabs.xtext.utils.unittesting.feature:default"/>
+<setEntry value="org.franca.architecture.feature:default"/>
 <setEntry value="org.franca.core:default"/>
-<setEntry value="org.xpect.sdk:default"/>
-<setEntry value="org.xpect.xtext.lib.feature:default"/>
-<setEntry value="org.xpect.xtext.xbase.lib.feature:default"/>
 </setAttribute>
-<stringAttribute key="selected_target_plugins" value="com.google.guava@default:default,com.google.inject@default:default,com.ibm.icu@default:default,com.jcraft.jsch@default:default,com.sun.el@default:default,de.itemis.xtext.antlr@default:default,javaewah@default:default,javax.annotation@default:default,javax.el@default:default,javax.inject@default:default,javax.servlet.jsp@default:default,javax.servlet@default:default,javax.xml@default:default,org.antlr.generator@default:default,org.antlr.runtime@default:default,org.apache.ant@default:default,org.apache.batik.css@default:default,org.apache.batik.util.gui@default:default,org.apache.batik.util@default:default,org.apache.commons.codec@default:default,org.apache.commons.compress@default:default,org.apache.commons.jxpath@default:default,org.apache.commons.lang@default:default,org.apache.commons.logging@default:default,org.apache.felix.gogo.command@default:default,org.apache.felix.gogo.runtime@default:default,org.apache.felix.gogo.shell@default:default,org.apache.httpcomponents.httpclient@default:default,org.apache.httpcomponents.httpcore@default:default,org.apache.jasper.glassfish@default:default,org.apache.log4j@default:default,org.apache.lucene.analysis@default:default,org.apache.lucene.core@default:default,org.eclipse.ant.core@default:default,org.eclipse.ant.launching@default:default,org.eclipse.ant.ui@default:default,org.eclipse.compare.core@default:default,org.eclipse.compare.win32@default:default,org.eclipse.compare@default:default,org.eclipse.core.commands@default:default,org.eclipse.core.contenttype@default:default,org.eclipse.core.databinding.beans@default:default,org.eclipse.core.databinding.observable@default:default,org.eclipse.core.databinding.property@default:default,org.eclipse.core.databinding@default:default,org.eclipse.core.expressions@default:default,org.eclipse.core.externaltools@default:default,org.eclipse.core.filebuffers@default:default,org.eclipse.core.filesystem.win32.x86@default:false,org.eclipse.core.filesystem@default:default,org.eclipse.core.jobs@default:default,org.eclipse.core.net.win32.x86@default:false,org.eclipse.core.net@default:default,org.eclipse.core.resources.win32.x86@default:false,org.eclipse.core.resources@default:default,org.eclipse.core.runtime@default:true,org.eclipse.core.variables@default:default,org.eclipse.debug.core@default:default,org.eclipse.debug.ui@default:default,org.eclipse.draw2d@default:default,org.eclipse.e4.core.commands@default:default,org.eclipse.e4.core.contexts@default:default,org.eclipse.e4.core.di.annotations@default:default,org.eclipse.e4.core.di.extensions@default:default,org.eclipse.e4.core.di@default:default,org.eclipse.e4.core.services@default:default,org.eclipse.e4.emf.xpath@default:default,org.eclipse.e4.ui.bindings@default:default,org.eclipse.e4.ui.css.core@default:default,org.eclipse.e4.ui.css.swt.theme@default:default,org.eclipse.e4.ui.css.swt@default:default,org.eclipse.e4.ui.di@default:default,org.eclipse.e4.ui.dialogs@default:default,org.eclipse.e4.ui.model.workbench@default:default,org.eclipse.e4.ui.services@default:default,org.eclipse.e4.ui.widgets@default:default,org.eclipse.e4.ui.workbench.addons.swt@default:default,org.eclipse.e4.ui.workbench.renderers.swt@default:default,org.eclipse.e4.ui.workbench.swt@default:default,org.eclipse.e4.ui.workbench3@default:default,org.eclipse.e4.ui.workbench@default:default,org.eclipse.ecf.filetransfer@default:default,org.eclipse.ecf.identity@default:default,org.eclipse.ecf.provider.filetransfer.httpclient4.ssl@default:false,org.eclipse.ecf.provider.filetransfer.httpclient4@default:default,org.eclipse.ecf.provider.filetransfer.ssl@default:false,org.eclipse.ecf.provider.filetransfer@default:default,org.eclipse.ecf.ssl@default:false,org.eclipse.ecf@default:default,org.eclipse.egit.core@default:default,org.eclipse.egit.doc@default:default,org.eclipse.egit.ui@default:default,org.eclipse.egit@default:default,org.eclipse.emf.ant@default:default,org.eclipse.emf.codegen.ecore.ui@default:default,org.eclipse.emf.codegen.ecore@default:default,org.eclipse.emf.codegen.ui@default:default,org.eclipse.emf.codegen@default:default,org.eclipse.emf.common.ui@default:default,org.eclipse.emf.common@default:default,org.eclipse.emf.converter@default:default,org.eclipse.emf.databinding.edit@default:default,org.eclipse.emf.databinding@default:default,org.eclipse.emf.ecore.change.edit@default:default,org.eclipse.emf.ecore.change@default:default,org.eclipse.emf.ecore.edit@default:default,org.eclipse.emf.ecore.editor@default:default,org.eclipse.emf.ecore.xmi@default:default,org.eclipse.emf.ecore@default:default,org.eclipse.emf.edit.ui@default:default,org.eclipse.emf.edit@default:default,org.eclipse.emf.exporter@default:default,org.eclipse.emf.importer.ecore@default:default,org.eclipse.emf.importer.java@default:default,org.eclipse.emf.importer.rose@default:default,org.eclipse.emf.importer@default:default,org.eclipse.emf.mapping.ecore.editor@default:default,org.eclipse.emf.mapping.ecore2ecore.editor@default:default,org.eclipse.emf.mapping.ecore2ecore@default:default,org.eclipse.emf.mapping.ecore2xml.ui@default:default,org.eclipse.emf.mapping.ecore2xml@default:default,org.eclipse.emf.mapping.ecore@default:default,org.eclipse.emf.mapping.ui@default:default,org.eclipse.emf.mapping@default:default,org.eclipse.emf.mwe2.language.ui@default:default,org.eclipse.emf.mwe2.language@default:default,org.eclipse.emf.mwe2.launch.ui@default:default,org.eclipse.emf.mwe2.launch@default:default,org.eclipse.emf.mwe2.lib@default:default,org.eclipse.emf.mwe2.runtime@default:default,org.eclipse.emf.workspace.ui@default:default,org.eclipse.emf.workspace@default:default,org.eclipse.emf@default:default,org.eclipse.equinox.app@default:default,org.eclipse.equinox.bidi@default:default,org.eclipse.equinox.common@2:true,org.eclipse.equinox.concurrent@default:default,org.eclipse.equinox.console@default:default,org.eclipse.equinox.ds@2:true,org.eclipse.equinox.event@2:true,org.eclipse.equinox.frameworkadmin.equinox@default:default,org.eclipse.equinox.frameworkadmin@default:default,org.eclipse.equinox.http.jetty@default:default,org.eclipse.equinox.http.registry@default:default,org.eclipse.equinox.http.servlet@default:default,org.eclipse.equinox.jsp.jasper.registry@default:default,org.eclipse.equinox.jsp.jasper@default:default,org.eclipse.equinox.launcher.win32.win32.x86@default:false,org.eclipse.equinox.launcher@default:default,org.eclipse.equinox.p2.artifact.repository@default:default,org.eclipse.equinox.p2.console@default:default,org.eclipse.equinox.p2.core@default:default,org.eclipse.equinox.p2.director.app@default:default,org.eclipse.equinox.p2.director@default:default,org.eclipse.equinox.p2.directorywatcher@default:default,org.eclipse.equinox.p2.engine@default:default,org.eclipse.equinox.p2.extensionlocation@default:default,org.eclipse.equinox.p2.garbagecollector@default:default,org.eclipse.equinox.p2.jarprocessor@default:default,org.eclipse.equinox.p2.metadata.repository@default:default,org.eclipse.equinox.p2.metadata@default:default,org.eclipse.equinox.p2.operations@default:default,org.eclipse.equinox.p2.publisher.eclipse@default:default,org.eclipse.equinox.p2.publisher@default:default,org.eclipse.equinox.p2.reconciler.dropins@default:default,org.eclipse.equinox.p2.repository.tools@default:default,org.eclipse.equinox.p2.repository@default:default,org.eclipse.equinox.p2.touchpoint.eclipse@default:default,org.eclipse.equinox.p2.touchpoint.natives@default:default,org.eclipse.equinox.p2.transport.ecf@default:default,org.eclipse.equinox.p2.ui.importexport@default:default,org.eclipse.equinox.p2.ui.sdk.scheduler@default:default,org.eclipse.equinox.p2.ui.sdk@default:default,org.eclipse.equinox.p2.ui@default:default,org.eclipse.equinox.p2.updatechecker@default:default,org.eclipse.equinox.p2.updatesite@default:default,org.eclipse.equinox.preferences@default:default,org.eclipse.equinox.registry@default:default,org.eclipse.equinox.security.ui@default:default,org.eclipse.equinox.security.win32.x86@default:false,org.eclipse.equinox.security@default:default,org.eclipse.equinox.simpleconfigurator.manipulator@default:default,org.eclipse.equinox.simpleconfigurator@1:true,org.eclipse.equinox.util@default:default,org.eclipse.help.base@default:default,org.eclipse.help.ui@default:default,org.eclipse.help.webapp@default:default,org.eclipse.help@default:default,org.eclipse.jdt.annotation*1.1.100.v20160418-1457@default:default,org.eclipse.jdt.annotation*2.1.0.v20160418-1457@default:default,org.eclipse.jdt.apt.core@default:default,org.eclipse.jdt.apt.pluggable.core@default:default,org.eclipse.jdt.apt.ui@default:default,org.eclipse.jdt.compiler.apt@default:false,org.eclipse.jdt.compiler.tool@default:false,org.eclipse.jdt.core.manipulation@default:default,org.eclipse.jdt.core@default:default,org.eclipse.jdt.debug.ui@default:default,org.eclipse.jdt.debug@default:default,org.eclipse.jdt.doc.user@default:default,org.eclipse.jdt.junit.core@default:default,org.eclipse.jdt.junit.runners.feature.source@default:default,org.eclipse.jdt.junit.runners@default:default,org.eclipse.jdt.junit.runtime@default:default,org.eclipse.jdt.junit4.runtime.patch@default:default,org.eclipse.jdt.junit4.runtime@default:default,org.eclipse.jdt.junit@default:default,org.eclipse.jdt.launching@default:default,org.eclipse.jdt.ui@default:default,org.eclipse.jdt@default:default,org.eclipse.jetty.continuation@default:default,org.eclipse.jetty.http@default:default,org.eclipse.jetty.io@default:default,org.eclipse.jetty.security@default:default,org.eclipse.jetty.server@default:default,org.eclipse.jetty.servlet@default:default,org.eclipse.jetty.util@default:default,org.eclipse.jface.databinding@default:default,org.eclipse.jface.text@default:default,org.eclipse.jface@default:default,org.eclipse.jgit.archive@default:default,org.eclipse.jgit@default:default,org.eclipse.jsch.core@default:default,org.eclipse.jsch.ui@default:default,org.eclipse.ltk.core.refactoring@default:default,org.eclipse.ltk.ui.refactoring@default:default,org.eclipse.osgi.compatibility.state@default:false,org.eclipse.osgi.services@default:default,org.eclipse.osgi.util@default:default,org.eclipse.osgi@-1:true,org.eclipse.pde.api.tools.annotations@default:default,org.eclipse.pde.api.tools.ui@default:default,org.eclipse.pde.api.tools@default:default,org.eclipse.pde.build@default:default,org.eclipse.pde.core@default:default,org.eclipse.pde.doc.user@default:default,org.eclipse.pde.ds.annotations@default:default,org.eclipse.pde.ds.core@default:default,org.eclipse.pde.ds.ui@default:default,org.eclipse.pde.junit.runtime@default:default,org.eclipse.pde.launching@default:default,org.eclipse.pde.runtime@default:default,org.eclipse.pde.ua.core@default:default,org.eclipse.pde.ua.ui@default:default,org.eclipse.pde.ui.templates@default:default,org.eclipse.pde.ui@default:default,org.eclipse.pde@default:default,org.eclipse.platform.doc.user@default:default,org.eclipse.platform@default:default,org.eclipse.rcp@default:default,org.eclipse.search@default:default,org.eclipse.swt.win32.win32.x86@default:false,org.eclipse.swt@default:default,org.eclipse.team.core@default:default,org.eclipse.team.ui@default:default,org.eclipse.text@default:default,org.eclipse.ui.browser@default:default,org.eclipse.ui.cheatsheets@default:default,org.eclipse.ui.console@default:default,org.eclipse.ui.editors@default:default,org.eclipse.ui.externaltools@default:default,org.eclipse.ui.forms@default:default,org.eclipse.ui.ide.application@default:default,org.eclipse.ui.ide@default:default,org.eclipse.ui.intro.quicklinks@default:default,org.eclipse.ui.intro.universal@default:default,org.eclipse.ui.intro@default:default,org.eclipse.ui.monitoring@default:default,org.eclipse.ui.navigator.resources@default:default,org.eclipse.ui.navigator@default:default,org.eclipse.ui.net@default:default,org.eclipse.ui.themes@default:default,org.eclipse.ui.trace@default:default,org.eclipse.ui.views.log@default:default,org.eclipse.ui.views.properties.tabbed@default:default,org.eclipse.ui.views@default:default,org.eclipse.ui.win32@default:false,org.eclipse.ui.workbench.texteditor@default:default,org.eclipse.ui.workbench@default:default,org.eclipse.ui@default:default,org.eclipse.update.configurator@3:true,org.eclipse.xpand@default:default,org.eclipse.xtend.core@default:default,org.eclipse.xtend.doc@default:default,org.eclipse.xtend.examples@default:default,org.eclipse.xtend.ide.common@default:default,org.eclipse.xtend.ide@default:default,org.eclipse.xtend.lib.macro@default:default,org.eclipse.xtend.lib@default:default,org.eclipse.xtend.m2e@default:default,org.eclipse.xtend.standalone@default:default,org.eclipse.xtend.typesystem.emf@default:default,org.eclipse.xtend@default:default,org.eclipse.xtext.activities@default:default,org.eclipse.xtext.builder.standalone@default:default,org.eclipse.xtext.builder@default:default,org.eclipse.xtext.common.types.edit@default:default,org.eclipse.xtext.common.types.shared.jdt38@default:false,org.eclipse.xtext.common.types.shared@default:default,org.eclipse.xtext.common.types.ui@default:default,org.eclipse.xtext.common.types@default:default,org.eclipse.xtext.doc@default:default,org.eclipse.xtext.ecore@default:default,org.eclipse.xtext.generator@default:default,org.eclipse.xtext.ide@default:default,org.eclipse.xtext.idea.generator@default:default,org.eclipse.xtext.java@default:default,org.eclipse.xtext.junit4@default:default,org.eclipse.xtext.logging@default:false,org.eclipse.xtext.m2e@default:default,org.eclipse.xtext.purexbase.ui@default:default,org.eclipse.xtext.purexbase@default:default,org.eclipse.xtext.smap@default:default,org.eclipse.xtext.testing@default:default,org.eclipse.xtext.ui.codetemplates.ui@default:default,org.eclipse.xtext.ui.codetemplates@default:default,org.eclipse.xtext.ui.ecore@default:default,org.eclipse.xtext.ui.shared@default:default,org.eclipse.xtext.ui@default:default,org.eclipse.xtext.util@default:default,org.eclipse.xtext.xbase.ide@default:default,org.eclipse.xtext.xbase.junit@default:default,org.eclipse.xtext.xbase.lib@default:default,org.eclipse.xtext.xbase.testing@default:default,org.eclipse.xtext.xbase.ui@default:default,org.eclipse.xtext.xbase@default:default,org.eclipse.xtext.xtext.generator@default:default,org.eclipse.xtext.xtext.ide@default:default,org.eclipse.xtext.xtext.ui.examples@default:default,org.eclipse.xtext.xtext.ui.graph@default:default,org.eclipse.xtext.xtext.ui@default:default,org.eclipse.xtext.xtext.wizard@default:default,org.eclipse.xtext@default:default,org.franca.core.dsl.ui@default:default,org.franca.core.dsl@default:default,org.franca.core@default:default,org.hamcrest.core@default:default,org.junit@default:default,org.objectweb.asm.tree@default:default,org.objectweb.asm@default:default,org.sat4j.core@default:default,org.sat4j.pb@default:default,org.slf4j.api@default:default,org.slf4j.impl.log4j12@default:false,org.tukaani.xz@default:default,org.w3c.css.sac@default:default,org.w3c.dom.events@default:default,org.w3c.dom.smil@default:default,org.w3c.dom.svg@default:default,org.xpect.ui.junit@default:default,org.xpect.ui@default:default,org.xpect.xtext.lib@default:default,org.xpect.xtext.xbase.lib@default:default,org.xpect@default:default"/>
-<stringAttribute key="selected_workspace_plugins" value="org.franca.compdeploymodel.dsl.ui@default:default,org.franca.compdeploymodel.dsl@default:default,org.franca.compmodel.dsl.ui@default:default,org.franca.compmodel.dsl@default:default,org.franca.architecture@default:default,org.genivi.commonapi.core@default:default,org.genivi.commonapi.someip@default:default"/>
+<stringAttribute key="selected_target_plugins" value="org.eclipse.jdt.launching@default:default,javax.servlet@default:default,org.apache.log4j@default:default,com.google.eclipse.protobuf@default:default,org.eclipse.equinox.bidi@default:default,org.eclipse.xtext.generator@default:default,javaewah@default:default,org.eclipse.core.net@default:default,org.slf4j.api@default:default,org.eclipse.e4.ui.workbench@default:default,org.eclipse.e4.ui.di@default:default,org.eclipse.equinox.event@2:true,org.eclipse.xtext.ecore@default:default,org.eclipse.ui.ide.application@default:default,org.eclipse.e4.core.di.extensions@default:default,org.eclipse.emf.mwe.core@default:default,org.eclipse.e4.ui.bindings@default:default,org.eclipse.team.ui@default:default,org.eclipse.emf.edit@default:default,org.eclipse.swt.win32.win32.x86@default:default,org.junit@default:default,com.jcraft.jsch@default:default,org.eclipse.xtext.common.types@default:default,org.eclipse.search@default:default,org.eclipse.equinox.launcher.win32.win32.x86@default:default,org.eclipse.jface@default:default,org.eclipse.ui.console@default:default,org.eclipse.xtext.ide@default:default,org.eclipse.jdt.ui@default:default,org.eclipse.core.expressions@default:default,org.eclipse.core.filebuffers@default:default,org.eclipse.xtext.ui.codetemplates@default:default,org.eclipse.e4.ui.css.core@default:default,org.eclipse.e4.ui.workbench.addons.swt@default:default,org.eclipse.emf.ecore@default:default,org.eclipse.core.filesystem.win32.x86@default:default,org.eclipse.egit.core@default:default,org.w3c.dom.smil@default:default,org.eclipse.equinox.p2.core@default:default,org.antlr.generator@default:default,org.eclipse.core.variables@default:default,org.eclipse.xtext.xbase@default:default,org.eclipse.equinox.ds@2:true,org.eclipse.equinox.preferences@default:default,org.hamcrest.core@default:default,org.eclipse.xtext.idea.generator@default:default,org.eclipse.core.databinding.observable@default:default,org.eclipse.emf.codegen.ecore@default:default,org.franca.core.source@default:default,org.eclipse.xtext.xtext.generator@default:default,org.eclipse.core.databinding@default:default,com.google.eclipse.protobuf.ui@default:default,org.apache.commons.jxpath@default:default,org.apache.ant@default:default,org.franca.core.dsl@default:default,org.eclipse.osgi.compatibility.state@default:default,org.eclipse.equinox.launcher@default:default,org.eclipse.equinox.p2.engine@default:default,org.eclipse.xtend.lib@default:default,org.eclipse.emf.ecore.edit@default:default,org.slf4j.impl.log4j12@default:default,org.antlr.runtime@default:default,org.eclipse.emf.ecore.editor@default:default,org.eclipse.ui.workbench.texteditor@default:default,org.apache.batik.util@default:default,org.eclipse.ui.win32@default:default,org.eclipse.equinox.p2.metadata.repository@default:default,org.eclipse.core.net.win32.x86@default:default,org.eclipse.debug.ui@default:default,org.franca.core.dsl.ui.source@default:default,org.w3c.css.sac@default:default,org.eclipse.equinox.region@default:default,org.franca.core.edit@default:default,org.eclipse.jdt.core.manipulation@default:default,com.google.inject@default:default,org.eclipse.egit@default:default,org.eclipse.core.databinding.property@default:default,org.eclipse.ltk.ui.refactoring@default:default,org.eclipse.ui.ide@default:default,org.eclipse.e4.ui.css.swt@default:default,org.eclipse.equinox.app@default:default,org.eclipse.equinox.registry@default:default,org.eclipse.e4.core.commands@default:default,org.eclipse.xtext.smap@default:default,org.eclipse.xtext.common.types.edit@default:default,org.eclipse.jsch.ui@default:default,org.apache.commons.logging@default:default,org.eclipse.compare.core@default:default,org.eclipse.xtext.util@default:default,org.franca.core.dsl.ui@default:default,org.eclipse.core.resources@default:default,org.eclipse.emf.common@default:default,org.eclipse.ui.editors@default:default,org.eclipse.core.contenttype@default:default,org.eclipse.emf.ecore.change@default:default,org.eclipse.osgi@default:default,org.eclipse.e4.core.services@default:default,org.eclipse.compare@default:default,org.eclipse.equinox.transforms.hook@default:default,org.eclipse.xtend@default:default,org.eclipse.swt@default:default,org.eclipse.xtext@default:default,org.eclipse.equinox.common@2:true,org.eclipse.ui.views.properties.tabbed@default:default,com.google.guava@default:default,org.eclipse.ui.navigator.resources@default:default,org.eclipse.jdt.compiler.apt@default:default,org.eclipse.emf.mwe2.lib@default:default,org.eclipse.equinox.p2.metadata@default:default,org.apache.commons.cli@default:default,org.eclipse.emf.edit.ui@default:default,org.eclipse.xtext.common.types.ui@default:default,org.franca.core@default:default,org.eclipse.core.filesystem@default:default,org.eclipse.osgi.services@default:default,org.eclipse.e4.ui.model.workbench@default:default,javax.annotation@default:default,org.eclipse.equinox.p2.repository@default:default,org.eclipse.e4.core.di.annotations@default:default,org.franca.core.edit.source@default:default,org.eclipse.core.resources.win32.x86@default:default,org.eclipse.ui.views@default:default,org.eclipse.xtext.xbase.testing@default:default,org.eclipse.e4.ui.workbench.swt@default:default,org.eclipse.help@default:default,org.eclipse.core.runtime@default:true,org.eclipse.debug.core@default:default,org.eclipse.xtext.builder.standalone@default:default,org.eclipse.emf.mwe.utils@default:default,de.itemis.xtext.antlr@default:default,org.apache.commons.lang@default:default,org.eclipse.jdt.compiler.tool@default:default,org.eclipse.jdt.core@default:default,org.eclipse.jface.text@default:default,org.eclipse.team.core@default:default,org.eclipse.text@default:default,org.eclipse.emf.codegen@default:default,org.eclipse.emf.mwe2.language@default:default,org.eclipse.ltk.core.refactoring@default:default,org.eclipse.xpand@default:default,org.eclipse.jdt.debug@default:default,org.eclipse.xtend.typesystem.emf@default:default,org.tukaani.xz@default:default,javax.xml@default:default,org.eclipse.jgit@default:default,org.eclipse.ant.core@default:default,com.ibm.icu@default:default,org.eclipse.e4.ui.workbench.renderers.swt@default:default,org.eclipse.e4.core.contexts@default:default,org.eclipse.ui@default:default,org.eclipse.ui.navigator@default:default,org.eclipse.core.commands@default:default,org.apache.batik.css@default:default,org.franca.core.dsl.source@default:default,org.eclipse.emf.mwe2.runtime@default:default,org.eclipse.emf.ecore.xmi@default:default,org.eclipse.xtext.testing@default:default,org.w3c.dom.events@default:default,org.eclipse.e4.ui.services@default:default,org.eclipse.xtext.builder@default:default,org.eclipse.xtext.logging@default:default,org.eclipse.e4.ui.widgets@default:default,org.eclipse.equinox.util@default:default,org.eclipse.xtext.ui.codetemplates.ui@default:default,org.objectweb.asm@default:default,org.eclipse.xtext.ui@default:default,org.eclipse.xtext.xbase.lib@default:default,org.eclipse.jdt.debug.ui@default:default,org.eclipse.xtend.lib.macro@default:default,org.eclipse.egit.ui@default:default,org.eclipse.jsch.core@default:default,org.eclipse.xtext.xbase.ide@default:default,org.eclipse.e4.ui.workbench3@default:default,org.eclipse.emf.common.ui@default:default,org.eclipse.e4.ui.css.swt.theme@default:default,org.eclipse.equinox.weaving.hook@default:default,org.eclipse.e4.emf.xpath@default:default,org.eclipse.ui.forms@default:default,org.eclipse.jface.databinding@default:default,javax.inject@default:default,org.eclipse.e4.core.di@default:default,org.w3c.dom.svg@default:default,org.apache.batik.util.gui@default:default,org.eclipse.xtext.ui.shared@default:default,org.eclipse.emf.mwe2.launch@default:default,org.eclipse.ui.workbench@default:default,org.eclipse.equinox.security.win32.x86@default:default,org.eclipse.equinox.security@default:default,org.eclipse.core.jobs@default:default,"/>
+<stringAttribute key="selected_workspace_plugins" value="org.genivi.commonapi.someip@default:default,org.franca.tags@default:default,org.franca.signal@default:default,org.franca.someip@default:default,org.franca.compdeploymodel.dsl@default:default,org.franca.compdeploymodel.dsl.ui@default:default,org.franca.architecture@default:default,org.franca.compmodel.dsl.ide@default:default,org.genivi.commonapi.core@default:default,org.franca.compmodel.dsl.ui@default:default,org.franca.compmodel.dsl@default:default,"/>
 <booleanAttribute key="show_selected_only" value="false"/>
 <booleanAttribute key="tracing" value="false"/>
-<booleanAttribute key="useCustomFeatures" value="true"/>
+<booleanAttribute key="useCustomFeatures" value="false"/>
 <booleanAttribute key="useDefaultConfig" value="true"/>
 <booleanAttribute key="useDefaultConfigArea" value="true"/>
 <booleanAttribute key="useProduct" value="true"/>

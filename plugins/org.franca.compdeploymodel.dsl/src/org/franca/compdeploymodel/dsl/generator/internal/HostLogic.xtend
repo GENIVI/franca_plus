@@ -8,6 +8,7 @@
 package org.franca.compdeploymodel.dsl.generator.internal
 
 import org.eclipse.emf.ecore.EObject
+import org.franca.compdeploymodel.dsl.fDeploy.FDPropertyHost
 import org.franca.core.franca.FArgument
 import org.franca.core.franca.FAttribute
 import org.franca.core.franca.FBroadcast
@@ -20,7 +21,6 @@ import org.franca.core.franca.FStructType
 import org.franca.core.franca.FTypeCollection
 import org.franca.core.franca.FTypeDef
 import org.franca.core.franca.FUnionType
-import org.franca.compdeploymodel.dsl.fDeploy.FDPropertyHost
 
 /**
  * This class defines how deployment properties are mapped to Franca IDL objects
@@ -49,6 +49,9 @@ class HostLogic {
 			case DEVICES:	 	   null  // ignore
 			case ADAPTERS:	 	   null  // ignore
 			case SERVICES:	 	   null  // ignore
+			case VARIANTS:	 	   null  // ignore
+			case REQUIRED_PORTS:   null  // ignore
+			case PROVIDED_PORTS:   null  // ignore
 			case TYPE_COLLECTIONS: typeof(FTypeCollection)
 			case INTERFACES:       forInterfaces.use(typeof(FInterface))
 			case ATTRIBUTES:       forInterfaces.use(typeof(FAttribute))
@@ -73,7 +76,7 @@ class HostLogic {
 	}
 
 	def static isInterfaceOnly(FDPropertyHost host) {
-		host.getFrancaType(false)==null
+		host.getFrancaType(false)===null
 	}
 
 	/**
@@ -85,21 +88,54 @@ class HostLogic {
 		else
 			null
 	}
-
-
+	
 	def static String getFrancaTypeProvider(FDPropertyHost host) {
 		switch (host) {
 			case PROVIDERS:  "FDProvider"
 			case INSTANCES:  "FDInterfaceInstance"
+			default:         null // ignore all other hosts
+		}
+	}
+	
+	def static String getFrancaTypeService(FDPropertyHost host) {
+		switch (host) {
+			case SERVICES:	 		"FDService"
+			case PROVIDED_PORTS: 	"FDProvidedPort"
+			case REQUIRED_PORTS: 	"FDRequiredPort"
+			default:         null // ignore all other hosts
+		}
+	}
+	
+	def static String getFrancaTypeDevice(FDPropertyHost host) {
+		switch (host) {
 			case DEVICES:	 "FDDevice"
 			case ADAPTERS:	 "FDComAdapter"
-			case SERVICES:	 "FDService"
+			default:         null // ignore all other hosts
+		}
+	}
+	
+	def static String getFrancaTypeComponent(FDPropertyHost host) {
+		switch (host) {
+			case COMPONENTS:	 	"FDComponent"
+			case PROVIDED_PORTS: 	"FDProvidedPort"
+			case REQUIRED_PORTS: 	"FDRequiredPort"
 			default:         null // ignore all other hosts
 		}
 	}
 
 	def static isProviderHost(FDPropertyHost host) {
-		host.getFrancaTypeProvider!=null
+		host.getFrancaTypeProvider !== null
 	}
-
+	
+	def static isServiceHost(FDPropertyHost host) {
+		host.getFrancaTypeService !== null
+	}
+	
+	def static isDeviceHost(FDPropertyHost host) {
+		host.getFrancaTypeDevice !== null
+	}
+	
+	def static isComponentHost(FDPropertyHost host) {
+		host.getFrancaTypeComponent !== null
+	}
 }

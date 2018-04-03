@@ -1,6 +1,6 @@
 package org.example.deployment
 
-import "platform:/plugin/org.franca.architecture/deployment/network_SOMEIP_deployment_spec.fdepl"
+import "platform:/plugin/org.franca.someip/deployment/network_SOMEIP_deployment_spec.fdepl"
 import "platform:/plugin/org.franca.architecture/deployment/architecture_deployment_spec.fdepl"
 import "../HelloWorld.fcdl"
 

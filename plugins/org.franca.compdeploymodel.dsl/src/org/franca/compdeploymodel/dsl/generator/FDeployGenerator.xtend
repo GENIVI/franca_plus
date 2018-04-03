@@ -15,12 +15,15 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDEnumType
 import org.franca.compdeploymodel.dsl.fDeploy.FDPropertyDecl
 import org.franca.compdeploymodel.dsl.fDeploy.FDPropertyHost
 import org.franca.compdeploymodel.dsl.fDeploy.FDSpecification
+import org.franca.compdeploymodel.dsl.generator.internal.ComponentAccessorGenerator
+import org.franca.compdeploymodel.dsl.generator.internal.DeviceAccessorGenerator
 import org.franca.compdeploymodel.dsl.generator.internal.HelperGenerator
 import org.franca.compdeploymodel.dsl.generator.internal.IDataGenerator
 import org.franca.compdeploymodel.dsl.generator.internal.ImportManager
 import org.franca.compdeploymodel.dsl.generator.internal.InterfaceAccessorGenerator
 import org.franca.compdeploymodel.dsl.generator.internal.OverwriteAccessorGenerator
 import org.franca.compdeploymodel.dsl.generator.internal.ProviderAccessorGenerator
+import org.franca.compdeploymodel.dsl.generator.internal.ServiceAccessorGenerator
 import org.franca.compdeploymodel.dsl.generator.internal.TypeCollectionAccessorGenerator
 
 import static extension org.franca.compdeploymodel.dsl.generator.internal.GeneratorHelper.*
@@ -43,6 +46,10 @@ class FDeployGenerator implements IGenerator {
 	@Inject InterfaceAccessorGenerator genInterfaceAcc
 	@Inject ProviderAccessorGenerator genProviderAcc
 	@Inject OverwriteAccessorGenerator genOverwriteAcc
+	@Inject ComponentAccessorGenerator genComponentAcc
+	@Inject ServiceAccessorGenerator genServiceAcc
+	@Inject DeviceAccessorGenerator genDeviceAcc
+
 	
 	// the types of PropertyAccessor classes we can generate
 	final static String PA_PROVIDER = "Provider"
@@ -57,9 +64,9 @@ class FDeployGenerator implements IGenerator {
 			
 			// generate some legacy classes for backward-compatibility
 			// (this is needed for Franca 0.9.1 and earlier)
-			fsa.generateLegacy(m, PA_PROVIDER)
-			fsa.generateLegacy(m, PA_INTERFACE)
-			fsa.generateLegacy(m, PA_TYPE_COLLECTION)
+//			fsa.generateLegacy(m, PA_PROVIDER)
+//			fsa.generateLegacy(m, PA_INTERFACE)
+//			fsa.generateLegacy(m, PA_TYPE_COLLECTION)
 		}
 	}
 	
@@ -89,18 +96,24 @@ class FDeployGenerator implements IGenerator {
 			«genEnumInterface(spec)»
 
 			«genInterface.generate(spec)»
+			
+			«genComponentAcc.generate(spec)»
+			
+			«genServiceAcc.generate(spec)»
 
+			«genDeviceAcc.generate(spec)»
+			
 			«genHelper.generate(spec)»
 
 			«genTCAcc.generate(spec)»
 
 			«genInterfaceAcc.generate(spec)»
 
-			«genProviderAcc.generate(spec)»
-
 			«genOverwriteAcc.generate(spec)»
-		}
 			
+			«genProviderAcc.generate(spec)»
+		}
+		
 	'''
 	
 	def private genEnumInterface(FDSpecification spec) '''

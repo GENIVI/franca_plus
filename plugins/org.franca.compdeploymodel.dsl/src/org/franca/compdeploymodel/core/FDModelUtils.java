@@ -20,6 +20,7 @@ import org.franca.compdeploymodel.dsl.fDeploy.FDInterfaceInstance;
 import org.franca.compdeploymodel.dsl.fDeploy.FDModel;
 import org.franca.compdeploymodel.dsl.fDeploy.FDOverwriteElement;
 import org.franca.compdeploymodel.dsl.fDeploy.FDRootElement;
+import org.franca.compdeploymodel.dsl.fDeploy.FDSpecification;
 import org.franca.compdeploymodel.dsl.fDeploy.FDValue;
 import org.franca.compmodel.dsl.fcomp.FCComponent;
 import org.franca.core.franca.FType;
@@ -52,7 +53,7 @@ public class FDModelUtils {
 		};
 		return null;
 	}
-
+	
 	/**
 	 * Check if a property value is of type FDInterfaceInstance.
 	 * 
@@ -147,4 +148,26 @@ public class FDModelUtils {
 			temp = temp.getParent();
 		return temp.getTarget();
 	}
+	
+	/**
+	 * Delivers the specification of a deploymodel element.
+	 * If element's root element has a specification, the specification property from the containing root element is given back.
+	 * If the root element has no specification and is not contained by an other root element NULL is returned.
+	 *  
+	 * @param element
+	 * @return specification
+	 */
+	public static FDSpecification getSpecification(FDElement element) {
+		FDRootElement root = getRootElement(element);
+		if (root != null) {
+			FDSpecification spec = root.getSpec();
+			if (spec != null)
+				return spec;
+			if (root.eContainer() instanceof FDElement) {
+				return getSpecification( (FDElement) (root.eContainer()) );
+			}
+		}
+		return null;
+	}
 }
+

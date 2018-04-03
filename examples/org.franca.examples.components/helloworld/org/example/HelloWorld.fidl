@@ -3,6 +3,9 @@ package org.example
 import org.example.* from "HelloWorldTypes.fidl"
 import model "HelloWorldTypes.fidl"
 
+<** @description: derived class **>
+/* free comment */
+// ignored comment
 interface HelloWorld2 extends HelloWorld {
   version {major 1 minor 0}
   broadcast isThereSomeBody {
@@ -13,7 +16,7 @@ interface HelloWorld2 extends HelloWorld {
   attribute org.example.KnownPeople knownPeople readonly
 } 
  
- 
+ <** @description: simple hello world class **>
 interface HelloWorld {
   version {major 1 minor 0}
   method sayHello {

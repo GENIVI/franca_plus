@@ -1,19 +1,17 @@
 package org.example.deployment
 
-import "platform:/plugin/org.franca.architecture/deployment/network_SOMEIP_deployment_spec.fdepl"
+import "platform:/plugin/org.franca.someip/deployment/network_SOMEIP_deployment_spec.fdepl"
 import "platform:/plugin/org.franca.architecture/deployment/architecture_deployment_spec.fdepl"
-import "platform:/plugin/org.franca.architecture/deployment/network_CAN_deployment_spec.fdepl"
+import "platform:/plugin/org.franca.signal/deployment/network_Signal_deployment_spec.fdepl"
 import "classpath:/org/example/HelloWorld.fidl"
+import "classpath:/org/example/HelloGalaxy.fcdl"
 import "../HelloWorld.fcdl"
 import "../HelloWorldTypes.fidl"
 import "../HelloWorldDevices.fcdl"
-import "../HelloGalaxy.fcdl"
-
-
 
 define network.someip for component org.example.Galaxy as MyGalaxyComponentDeployment {
 	provide HalloGalaxy on network.someip {
-		SomeIpInstanceID = 1
+		SomeIpInstanceID = 111
 	}
 }
 

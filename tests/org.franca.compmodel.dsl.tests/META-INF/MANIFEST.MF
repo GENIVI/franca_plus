@@ -14,7 +14,10 @@ Require-Bundle: org.franca.compmodel.dsl,
  org.objectweb.asm;bundle-version="[5.0.1,6.0.0)";resolution:=optional,
  org.eclipselabs.xtext.utils.unittesting;bundle-version="0.9.3",
  org.franca.core.dsl,
- org.franca.core.dsl.tests.base;bundle-version="0.12.0"
+ org.franca.core.dsl.tests.base;bundle-version="0.12.0",
+ org.eclipse.xtext.testing,
+ org.eclipse.xtext.xbase.testing,
+ com.google.guava
 Import-Package: junit.framework;version="4.11.0",
  junit.textui;version="4.11.0",
  org.apache.log4j,
@@ -26,4 +29,4 @@ Import-Package: junit.framework;version="4.11.0",
  org.junit.runners;version="4.5.0",
  org.junit.runners.model;version="4.5.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.franca.compmodel.dsl
+Export-Package: org.franca.compmodel.dsl.tests;x-internal=true

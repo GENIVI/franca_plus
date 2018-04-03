@@ -8,10 +8,6 @@
 		<relativePath>../../releng/org.francaplus.parent/pom.xml</relativePath>
 	</parent>
 
-	<properties>
-        <skip.deployment>false</skip.deployment>
-    </properties>
-
 	<groupId>org.franca</groupId>
 	<artifactId>org.franca.architecture.feature</artifactId>
 	<packaging>eclipse-feature</packaging>
