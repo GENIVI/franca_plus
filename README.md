@@ -16,3 +16,4 @@ To build the standalone application you need to run ``mvn generate-sources insta
 ## Further Information
 
 see Genivi Confluence https://at.projects.genivi.org/wiki/pages/viewpage.action?pageId=14976869 
+and Genivi AMM 2018 Presentation https://at.projects.genivi.org/wiki/download/attachments/16027368/20180418_Genivi-AMM-Munich_Franca%2B.pptx
