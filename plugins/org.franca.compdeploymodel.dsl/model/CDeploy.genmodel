@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (C) 2018 BMW Group&#xD;&#xA;Author: Bernhard Hennlich (bernhard.hennlich@bmw.de)&#xD;&#xA;This Source Code Form is subject to the terms of the Eclipse Public&#xD;&#xA;License, v. 1.0. If a copy of the EPL was not distributed with this&#xD;&#xA;file, You can obtain one at https://www.eclipse.org/legal/epl-v10.html."
+    modelDirectory="/org.franca.compdeploymodel.dsl/src-gen" modelPluginID="org.franca.compdeploymodel.dsl"
+    forceOverwrite="true" modelName="CDeploy" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    complianceLevel="6.0" copyrightFields="false" runtimeVersion="2.12" usedGenPackages="platform:/resource/org.franca.compmodel.dsl/model/generated/FComp.genmodel#//fcomp platform:/resource/org.franca.deploymodel.dsl/model/FDeploy.genmodel#//fDeploy">
+  <genPackages prefix="CDeploy" basePackage="org.franca.compdeploymodel.dsl" disposableProviderFactory="true"
+      fileExtensions="cdepl" ecorePackage="CDeploy.ecore#/">
+    <genClasses ecoreClass="CDeploy.ecore#//FDService">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CDeploy.ecore#//FDService/target"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CDeploy.ecore#//FDService/providedPorts"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CDeploy.ecore#//FDService/requiredPorts"/>
+    </genClasses>
+    <genClasses ecoreClass="CDeploy.ecore#//FDDevice">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CDeploy.ecore#//FDDevice/target"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CDeploy.ecore#//FDDevice/adapters"/>
+    </genClasses>
+    <genClasses ecoreClass="CDeploy.ecore#//FDComponentInstance">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CDeploy.ecore#//FDComponentInstance/target"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CDeploy.ecore#//FDComponentInstance/parent"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CDeploy.ecore#//FDComponentInstance/prototype"/>
+    </genClasses>
+    <genClasses ecoreClass="CDeploy.ecore#//FDComAdapter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CDeploy.ecore#//FDComAdapter/target"/>
+    </genClasses>
+    <genClasses ecoreClass="CDeploy.ecore#//FDVariant">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CDeploy.ecore#//FDVariant/root"/>
+    </genClasses>
+    <genClasses ecoreClass="CDeploy.ecore#//FDComponent">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CDeploy.ecore#//FDComponent/target"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CDeploy.ecore#//FDComponent/providedPorts"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CDeploy.ecore#//FDComponent/requiredPorts"/>
+    </genClasses>
+    <genClasses ecoreClass="CDeploy.ecore#//FDPort"/>
+    <genClasses ecoreClass="CDeploy.ecore#//FDRequiredPort">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CDeploy.ecore#//FDRequiredPort/target"/>
+    </genClasses>
+    <genClasses ecoreClass="CDeploy.ecore#//FDProvidedPort">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CDeploy.ecore#//FDProvidedPort/target"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

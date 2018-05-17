@@ -9,30 +9,19 @@
 
 	<groupId>org.franca</groupId>
 	<artifactId>org.francaplus.parent</artifactId>
-	<version>0.12.0-SNAPSHOT</version>
+	<version>0.13.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<!--parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent-->
-	
-	<distributionManagement>
-  <repository>
-      <id>ascent.artifactory.server</id>
-      <name>ascent.artifactory.server</name>
-      <url>https://asc-repoa.bmwgroup.net/artifactory/franca-local-maven</url>
-  </repository>
-	</distributionManagement>
+	<!--parent> <groupId>org.sonatype.oss</groupId> <artifactId>oss-parent</artifactId> 
+		<version>7</version> </parent -->
 
 	<properties>
 		<eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
 		<platform-version-name>neon</platform-version-name>
 		<target-product>francaplus.product</target-product>
 		<target-file-name>franca-${platform-version-name}.target</target-file-name>
-        <target-classifier>franca-${platform-version-name}</target-classifier>
-		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		<target-classifier>franca-${platform-version-name}</target-classifier>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-version>1.1.0</tycho-version>
 		<junit-version>4.8.1</junit-version>
 		<slf4j-version>1.6.1</slf4j-version>
@@ -48,10 +37,9 @@
 		<module>../../plugins/org.franca.compmodel.dsl.ide</module>
 		<module>../../plugins/org.franca.compdeploymodel.dsl</module>
 		<module>../../plugins/org.franca.compdeploymodel.dsl.ui</module>
+		<module>../../plugins/org.franca.compdeploymodel.dsl.ide</module>
 
-		<!-- deployment specification files and tags-->
-		<module>../../plugins/org.genivi.commonapi.core</module>
-		<module>../../plugins/org.genivi.commonapi.someip</module>
+		<!-- deployment specification files and tags -->
 		<module>../../plugins/org.franca.architecture</module>
 		<module>../../plugins/org.franca.someip</module>
 		<module>../../plugins/org.franca.signal</module>
@@ -59,7 +47,6 @@
 
 		<!-- test modules -->
 		<module>../../tests/org.franca.compmodel.dsl.tests</module>
-		<module>../../tests/org.franca.compdeploymodel.dsl.tests.base</module>
 		<module>../../tests/org.franca.compdeploymodel.dsl.tests</module>
 		<!-- product modules -->
 		<module>../../releng/org.${target-product}</module>
@@ -67,8 +54,6 @@
 		<!-- feature modules -->
 		<module>../../features/org.francaplus.feature</module>
 		<module>../../features/org.francaplus.thirdparty.feature</module>
-		<module>../../features/org.genivi.commonapi.core.feature</module>
-		<module>../../features/org.genivi.commonapi.someip.feature</module>
 		<module>../../features/org.franca.architecture.feature</module>
 		<!-- update site -->
 		<module>../../releng/org.francaplus.updatesite</module>
@@ -97,13 +82,11 @@
 					</execution>
 				</executions>
 				<configuration>
-     			<excludes>
-      				<feature id="org.francaplus.thirdparty.feature" />
-      				<feature id="org.franca.architecture.feature" />
-      				<feature id="org.genivi.commonapi.core.feature" />
-      				<feature id="org.genivi.commonapi.someip.feature" />
-     				</excludes>
-    			</configuration>
+					<excludes>
+						<feature id="org.francaplus.thirdparty.feature" />
+						<feature id="org.franca.architecture.feature" />
+					</excludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
@@ -119,10 +102,10 @@
 				</executions>
 			</plugin>
 			<plugin>
-          		<groupId>org.eclipse.tycho</groupId>
-          		<artifactId>tycho-versions-plugin</artifactId>
-          		<version>${tycho-version}</version>
-        	</plugin>	
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-versions-plugin</artifactId>
+				<version>${tycho-version}</version>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
@@ -199,7 +182,7 @@
 					<artifactId>tycho-compiler-plugin</artifactId>
 					<version>${tycho-version}</version>
 					<configuration>
-						<encoding>ISO-8859-1</encoding>
+						<encoding>UTF-8</encoding>
 						<source>6.0</source>
 						<target>6.0</target>
 					</configuration>
@@ -264,19 +247,19 @@
 					<version>${tycho-version}</version>
 				</plugin>
 				<plugin>
-				    <groupId>org.eclipse.tycho</groupId>
-				    <artifactId>tycho-p2-plugin</artifactId>
-				    <version>${tycho-version}</version>
-				    <executions>
-				     <execution>
-				      <id>attached-p2-metadata</id>
-				      <phase>package</phase>
-				      <goals>
-				       <goal>p2-metadata</goal>
-				      </goals>
-				     </execution>
-				    </executions>
-				   </plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-p2-plugin</artifactId>
+					<version>${tycho-version}</version>
+					<executions>
+						<execution>
+							<id>attached-p2-metadata</id>
+							<phase>package</phase>
+							<goals>
+								<goal>p2-metadata</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 				<!-- APACHE MAVEN PLUGINS -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -321,7 +304,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-deploy-plugin</artifactId>
-					
+
 					<configuration>
 						<!-- default is true, i.e. do skip -->
 						<skip>${skip.deployment}</skip>
@@ -390,23 +373,6 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<!--pluginRepositories>
-
-		<pluginRepository>
-			<id>sonatype</id>
-			<url>http://repository.sonatype.org/content/groups/sonatype-public-grid/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>xtend</id>
-			<url>http://repo.maven.apache.org/maven2</url>
-		</pluginRepository>
-	</pluginRepositories-->
 	<repositories>
 		<repository>
 			<id>maven.eclipse.org</id>
@@ -419,56 +385,29 @@
 	</repositories>
 
 	<profiles>
-		 <profile>
-             <id>macosx-jvm-flags</id>
-		       <activation>
-                        <os>
-                           <family>mac</family>
-                        </os>
-               </activation>
-                  <properties>
-                        <os-jvm-flags>-XstartOnFirstThread</os-jvm-flags>
-                  </properties>
-         </profile>
-         <profile>
-                <id>non-macosx-jvm-flags</id>
-	                 <activation>
-    	                   <os>
-	                           <family>!mac</family>
-	                       </os>
-                      </activation>
-                       <properties>
-                               <os-jvm-flags>
-                               </os-jvm-flags>
-                       </properties>
-               </profile>
-        <!--  profile>
-            <id>x86</id>
-            <activation>
-                <property>
-        			<name>!x64</name>
-      			</property>
-            </activation>
-            <properties>
-                <target-file-name>franca-${platform-version-name}.target</target-file-name>
-                <target-classifier>franca-${platform-version-name}</target-classifier>
-				<target-arch>x86</target-arch>
-				<target-product>francaplus.product</target-product>
-            </properties>
-        </profile>
-        <profile>
-            <id>x64</id>
-            <activation>
-                <property>
-        			<name>x64</name>
-      			</property>
-            </activation>
-            <properties>
-                <target-file-name>franca-${platform-version-name}.target</target-file-name>
-                <target-classifier>franca-${platform-version-name}</target-classifier>
-				<target-arch>x86_64</target-arch>
-            </properties>
-        </profile-->
+		<profile>
+			<id>macosx-jvm-flags</id>
+			<activation>
+				<os>
+					<family>mac</family>
+				</os>
+			</activation>
+			<properties>
+				<os-jvm-flags>-XstartOnFirstThread</os-jvm-flags>
+			</properties>
+		</profile>
+		<profile>
+			<id>non-macosx-jvm-flags</id>
+			<activation>
+				<os>
+					<family>!mac</family>
+				</os>
+			</activation>
+			<properties>
+				<os-jvm-flags>
+				</os-jvm-flags>
+			</properties>
+		</profile>
 
 		<profile>
 			<id>release-sign-artifacts</id>
@@ -506,6 +445,18 @@
 					<name>targetPlatform.directory</name>
 				</property>
 			</activation>
+			<distributionManagement>
+				<repository>
+					<id>ascent.artifactory.server</id>
+					<name>ascent.artifactory.server</name>
+					<url>${deployUri}</url>
+				</repository>
+				<snapshotRepository>
+					<id>ascent.artifactory.server</id>
+					<name>ascent.artifactory.server</name>
+					<url>${deployUri}</url>
+				</snapshotRepository>
+			</distributionManagement>
 			<repositories>
 				<repository>
 					<id>targetPlatform</id>
@@ -533,26 +484,16 @@
 									<ws>win32</ws>
 									<arch>x86_64</arch>
 								</environment>
-								<!--<environment>
-									<os>macosx</os>
-									<ws>cocoa</ws>
-									<arch>x86_64</arch>
-								</environment>
-								<environment>
-									<os>macosx</os>
-									<ws>cocoa</ws>
-									<arch>x86</arch>
-								</environment>
-								<environment>
-									<os>linux</os>
-									<ws>gtk</ws>
-									<arch>x86</arch>
-								</environment-->
+								<!--<environment> <os>macosx</os> <ws>cocoa</ws> <arch>x86_64</arch> 
+									</environment> <environment> <os>macosx</os> <ws>cocoa</ws> <arch>x86</arch> 
+									</environment> <environment> <os>linux</os> <ws>gtk</ws> <arch>x86</arch> 
+									</environment -->
 								<environment>
 									<os>linux</os>
 									<ws>gtk</ws>
 									<arch>x86_64</arch>
-								</environment>>
+								</environment>
+								>
 							</environments>
 							<dependency-resolution>
 								<optionalDependencies>ignore</optionalDependencies>
@@ -570,6 +511,19 @@
 					<name>!targetPlatform.directory</name>
 				</property>
 			</activation>
+			<distributionManagement>
+				 <repository>
+					<id>ascent.artifactory.server</id>
+					<name>ascent.artifactory.server</name>
+					<url>https://asc-repoa.bmwgroup.net/artifactory/franca-local-maven/snapshot</url>
+					
+				 </repository>
+				 <snapshotRepository>
+					<id>ascent.artifactory.server</id>
+					<name>ascent.artifactory.server</name>
+					<url>https://asc-repoa.bmwgroup.net/artifactory/franca-local-maven/snapshot</url>
+			    </snapshotRepository>
+			</distributionManagement>
 			<build>
 				<plugins>
 					<plugin>
@@ -602,26 +556,15 @@
 									<ws>win32</ws>
 									<arch>x86_64</arch>
 								</environment>
-								<!--<environment>
-									<os>macosx</os>
-									<ws>cocoa</ws>
-									<arch>x86_64</arch>
-								</environment>
-								<environment>
-									<os>macosx</os>
-									<ws>cocoa</ws>
-									<arch>x86</arch>
-								</environment>
-								<environment>
-									<os>linux</os>
-									<ws>gtk</ws>
-									<arch>x86</arch>
-								</environment-->
+								<!--<environment> <os>macosx</os> <ws>cocoa</ws> <arch>x86_64</arch> 
+									</environment> <environment> <os>macosx</os> <ws>cocoa</ws> <arch>x86</arch> 
+									</environment> <environment> <os>linux</os> <ws>gtk</ws> <arch>x86</arch> 
+									</environment -->
 								<environment>
 									<os>linux</os>
 									<ws>gtk</ws>
 									<arch>x86_64</arch>
-								</environment>>
+								</environment>
 							</environments>
 						</configuration>
 					</plugin>

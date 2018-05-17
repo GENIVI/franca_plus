@@ -1,0 +1,23 @@
+package org.example
+
+import "platform:/plugin/org.franca.someip/deployment/network_SOMEIP_deployment_spec.cdepl"
+import "component_architecture.fcdl"
+
+
+define network.someip for service VehicleFuture.InfotainmentFramework2030.AudioCluster.Component2Inst1.ComponentInst1 as Inst1 {}
+define network.someip for service VehicleFuture.InfotainmentFramework2030.AudioCluster.Component2Inst1.ComponentInst2 as Inst2 {}
+define network.someip for service VehicleFuture.InfotainmentFramework2030.AudioCluster.Component2Inst1.ComponentInst3 as Inst3 {}
+
+define network.someip for device org.example.HeadUnit as HeadUnit {
+	use org.example.Inst1
+	use org.example.Inst2
+}
+
+define network.someip for device org.example.Amplifier as Amplifier {
+	use org.example.Inst1
+}
+
+define variant CA for root VehicleFuture {
+	use org.example.Amplifier
+	use org.example.HeadUnit
+}

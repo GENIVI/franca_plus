@@ -1,0 +1,15 @@
+package org.example.deployment
+
+import "../platform/network_SOMEIP_deployment_spec.cdepl"
+import "../platform/architecture_deployment_spec.cdepl"
+
+import "705_Service.cdepl"
+import "../fcdl/70-HelloWorld.fcdl"
+
+define system.architecture for device org.example.HelloServerECU as HelloServerECU {
+	use org.example.deployment.Service
+	adapter EthernetCard1 on network.someip {
+		use org.example.deployment.Service.AskMePort
+	    SomeIpUnicastAddress = "127.0.0.1"
+	}
+}

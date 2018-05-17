@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.franca</groupId>
 		<artifactId>org.francaplus.parent</artifactId>
-		<version>0.12.0-SNAPSHOT</version>
+		<version>0.13.0-SNAPSHOT</version>
 		<relativePath>../../releng/org.francaplus.parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>org.franca.compdeploymodel.dsl</artifactId>
@@ -82,7 +82,7 @@
 						</goals>
 						<configuration>
 							<workflowEngine>mwe2</workflowEngine>
-							<workflowDescriptor>org.franca.compdeploymodel.dsl.GenerateFDeploy</workflowDescriptor>
+							<workflowDescriptor>org.franca.compdeploymodel.dsl.GenerateCDeploy</workflowDescriptor>
 							<timestampFileName>fdeploy-generator.timestamp</timestampFileName>
 							<jvmSettings>
 								<fork>true</fork>
@@ -109,5 +109,5 @@
             </plugin>
 		</plugins>
 	</build>
-    <version>0.12.0-SNAPSHOT</version>
+    <version>0.13.0-SNAPSHOT</version>
 </project>

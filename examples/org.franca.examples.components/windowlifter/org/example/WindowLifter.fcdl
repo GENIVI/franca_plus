@@ -67,4 +67,6 @@ root component Vehicle {
 root component ArchitectureNextGeneration extends Vehicle 
 
 <** @level: sec=1 **>
-device BODY_CONTROLER
+device BODY_CONTROLER {
+	adapter EthernetCard
+}

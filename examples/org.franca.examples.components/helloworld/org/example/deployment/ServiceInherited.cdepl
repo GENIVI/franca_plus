@@ -1,0 +1,38 @@
+package org.example.deployment
+
+import "platform:/plugin/org.franca.someip/deployment/network_SOMEIP_deployment_spec.cdepl"
+import "platform:/plugin/org.franca.architecture/deployment/architecture_deployment_spec.cdepl"
+
+import "../HelloWorldInheritance.fcdl"
+import "Interface.cdepl"
+
+define network.someip for service WorldApart.HelloWorldServerExtension as Service {
+	
+	provide AskMePort on network.someip {	
+   		use org.example.deployment.SomeIpDeployment4HelloWorld
+   		use org.example.deployment.SomeIpDeployment4HelloWorld2
+   		
+   		SomeIpInstanceID = 1
+        SomeIpReliableUnicastPort = 30506
+        SomeIpUnreliableUnicastPort = 0
+   	}
+   	
+   	provide AskMePortExt2 on network.someip {
+   		use org.example.deployment.SomeIpDeployment4HelloWorld
+   		use org.example.deployment.SomeIpDeployment4HelloWorld2
+   		
+   		SomeIpInstanceID = 1
+   	}
+   	
+   	provide AskMePortExt on system.architecture 
+   	provide AskMePortCan on system.architecture
+   	
+}
+
+
+// deployment for a hosted client instance 
+define system.architecture for service WorldApart.HelloWorldClientExtension as Client_1 { 
+	require AnswerMePort on network.someip {	
+		// ???
+	}
+}

@@ -1,0 +1,29 @@
+package org.example.deployment
+
+import "platform:/plugin/org.franca.someip/deployment/network_SOMEIP_deployment_spec.cdepl"
+import "platform:/plugin/org.franca.architecture/deployment/architecture_deployment_spec.cdepl"
+import "classpath:/org/example/HelloWorld.fidl"
+import "classpath:/org/example/HelloGalaxy.fcdl"
+import "classpath:/org/example/HelloWorldDevices.fcdl"
+
+define network.someip for component org.example.Paradise as MyParadiseComponentDeployment { 
+	provide HalloGalaxy on network.someip {
+		SomeIpInstanceID = 111
+	}
+}
+
+define network.someip for component org.example.Galaxy as MyGalaxyComponentDeployment { 
+	use MyParadiseComponentDeployment
+}
+
+define network.someip for service Galaxy as MyGalaxyDeployment {
+	use org.example.deployment.MyGalaxyComponentDeployment
+}
+
+define network.someip for device org.example.HelloServerECU as HelloServerECU {
+	use org.example.deployment.MyGalaxyDeployment
+} 
+
+define variant Variant for root Galaxy {
+	use org.example.deployment.HelloServerECU
+}

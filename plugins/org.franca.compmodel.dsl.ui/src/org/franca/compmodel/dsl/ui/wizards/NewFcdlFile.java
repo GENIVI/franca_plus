@@ -63,10 +63,11 @@ public class NewFcdlFile extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		final String containerName = page.getContainerName();
 		final String fileName = page.getFileName();
+		final String packageName = page.getPackageName();
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
-					doFinish(containerName, fileName, monitor);
+					doFinish(containerName, fileName, packageName, monitor);
 				} catch (CoreException e) {
 					throw new InvocationTargetException(e);
 				} finally {
@@ -90,12 +91,13 @@ public class NewFcdlFile extends Wizard implements INewWizard {
 	 * The worker method. It will find the container, create the
 	 * file if missing or just replace its contents, and open
 	 * the editor on the newly created file.
+	 * @param packageName 
 	 */
 
 	private void doFinish(
 		String containerName,
 		String fileName,
-		IProgressMonitor monitor)
+		String packageName, IProgressMonitor monitor)
 		throws CoreException {
 		// create a sample file
 		monitor.beginTask("Creating " + fileName, 2);
@@ -107,7 +109,7 @@ public class NewFcdlFile extends Wizard implements INewWizard {
 		IContainer container = (IContainer) resource;
 		final IFile file = container.getFile(new Path(fileName));
 		try {
-			InputStream stream = openContentStream();
+			InputStream stream = openContentStream(packageName, fileName);
 			if (file.exists()) {
 				file.setContents(stream, true, true, monitor);
 			} else {
@@ -135,9 +137,9 @@ public class NewFcdlFile extends Wizard implements INewWizard {
 	 * We will initialize file contents with a sample text.
 	 */
 
-	private InputStream openContentStream() {
+	private InputStream openContentStream(String packageName, String fileName) {
 		String contents =
-			"package org.example";
+				"package " + packageName + "\n\ncomponent " + fileName.replace(".fcdl", "") + " {\n}";
 		return new ByteArrayInputStream(contents.getBytes());
 	}
 

@@ -1,0 +1,11 @@
+package org.example.deployment
+
+import "ServerECU.cdepl"
+import "ClientECU.cdepl"
+import "../HelloWorld.fcdl"
+
+
+define variant AIO for root World {
+	use org.example.deployment.HelloClientECU
+	use org.example.deployment.HelloServerECU
+}

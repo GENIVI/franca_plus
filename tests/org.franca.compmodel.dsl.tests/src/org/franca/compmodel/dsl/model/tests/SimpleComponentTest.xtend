@@ -16,7 +16,6 @@ import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.franca.compmodel.dsl.fcomp.FCModel
 import org.franca.compmodel.dsl.tests.util.MultiInjectorProvider
 import org.junit.Assert
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -261,14 +260,13 @@ class SimpleComponentTest
 		model.assertNoErrors
 	}
 	
-	@Ignore
 	@Test
-	def void FullDiensteComponent()
+	def void DiensteFrameworkComponent()
 	{
 		
 		val model = '''
 		package test
-		import model "testfcdls/Tags.fcdl"
+		import model "classpath:/Tags.fcdl"
 				
 		<**@framework **>
 		component comp

@@ -2,47 +2,47 @@
 <?eclipse version="3.0"?>
 
 <plugin>
-   <extension-point id="DeployProposalProvider" name="DeployProposalProvider" schema="schema/DeployProposalProvider.exsd"/>
+   <extension-point id="DeployProposalProvider" name="Provider for Custom Proposals" schema="schema/DeployProposalProvider.exsd"/>
 
     <extension
             point="org.eclipse.ui.editors">
         <editor
-            class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
-            extensions="fdepl"
-            id="org.franca.compdeploymodel.dsl.FDeploy"
-            name="FDeploy Editor">
+            extensions="cdepl"
+            id="org.franca.compdeploymodel.dsl.CDeploy"
+            name="CDeploy Editor">
         </editor>
     </extension>
     <extension
         point="org.eclipse.ui.handlers">
         <handler
-            class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
+            class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
             commandId="org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclaration">
             <activeWhen>
                 <reference
-                    definitionId="org.franca.compdeploymodel.dsl.FDeploy.Editor.opened">
+                    definitionId="org.franca.compdeploymodel.dsl.CDeploy.Editor.opened">
                 </reference>
             </activeWhen>
         </handler>
         <handler
-            class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
-            commandId="org.franca.compdeploymodel.dsl.FDeploy.validate">
+            class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
+            commandId="org.franca.compdeploymodel.dsl.CDeploy.validate">
          <activeWhen>
             <reference
-                    definitionId="org.franca.compdeploymodel.dsl.FDeploy.Editor.opened">
+                    definitionId="org.franca.compdeploymodel.dsl.CDeploy.Editor.opened">
             </reference>
          </activeWhen>
       </handler>
     </extension>
     <extension point="org.eclipse.core.expressions.definitions">
-        <definition id="org.franca.compdeploymodel.dsl.FDeploy.Editor.opened">
+        <definition id="org.franca.compdeploymodel.dsl.CDeploy.Editor.opened">
             <and>
                 <reference definitionId="isActiveEditorAnInstanceOfXtextEditor"/>
                 <with variable="activeEditor">
                     <test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName" 
-                        value="org.franca.compdeploymodel.dsl.FDeploy" 
+                        value="org.franca.compdeploymodel.dsl.CDeploy" 
                         forcePluginActivation="true"/>
                 </with>        
             </and>
@@ -51,33 +51,33 @@
     <extension
             point="org.eclipse.ui.preferencePages">
         <page
-            class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-            id="org.franca.compdeploymodel.dsl.FDeploy"
-            name="FDeploy">
-            <keywordReference id="org.franca.compdeploymodel.dsl.ui.keyword_FDeploy"/>
+            class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+            id="org.franca.compdeploymodel.dsl.CDeploy"
+            name="CDeploy">
+            <keywordReference id="org.franca.compdeploymodel.dsl.ui.keyword_CDeploy"/>
         </page>
         <page
-            category="org.franca.compdeploymodel.dsl.FDeploy"
-            class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
-            id="org.franca.compdeploymodel.dsl.FDeploy.coloring"
+            category="org.franca.compdeploymodel.dsl.CDeploy"
+            class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
+            id="org.franca.compdeploymodel.dsl.CDeploy.coloring"
             name="Syntax Coloring">
-            <keywordReference id="org.franca.compdeploymodel.dsl.ui.keyword_FDeploy"/>
+            <keywordReference id="org.franca.compdeploymodel.dsl.ui.keyword_CDeploy"/>
         </page>
         <page
-            category="org.franca.compdeploymodel.dsl.FDeploy"
-            class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
-            id="org.franca.compdeploymodel.dsl.FDeploy.templates"
+            category="org.franca.compdeploymodel.dsl.CDeploy"
+            class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
+            id="org.franca.compdeploymodel.dsl.CDeploy.templates"
             name="Templates">
-            <keywordReference id="org.franca.compdeploymodel.dsl.ui.keyword_FDeploy"/>
+            <keywordReference id="org.franca.compdeploymodel.dsl.ui.keyword_CDeploy"/>
         </page>
     </extension>
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
-            class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-            id="org.franca.compdeploymodel.dsl.FDeploy"
-            name="FDeploy">
-            <keywordReference id="org.franca.compdeploymodel.dsl.ui.keyword_FDeploy"/>
+            class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+            id="org.franca.compdeploymodel.dsl.CDeploy"
+            name="CDeploy">
+            <keywordReference id="org.franca.compdeploymodel.dsl.ui.keyword_CDeploy"/>
             <enabledWhen>
 	            <adapt type="org.eclipse.core.resources.IProject"/>
 			</enabledWhen>
@@ -87,14 +87,14 @@
     <extension
         point="org.eclipse.ui.keywords">
         <keyword
-            id="org.franca.compdeploymodel.dsl.ui.keyword_FDeploy"
-            label="FDeploy"/>
+            id="org.franca.compdeploymodel.dsl.ui.keyword_CDeploy"
+            label="CDeploy"/>
     </extension>
     <extension
          point="org.eclipse.ui.commands">
       <command
             description="Trigger expensive validation"
-            id="org.franca.compdeploymodel.dsl.FDeploy.validate"
+            id="org.franca.compdeploymodel.dsl.CDeploy.validate"
             name="Validate">
       </command>
     </extension>
@@ -102,12 +102,12 @@
         <menuContribution
             locationURI="popup:#TextEditorContext?after=group.edit">
              <command
-                 commandId="org.franca.compdeploymodel.dsl.FDeploy.validate"
+                 commandId="org.franca.compdeploymodel.dsl.CDeploy.validate"
                  style="push"
                  tooltip="Trigger expensive validation">
             <visibleWhen checkEnabled="false">
                 <reference
-                    definitionId="org.franca.compdeploymodel.dsl.FDeploy.Editor.opened">
+                    definitionId="org.franca.compdeploymodel.dsl.CDeploy.Editor.opened">
                 </reference>
             </visibleWhen>
          </command>  
@@ -117,7 +117,7 @@
 		<menuContribution locationURI="popup:#TextEditorContext?endof=group.find">
 			<command commandId="org.eclipse.xtext.ui.editor.FindReferences">
 				<visibleWhen checkEnabled="false">
-                	<reference definitionId="org.franca.compdeploymodel.dsl.FDeploy.Editor.opened">
+                	<reference definitionId="org.franca.compdeploymodel.dsl.CDeploy.Editor.opened">
                 	</reference>
             	</visibleWhen>
 			</command>
@@ -125,11 +125,11 @@
 	</extension>
 	<extension point="org.eclipse.ui.handlers">
 	    <handler
-            class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
+            class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
             commandId="org.eclipse.xtext.ui.editor.FindReferences">
             <activeWhen>
                 <reference
-                    definitionId="org.franca.compdeploymodel.dsl.FDeploy.Editor.opened">
+                    definitionId="org.franca.compdeploymodel.dsl.CDeploy.Editor.opened">
                 </reference>
             </activeWhen>
         </handler>
@@ -140,35 +140,35 @@
 	<extension
 		point="org.eclipse.emf.ecore.extension_parser">
 		<parser
-			class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
-			type="fdepl">
+			class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+			type="cdepl">
 		</parser>
 	</extension>
 	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
         <resourceServiceProvider
-            class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
-            uriExtension="fdepl">
+            class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            uriExtension="cdepl">
         </resourceServiceProvider>
     </extension>
 
 	<!-- marker definitions for org.franca.compmodel.dsl.FComp -->
 	<extension
-	        id="fdepl.check.fast"
-	        name="FDeploy Problem"
+	        id="cdepl.check.fast"
+	        name="CDeploy Problem"
 	        point="org.eclipse.core.resources.markers">
 	    <super type="org.eclipse.xtext.ui.check.fast"/>
 	    <persistent value="true"/>
 	</extension>
 	<extension
-	        id="fdepl.check.normal"
-	        name="FDeploy Problem"
+	        id="cdepl.check.normal"
+	        name="CDeploy Problem"
 	        point="org.eclipse.core.resources.markers">
 	    <super type="org.eclipse.xtext.ui.check.normal"/>
 	    <persistent value="true"/>
 	</extension>
 	<extension
-	        id="fdepl.check.expensive"
-	        name="FDeploy Problem"
+	        id="cdepl.check.expensive"
+	        name="CDeploy Problem"
 	        point="org.eclipse.core.resources.markers">
 	    <super type="org.eclipse.xtext.ui.check.expensive"/>
 	    <persistent value="true"/>
@@ -177,27 +177,27 @@
    <extension
          point="org.eclipse.xtext.builder.participant">
       <participant
-            class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant">
+            class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant">
       </participant>
    </extension>
    <extension
             point="org.eclipse.ui.preferencePages">
         <page
-            category="org.franca.compdeploymodel.dsl.FDeploy"
-            class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
-            id="org.franca.compdeploymodel.dsl.FDeploy.compiler.preferencePage"
+            category="org.franca.compdeploymodel.dsl.CDeploy"
+            class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
+            id="org.franca.compdeploymodel.dsl.CDeploy.compiler.preferencePage"
             name="Compiler">
-            <keywordReference id="org.franca.compdeploymodel.dsl.ui.keyword_FDeploy"/>
+            <keywordReference id="org.franca.compdeploymodel.dsl.ui.keyword_CDeploy"/>
         </page>
     </extension>
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
-            category="org.franca.compdeploymodel.dsl.FDeploy"
-            class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
-            id="org.franca.compdeploymodel.dsl.FDeploy.compiler.propertyPage"
+            category="org.franca.compdeploymodel.dsl.CDeploy"
+            class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
+            id="org.franca.compdeploymodel.dsl.CDeploy.compiler.propertyPage"
             name="Compiler">
-            <keywordReference id="org.franca.compdeploymodel.dsl.ui.keyword_FDeploy"/>
+            <keywordReference id="org.franca.compdeploymodel.dsl.ui.keyword_CDeploy"/>
             <enabledWhen>
 	            <adapt type="org.eclipse.core.resources.IProject"/>
 			</enabledWhen>
@@ -209,11 +209,11 @@
 	<extension
 		point="org.eclipse.ui.handlers">
 		<handler 
-			class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
+			class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
 			commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline">
 			<activeWhen>
 				<reference
-					definitionId="org.franca.compdeploymodel.dsl.FDeploy.Editor.opened">
+					definitionId="org.franca.compdeploymodel.dsl.CDeploy.Editor.opened">
 				</reference>
 			</activeWhen>
 		</handler>
@@ -233,7 +233,7 @@
 				style="push"
 				tooltip="Open Quick Outline">
 				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.franca.compdeploymodel.dsl.FDeploy.Editor.opened"/>
+					<reference definitionId="org.franca.compdeploymodel.dsl.CDeploy.Editor.opened"/>
 				</visibleWhen>
 			</command>
 		</menuContribution>
@@ -242,17 +242,17 @@
    <extension
          point="org.eclipse.ui.ide.markerResolution">
       <markerResolutionGenerator
-            class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator">
+            class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator">
       </markerResolutionGenerator>
    </extension>
    	<!-- Rename Refactoring -->
 	<extension point="org.eclipse.ui.handlers">
 		<handler 
-			class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.IRenameElementHandler"
+			class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.IRenameElementHandler"
 			commandId="org.eclipse.xtext.ui.refactoring.RenameElement">
 			<activeWhen>
 				<reference
-					definitionId="org.franca.compdeploymodel.dsl.FDeploy.Editor.opened">
+					definitionId="org.franca.compdeploymodel.dsl.CDeploy.Editor.opened">
 				</reference>
 			</activeWhen>
 		</handler>
@@ -264,7 +264,7 @@
                style="push">
             <visibleWhen checkEnabled="false">
                <reference
-                     definitionId="org.franca.compdeploymodel.dsl.FDeploy.Editor.opened">
+                     definitionId="org.franca.compdeploymodel.dsl.CDeploy.Editor.opened">
                </reference>
             </visibleWhen>
          </command>
@@ -272,30 +272,30 @@
    </extension>
    <extension point="org.eclipse.ui.preferencePages">
 	    <page
-	        category="org.franca.compdeploymodel.dsl.FDeploy"
-	        class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
-	        id="org.franca.compdeploymodel.dsl.FDeploy.refactoring"
+	        category="org.franca.compdeploymodel.dsl.CDeploy"
+	        class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
+	        id="org.franca.compdeploymodel.dsl.CDeploy.refactoring"
 	        name="Refactoring">
-	        <keywordReference id="org.franca.compdeploymodel.dsl.ui.keyword_FDeploy"/>
+	        <keywordReference id="org.franca.compdeploymodel.dsl.ui.keyword_CDeploy"/>
 	    </page>
 	</extension>
 
   <extension point="org.eclipse.compare.contentViewers">
-    <viewer id="org.franca.compdeploymodel.dsl.FDeploy.compare.contentViewers"
-            class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="fdepl">
+    <viewer id="org.franca.compdeploymodel.dsl.CDeploy.compare.contentViewers"
+            class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+            extensions="cdepl">
     </viewer>
   </extension>
   <extension point="org.eclipse.compare.contentMergeViewers">
-    <viewer id="org.franca.compdeploymodel.dsl.FDeploy.compare.contentMergeViewers"
-            class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="fdepl" label="FDeploy Compare">
+    <viewer id="org.franca.compdeploymodel.dsl.CDeploy.compare.contentMergeViewers"
+            class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+            extensions="cdepl" label="CDeploy Compare">
      </viewer>
   </extension>
   <extension point="org.eclipse.ui.editors.documentProviders">
-    <provider id="org.franca.compdeploymodel.dsl.FDeploy.editors.documentProviders"
-            class="org.franca.compdeploymodel.dsl.ui.FDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
-            extensions="fdepl">
+    <provider id="org.franca.compdeploymodel.dsl.CDeploy.editors.documentProviders"
+            class="org.franca.compdeploymodel.dsl.ui.CDeployExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
+            extensions="cdepl">
     </provider>
   </extension>
 </plugin>

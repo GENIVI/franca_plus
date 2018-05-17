@@ -18,9 +18,12 @@ import org.franca.compmodel.dsl.fcomp.FCComAdapter
 import org.franca.compmodel.dsl.fcomp.FCComponent
 import org.franca.compmodel.dsl.fcomp.FCDelegateConnector
 import org.franca.compmodel.dsl.fcomp.FCDevice
+import org.franca.compmodel.dsl.fcomp.FCFrom
 import org.franca.compmodel.dsl.fcomp.FCGenericPrototype
+import org.franca.compmodel.dsl.fcomp.FCInner
 import org.franca.compmodel.dsl.fcomp.FCModel
 import org.franca.compmodel.dsl.fcomp.FCPort
+import org.franca.compmodel.dsl.fcomp.FCTo
 import org.franca.compmodel.dsl.fcomp.Import
 import org.franca.compmodel.dsl.services.FCompGrammarAccess
 
@@ -29,7 +32,8 @@ import org.franca.compmodel.dsl.services.FCompGrammarAccess
 @SuppressWarnings("all")
 class FCompFormatter extends AbstractFormatter2 {
 
-	@Inject extension FCompGrammarAccess fcga
+	@Inject
+	extension FCompGrammarAccess fcga
 
 	def dispatch void format(FCModel fCModel, extension IFormattableDocument document) {
 		val lastImport = fCModel.imports.last
@@ -76,26 +80,26 @@ class FCompFormatter extends AbstractFormatter2 {
 		var ISemanticRegion region = fCAnnotation.regionFor.ruleCall(
 			fcga.FCAnnotationAccess.valueANNOTATION_VALUETerminalRuleCall_1_0)
 		if (region !== null) {
-				
+
 			if (region.text.contains("\n"))
 				region.append[lowPriority setNewLines(0, 0, 0)]
 			else
 				region.append[lowPriority setNewLines(1, 1, 1)]
-				
+
 			// pretty print the value "@tag: value"
 			region = fCAnnotation.regionFor.ruleCall(
 				fcga.FCAnnotationAccess.kindFCBuiltinAnnotationTypeEnumRuleCall_0_0_0)?.append[noSpace]
 			region = fCAnnotation.regionFor.ruleCall(fcga.FCAnnotationAccess.tagFCTagDeclTAG_IDParserRuleCall_0_1_0_1)?.
 				append[noSpace]
-		} 
+		}
 		else
-			fCAnnotation.append[lowPriority setNewLines(1, 1, 1)]	
+			fCAnnotation.append[lowPriority setNewLines(1, 1, 1)]
 	}
 
 	def dispatch void format(FCComponent fCComponent, extension IFormattableDocument document) {
-		
+
 		fCComponent.comment?.format
-		
+
 		// keep the component modifier together with the component name in one line
 		fCComponent.regionFor.keyword(fcga.FCComponentAccess.singletonSingletonKeyword_2_2_0).surround[oneSpace]
 		fCComponent.regionFor.keyword(fcga.FCComponentAccess.abstractAbstractKeyword_2_0_0).surround[oneSpace]
@@ -104,8 +108,10 @@ class FCompFormatter extends AbstractFormatter2 {
 		fCComponent.regionFor.keyword(fcga.FCComponentAccess.componentKeyword_3).surround[oneSpace]
 		fCComponent.regionFor.ruleCall(fcga.FCComponentAccess.nameIDTerminalRuleCall_4_0).surround[oneSpace]
 		fCComponent.regionFor.keyword(fcga.FCComponentAccess.extendsKeyword_5_0).surround[oneSpace]
-		fCComponent.regionFor.ruleCall(fcga.FCComponentAccess.superTypeFCComponentFQNParserRuleCall_5_1_0_1).surround[oneSpace]
-		
+		fCComponent.regionFor.ruleCall(fcga.FCComponentAccess.superTypeFCComponentFQNParserRuleCall_5_1_0_1).surround [
+			oneSpace
+		]
+
 		val lastProto = fCComponent.prototypes.last
 		val lastRequiredPort = fCComponent.requiredPorts.last
 		val lastProvidedPort = fCComponent.providedPorts.last
@@ -127,7 +133,8 @@ class FCompFormatter extends AbstractFormatter2 {
 					proto.append[setNewLines(1)]
 				else
 					proto.append[setNewLines(2)]
-			} else
+			} 
+			else
 				proto.append[setNewLines(1)]
 			proto.regionFor.keyword(fcga.FCPrototypeAccess.asKeyword_4_0).surround[oneSpace]
 		}
@@ -139,7 +146,8 @@ class FCompFormatter extends AbstractFormatter2 {
 					requiredPort.append[setNewLines(1)]
 				else
 					requiredPort.append[setNewLines(2)]
-			} else
+			} 
+			else
 				requiredPort.append[setNewLines(1)]
 			requiredPort.regionFor.keyword(fcga.FCRequiredPortAccess.asKeyword_5_0).surround[oneSpace]
 		}
@@ -151,32 +159,39 @@ class FCompFormatter extends AbstractFormatter2 {
 					providedPort.append[setNewLines(1)]
 				else
 					providedPort.append[setNewLines(2)]
-			} else
+			} 
+			else
 				providedPort.append[setNewLines(1)]
 			providedPort.regionFor.keyword(fcga.FCProvidedPortAccess.asKeyword_4_0).surround[oneSpace]
-			
+
 		}
 
 		for (FCDelegateConnector delegate : fCComponent.delegates) {
 			delegate.comment?.format
+			delegate.inner.format
 			if (delegate === lastDeleagtion) {
 				if (delegate.nextHiddenRegion.nextSemanticRegion.identityEquals(brackets.get(0).value))
 					delegate.append[setNewLines(1)]
 				else
 					delegate.append[setNewLines(2)]
-			} else
+			} 
+			else
 				delegate.append[setNewLines(1)]
+			
 			delegate.regionFor.keyword(fcga.FCDelegateConnectorAccess.toKeyword_4).surround[oneSpace]
 		}
 
 		for (FCAssemblyConnector assembly : fCComponent.assembles) {
 			assembly.comment?.format
+			assembly.from.format
+			assembly.to.format
 			if (assembly === lastConnector) {
 				if (assembly.nextHiddenRegion.nextSemanticRegion.identityEquals(brackets.get(0).value))
 					assembly.append[setNewLines(1)]
 				else
 					assembly.append[setNewLines(2)]
-			} else
+			} 
+			else
 				assembly.append[setNewLines(1)]
 			assembly.regionFor.keyword(fcga.FCAssemblyConnectorAccess.toKeyword_3).surround[oneSpace]
 		}
@@ -188,7 +203,8 @@ class FCompFormatter extends AbstractFormatter2 {
 					inject.append[setNewLines(1)]
 				else
 					inject.append[setNewLines(2)]
-			} else
+			} 
+			else
 				inject.append[setNewLines(1)]
 			inject.regionFor.keyword(fcga.FCInjectionModifierAccess.finallyFinallyKeyword_0).surround[oneSpace]
 			inject.regionFor.keyword(fcga.FCPrototypeInjectionAccess.asKeyword_4_0).surround[oneSpace]
@@ -205,5 +221,17 @@ class FCompFormatter extends AbstractFormatter2 {
 	def dispatch void format(FCComAdapter fCAdapter, extension IFormattableDocument document) {
 		fCAdapter.comment?.format
 		fCAdapter.surround[setNewLines(1)]
+	}
+
+	def dispatch void format(FCTo fCTo, extension IFormattableDocument document) {
+		fCTo.regionFor.keyword(".").surround[noSpace] 
+	}
+
+	def dispatch void format(FCInner fCInner, extension IFormattableDocument document) {
+		fCInner.regionFor.keyword(".").surround[noSpace]
+	}
+
+	def dispatch void format(FCFrom fCFrom, extension IFormattableDocument document) {
+		fCFrom.regionFor.keyword(".").surround[noSpace]
 	}
 }

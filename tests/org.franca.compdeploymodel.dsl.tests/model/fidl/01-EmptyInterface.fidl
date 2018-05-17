@@ -1,3 +1,0 @@
-package fidl
-
-interface EmptyInterface { }

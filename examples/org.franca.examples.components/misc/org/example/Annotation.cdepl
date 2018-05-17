@@ -1,0 +1,19 @@
+package org.example
+import "platform:/plugin/org.franca.architecture/deployment/architecture_deployment_spec.cdepl"
+import "../../../helloworld/org/example/HelloWorld.fidl"
+
+/*
+ * more comment
+ */
+//<**@details: adasdas
+//@description: a interface     
+//@details: some details
+//   and more**>
+define system.architecture for interface org.example.HelloWorld
+as HelloWorld_depl {
+// <**@deprecated:**>
+	method sayHello {
+		MethodTimeout = 1200
+	}
+
+}

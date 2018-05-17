@@ -1,7 +1,0 @@
-package fidl
-
-typeCollection MyTypeCollection {
-	struct MyStruct {
-		String aString
-	}
-}

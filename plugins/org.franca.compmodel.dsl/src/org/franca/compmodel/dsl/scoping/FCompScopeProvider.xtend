@@ -28,6 +28,7 @@ import org.franca.compmodel.dsl.fcomp.FCPrototypeInjection
 
 import static extension org.eclipse.xtext.scoping.Scopes.*
 import org.franca.compmodel.dsl.fcomp.FCGenericPrototype
+import org.franca.core.FrancaModelExtensions
 
 /**
  * This class contains custom scoping description.
@@ -37,7 +38,7 @@ import org.franca.compmodel.dsl.fcomp.FCGenericPrototype
  * 
  */
 class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
-
+	
 	/** Scope "superType" for possible component types */
 	def scope_FCComponent_superType(FCComponent component, EReference ref) {
 		val IScope delegateScope = delegateGetScope(component, ref)
@@ -45,7 +46,8 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 		new FilteringScope(delegateScope, [getEObjectOrProxy != component])
 	}
 	
-	/** Scope "contains" for possible component types: without self and not root */
+	/** Scope "contains" for possible component types: without self and not root
+	 */
 	def scope_FCAbstractPrototype_component(FCComponent component, EReference ref) {
 		val IScope delegateScope = delegateGetScope(component, ref)
 		// Remove self component from scope, to avoid recursion in modeling
@@ -66,7 +68,11 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 		new FilteringScope(delegateScope, filter)
 	}
 
-	/** Scope "delegate from" for possible ports inclusive inherited ports */
+	/** Scope "delegate from the outer" for possible ports inclusive inherited ports
+	 * @param new delegate connector object for a composition
+	 * @param reference 
+	 * @returns scope with all ports, which are either directly contained in the composition or inherited.
+	 */
 	def scope_FCOuter_port(FCDelegateConnector dc, EReference ref) {
 		val comp = FCompUtils::getComponentForObject(dc)
 		var List<FCPort> ports = new ArrayList()
@@ -74,7 +80,14 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 		ports.scopeFor
 	}
 
-	/** Scope "delegate to" for possible contained (also inherited) components, depending on the "from" interface type */
+	/** 
+	 * Scope "delegate to the inner" for possible contained (also inherited) components, 
+	 * depending on the "from" interface type
+	 * @param new delegate connector object for a composition
+	 * @param reference 
+	 * @returns scope with all prototypes, which are either directly contained in the composition or inherited 
+	 * 		the prototypes must provide resp. require ports with interfaces derived from the outer.
+	 */
 	def scope_FCInner_prototype(FCDelegateConnector dc, EReference ref) {
 		val comp = FCompUtils::getComponentForObject(dc)
 		val interfaceType = dc.outer.port.interface
@@ -82,20 +95,27 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 		FCompUtils.collectInheritedPrototypes(comp, protos)
 		var compRefs = protos.filter [
 			var List<FCPort> ports = new ArrayList<FCPort>()
-			FCompUtils::collectInheritedPorts(component, dc.kind, ports)
-			ports.exists[interface == interfaceType]
+			FCompUtils::collectInheritedPorts(component, dc.kind, ports)		
+			ports.exists[FrancaModelExtensions::getInterfaceInheritationSet(interface).contains(interfaceType)] 
 		]
 		compRefs.scopeFor
 	}
 
-	/** Scope "delegate to" for possible port, depending on selected target component and the "from" interface type */
+	/** 
+	 * Scope "delegate to the inner" for possible ports, 
+	 * depending on selected target component and the "from" interface type
+	 * @param new delegate connector object for a composition
+	 * @param reference 
+	 * @returns scope with all ports of the selected inner prototype 
+	 * 		with an interface derived from the outer interface type.
+	 */
 	def scope_FCInner_port(FCDelegateConnector dc, EReference ref) {
 		val cref = dc.inner.prototype
 		val interfaceType = dc.outer.port.interface
 		if (cref !== null) {
 			var List<FCPort> ports = new ArrayList<FCPort>()
 			FCompUtils::collectInheritedPorts(cref.component, dc.kind, ports)
-			ports.filter[interface == interfaceType].scopeFor
+			ports.filter[FrancaModelExtensions::getInterfaceInheritationSet(interface).contains(interfaceType)].scopeFor
 		} else
 			IScope.NULLSCOPE
 	}
@@ -136,7 +156,7 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 		val prototypes = comp.prototypes.filter [
 			var List<FCPort> ports = new ArrayList()
 			FCompUtils::collectInheritedPorts(component, FCPortKind.PROVIDED, ports)
-			ports.exists[interface == interfaceType]
+			ports.exists[FrancaModelExtensions::getInterfaceInheritationSet(interface).contains(interfaceType)]
 		]
 		prototypes.scopeFor
 	}
@@ -147,7 +167,7 @@ class FCompScopeProvider extends AbstractDeclarativeScopeProvider {
 		if (cref !== null) {
 			var List<FCPort> ports = new ArrayList()
 			FCompUtils::collectInheritedPorts(cref.component, FCPortKind.PROVIDED, ports)
-			ports.filter[interface == interfaceType].scopeFor
+			ports.filter[FrancaModelExtensions::getInterfaceInheritationSet(interface).contains(interfaceType)].scopeFor
 		} else
 			IScope.NULLSCOPE
 	}

@@ -1,0 +1,15 @@
+package org.example.deployment
+
+import "platform:/plugin/org.franca.someip/deployment/network_SOMEIP_deployment_spec.cdepl"
+import "../HelloWorld.fcdl"
+
+// deployment for a hosted client instance
+define network.someip for service World.Room1.Client1 as C1 
+
+define network.someip for service World.Room1.Client2 as C2 {
+	require AnswerMePort 
+}
+
+
+
+    

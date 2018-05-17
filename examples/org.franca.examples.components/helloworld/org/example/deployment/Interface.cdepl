@@ -1,0 +1,47 @@
+package org.example.deployment
+
+import "platform:/plugin/org.franca.someip/deployment/network_SOMEIP_deployment_spec.cdepl"
+
+import "classpath:/org/example/HelloWorld.fidl"
+import "../HelloWorldTypes.fidl"
+
+// deployment for types
+define network.someip for typeCollection org.example as HelloWorldTypesDeployment {
+	enumeration Location { 
+		EnumBackingType = UInt32
+	}
+	array KnownPeople {
+		SomeIpArrayMaxLength = 128
+	}
+}
+
+// deployment for the interface type
+define network.someip for interface org.example.HelloWorld as SomeIpDeployment4HelloWorld {
+	use org.example.deployment.HelloWorldTypesDeployment
+	SomeIpServiceID = 123
+
+	method sayHello {
+		SomeIpMethodID = 4
+	}
+	
+}
+
+// deployment for the interface type
+define network.someip for interface org.example.HelloWorld2 as SomeIpDeployment4HelloWorld2 {
+	use org.example.deployment.HelloWorldTypesDeployment
+	SomeIpServiceID = 123
+
+	broadcast isThereSomeBody {
+		SomeIpEventID = 5
+		SomeIpReliable = true
+		SomeIpEventGroups = { 1 }
+	}
+	attribute knownPeople {
+		AttributeNotifierUpdateMode = Cyclic
+		SomeIpGetterID = 6
+		SomeIpNotifierID = 7
+		SomeIpNotifierEventGroups = { 1 }
+		SomeIpSetterID = 8
+	}
+}
+

@@ -1,0 +1,32 @@
+package org.example
+
+import org.example.* from "HelloWorld.fidl"
+import org.example.* from "HelloWorld.fcdl"
+
+/*
+ * Server Component for Hello World Extension.
+ * Derived from HelloWorldServer.
+ */
+service component HelloWorldServerExtension extends HelloWorldServer {
+	provides HelloWorld2 as AskMePortExt2
+	provides HelloWorld as AskMePortExt
+}
+
+/*
+ * Client Component for Hello World Extension.
+ * Derived from HelloWorldClient.
+ */
+service component HelloWorldClientExtension extends HelloWorldClient {
+	requires HelloWorld as AnswerMePortExt
+	requires HelloWorld2 as AnswerMePortExt2
+}
+
+root component WorldApart {
+	contains HelloWorldServerExtension
+	contains HelloWorldClientExtension
+	
+	connect HelloWorldClientExtension.AnswerMePort to HelloWorldServerExtension.AskMePort
+	connect HelloWorldClientExtension.AnswerMePortExt to HelloWorldServerExtension.AskMePortExt2
+	connect HelloWorldClientExtension.AnswerMePortExt2 to HelloWorldServerExtension.AskMePortExt2
+	
+}

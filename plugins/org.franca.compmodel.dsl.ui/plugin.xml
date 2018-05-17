@@ -433,21 +433,21 @@
            class="org.franca.compmodel.dsl.ui.wizards.NewFcdlFile"
            icon="icons/component.png"
            id="org.franca.compmodel.dsl.ui.wizards.NewFcdlFile"
-           name="New Franca Component Editor file">
+           name="Franca Component">
      </wizard>
      <wizard
            category="org.franca.compmodel.dsl.ui.wizard"
            class="org.franca.compmodel.dsl.ui.wizards.NewFidlFile"
-           icon="icons/sample.gif"
+           icon="icons/interface.png"
            id="org.franca.compmodel.dsl.ui.wizards.NewIdlFile"
-           name="New Franca IDL Editor file">
+           name="Franca Interface">
      </wizard>
      <wizard
            category="org.franca.compmodel.dsl.ui.wizard"
-           class="org.franca.compmodel.dsl.ui.wizards.NewFdeplFile"
-           icon="icons/sample.gif"
-           id="org.franca.compmodel.dsl.ui.wizards.NewFdeplFile"
-           name="New Franca Deployment Editor file">
+           class="org.franca.compmodel.dsl.ui.wizards.NewCdeplFile"
+           icon="icons/deployment.png"
+           id="org.franca.compmodel.dsl.ui.wizards.NewCdeplFile"
+           name="Franca Component Deployment">
      </wizard>
   </extension>
 

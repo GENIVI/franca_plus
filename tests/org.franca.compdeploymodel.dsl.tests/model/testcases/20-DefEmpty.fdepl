@@ -1,8 +1,0 @@
-package testcases
-// deployment definition for an empty deployment specification
-
-import "../fidl/01-EmptyInterface.fidl"
-
-specification MySpec20 { }
-
-define testcases.MySpec20 for interface fidl.EmptyInterface { }

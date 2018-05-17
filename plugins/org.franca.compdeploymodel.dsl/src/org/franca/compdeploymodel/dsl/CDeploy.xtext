@@ -1,0 +1,133 @@
+/*******************************************************************************
+* Copyright (c) 2018
+*    itemis AG (http://www.itemis.de)
+*    BMW AG (http://www.bmw.de)
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* 2017-07-28: Bernhard Hennlich (BMW AG: rules for component deployment)
+* 2018-03-16: Klaus Birken (extracted as DSL extending Franca deployment)
+*******************************************************************************/
+grammar org.franca.compdeploymodel.dsl.CDeploy with org.franca.deploymodel.dsl.FDeploy
+
+import "http://www.franca.org/compdeploymodel/dsl/CDeploy"
+
+// the Franca deployment ecore model (the base language for the language defined here)
+import "http://www.franca.org/deploymodel/dsl/FDeploy"
+
+// the Franca Component ecore model
+import "http://org.franca.compmodel.dsl" as fcomp
+
+// the Ecore ecore model
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+// **************************************************************
+// model root
+
+@Override 
+FDModel:
+	super
+;
+
+
+// **************************************************************
+// content definition (model part)
+
+@Override 
+FDRootElement:
+	super |
+	FDComponent | FDDevice | FDService | FDVariant |
+	FDProvidedPort | FDRequiredPort | FDComAdapter;
+
+FDService:
+	'define' spec=[FDSpecification|FQN]	'for' 'service' target=FDComponentInstance ('as' name=ID)? ('{'
+		('use' use+=[FDComponent|FQN])*
+
+		// the own properties of this service
+		properties=FDPropertySet
+		
+		// ports of component
+		(providedPorts+=FDProvidedPort|
+		requiredPorts+=FDRequiredPort)*
+	'}')?;
+	
+FDDevice:
+	'define' spec=[FDSpecification|FQN]
+	'for' 'device' target=[fcomp::FCDevice|FQN] ('as' name = ID)?
+	('{'
+		('use' use+=[FDService|FQN])*
+		
+		// the own properties of this device
+		properties=FDPropertySet
+
+		(adapters+=FDComAdapter)*
+	'}')?;
+
+FDComponentInstance:
+	target=[fcomp::FCComponent]
+	({FDComponentInstance.parent=current} '.' prototype=[fcomp::FCGenericPrototype])*;
+
+FDComAdapter: 
+	'adapter' target=[fcomp::FCComAdapter] 'on' spec=[FDSpecification|FQN]
+	('{'
+		('use' use+=[FDProvidedPort|FQN])*
+		properties=FDPropertySet
+	'}')?
+;
+
+FDVariant:
+	'define' 'variant' name=ID 'for' 'root' root=[fcomp::FCComponent]? 
+	('{'
+		('use' use+=[FDDevice|FQN])*
+	'}')?;
+
+	
+FDComponent:
+	'define' spec=[FDSpecification|FQN]
+	'for' 'component' target=[fcomp::FCComponent|FQN] ('as' name=FQN)?
+	'{'
+		('use' use+=[FDComponent|FQN])*
+
+		// the own properties of this component
+		properties=FDPropertySet
+		
+		// ports of component
+		(providedPorts+=FDProvidedPort|
+		requiredPorts+=FDRequiredPort)*
+	'}';
+	
+FDPort: FDProvidedPort | FDRequiredPort;
+
+FDRequiredPort:
+	'require' target=[fcomp::FCRequiredPort|FQN] ('on' spec=[FDSpecification|FQN])?
+	('{' 
+		('use' use+=[FDInterface|FQN])*
+		
+		// the own properties of this component
+		properties=FDPropertySet
+	'}')?;
+
+FDProvidedPort:
+	'provide' target=[fcomp::FCProvidedPort|FQN] ('on' spec=[FDSpecification|FQN])?
+	('{'
+		('use' use+=[FDInterface|FQN])*
+		
+		// the own properties of this component
+		properties=FDPropertySet
+	'}')?;
+	
+// **************************************************************
+// annotations
+terminal ANNOTATION_STRING returns ecore::EString:
+	'@' (('a'..'z')|'-')+ (' '|'\t')* ':'
+	( ('\\' ('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\')) | ('\\*'|'\\@') | !('\\'|'*'|'@') )*
+;
+
+FDAnnotationBlock:
+	'<**' (elements+=FDAnnotation)+ '**>';
+
+FDAnnotation:
+	rawText=ANNOTATION_STRING;
+	

@@ -2,11 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Franca Component Deployment Model UI plugin
 Bundle-Vendor: itemis AG
-Bundle-Version: 0.12.0.qualifier
+Bundle-Version: 0.13.0.qualifier
 Bundle-SymbolicName: org.franca.compdeploymodel.dsl.ui;singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.franca.compdeploymodel.dsl;visibility:=reexport,
- org.franca.compmodel.dsl,
+Require-Bundle: org.franca.deploymodel.dsl,
+ org.franca.deploymodel.dsl.ui,
+ org.franca.compdeploymodel.dsl,
+ org.franca.compdeploymodel.dsl.ide;visibility:=reexport,
  org.eclipse.xtext;bundle-version="[2.11.0,2.12.0)",
  org.eclipse.xtext.ui;bundle-version="[2.11.0,2.12.0)",
  org.eclipse.xtext.ui.shared;bundle-version="[2.11.0,2.12.0)",
@@ -22,35 +24,14 @@ Require-Bundle: org.franca.compdeploymodel.dsl;visibility:=reexport,
  org.antlr.runtime,
  org.eclipse.jdt.core;resolution:=optional,
  org.eclipse.swt,
- com.google.guava
+ com.google.guava,
+ com.google.eclipse.protobuf;bundle-version="1.6.0"
 Import-Package: org.apache.log4j,
  org.franca.compmodel.dsl.ui.contentassist
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.franca.compdeploymodel.dsl.ui;
-  uses:="org.osgi.framework,
-   com.google.inject,
-   org.eclipse.xtext.ui,
-   org.eclipse.core.resources,
-   org.eclipse.xtext.ui.guice,
-   org.eclipse.ui.plugin",
- org.franca.compdeploymodel.dsl.ui.contentassist;
-  uses:="org.eclipse.emf.ecore,
-   org.eclipse.xtext.ui.editor.contentassist,
-   org.eclipse.xtext,
-   org.eclipse.xtext.common.ui.contentassist",
- org.franca.compdeploymodel.dsl.ui.contentassist.antlr;
-  uses:="org.franca.compdeploymodel.dsl.ui.contentassist.antlr.internal,
-   org.eclipse.xtext.ui.codetemplates.ui.partialEditing,
-   org.eclipse.xtext.ui.editor.contentassist.antlr.internal,
-   org.franca.compdeploymodel.dsl.services,
-   org.eclipse.xtext,
-   org.eclipse.xtext.ui.editor.contentassist.antlr",
+Export-Package: org.franca.compdeploymodel.dsl.ui,
+ org.franca.compdeploymodel.dsl.ui.contentassist,
  org.franca.compdeploymodel.dsl.ui.highlighting,
- org.franca.compdeploymodel.dsl.ui.internal;uses:="org.osgi.framework,com.google.inject,org.eclipse.ui.plugin",
- org.franca.compdeploymodel.dsl.ui.quickfix;
-  uses:="org.eclipse.emf.common.util,
-   org.franca.compdeploymodel.dsl.fDeploy,
-   org.eclipse.xtext.validation,
-   org.eclipse.xtext.ui.editor.quickfix,
-   org.franca.core.franca"
-Bundle-Activator: org.franca.compdeploymodel.dsl.ui.internal.FDeployAdaptiveActivator
+ org.franca.compdeploymodel.dsl.ui.quickfix,
+ org.franca.compdeploymodel.dsl.ui.internal
+Bundle-Activator: org.franca.compdeploymodel.dsl.ui.internal.DslActivator

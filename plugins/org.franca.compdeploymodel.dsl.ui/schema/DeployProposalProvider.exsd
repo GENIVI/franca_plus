@@ -7,7 +7,7 @@
       </appInfo>
       <documentation>
          This extension point provides access to the given ProposalProvider implementation. The FDeployProposalProvider class needs to be extend for external usage.
-         Currently the corresponding extension could only be implemented once.  
+         Currently the corresponding extension could only be implemented once.
       </documentation>
    </annotation>
 
@@ -63,7 +63,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.franca.compdeploymodel.dsl.ui.contentassist.FDeployProposalProvider:"/>
+                  <meta.attribute kind="java" basedOn="org.franca.compdeploymodel.dsl.ui.contentassist.CDeployProposalProvider:"/>
                </appInfo>
             </annotation>
          </attribute>

@@ -1,0 +1,69 @@
+module org.franca.compdeploymodel.dsl.GenerateCDeploy
+
+import org.eclipse.xtext.xtext.generator.*
+import org.eclipse.xtext.xtext.generator.model.project.*
+import org.eclipse.emf.mwe2.ecore.EcoreGenerator
+
+var rootPath = ".."
+var projectName = "org.franca.compdeploymodel.dsl"
+
+Workflow {
+	component = XtextGenerator {
+		configuration = {
+			project = StandardProjectConfig {
+				baseName = projectName
+				rootPath = rootPath
+				runtimeTest = {
+					enabled = true
+					root = "../../tests/${projectName}.tests"
+				}
+				eclipsePlugin = {
+					enabled = true
+				}
+				eclipsePluginTest = {
+					enabled = true
+					root = "../../tests/${projectName}.ui.tests"
+				}
+				createEclipseMetaData = true
+			}
+			code = {
+				encoding = "ISO-8859-1"
+				lineDelimiter = "\r\n"
+				fileHeader = "/* Copyright (C) 2018 BMW Group
+ * Author: Bernhard Hennlich (bernhard.hennlich@bmw.de)
+ * This Source Code Form is subject to the terms of the Eclipse Public
+ * License, v. 1.0. If a copy of the EPL was not distributed with this
+ * file, You can obtain one at https://www.eclipse.org/legal/epl-v10.html.
+ */"
+			}
+		}
+		language = StandardLanguage {
+			name = "${projectName}.CDeploy"
+			fileExtensions = "cdepl"
+			
+			// the grammar is using a predefined ecore model
+			referencedResource = "platform:/resource/${projectName}/model/CDeploy.genmodel"
+
+			// the CDeploy language is based on FDeploy
+			referencedResource = "platform:/resource/org.franca.deploymodel.dsl/model/FDeploy.genmodel"
+
+			// CDeploy is a language for deployment of components, thus it references FComp
+			referencedResource = "platform:/resource/org.franca.compmodel.dsl/model/generated/FComp.genmodel"
+
+			serializer = {
+				generateStub = false
+			}
+			validator = {
+				// composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
+				composedCheck = "org.eclipse.xtext.validation.ImportUriValidator"			
+			}
+		}
+	}
+	
+	component = EcoreGenerator {
+		genModel = "platform:/resource/${projectName}/model/CDeploy.genmodel"
+        srcPath = "platform:/resource/${projectName}/src-gen"
+        generateEdit = false
+        generateEditor = false
+	}
+}

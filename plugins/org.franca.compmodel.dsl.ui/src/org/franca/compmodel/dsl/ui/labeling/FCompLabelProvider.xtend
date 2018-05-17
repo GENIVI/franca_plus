@@ -33,6 +33,8 @@ import org.franca.compmodel.dsl.fcomp.FCTagsDeclaration
 import org.franca.compmodel.dsl.fcomp.FCTagDecl
 import org.franca.compmodel.dsl.fcomp.FCDevice
 import org.franca.compmodel.dsl.fcomp.FCComAdapter
+import org.franca.compmodel.dsl.fcomp.FCInjectionModifier
+import org.eclipse.jface.viewers.StyledString
 
 /**
  * Provides labels for EObjects.
@@ -48,34 +50,55 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 	
 	@Inject 
 	StylerFactory stylerFactory
+	
+	private def StyledString appendItalicInBrackets(StyledString it, String text) {
+		val TextStyle textStyle = new TextStyle()
+		val fontData= JFaceResources.getDialogFont().getFontData
+		fontData.get(0).style = SWT.ITALIC
+		textStyle.setFontData(fontData)
+		// textStyle.color = new RGB(63, 72, 204)
+		textStyle.color = new RGB(0, 0, 0)
+		append(' [')
+		append(stylerFactory.createFromXtextStyle(text, textStyle))
+		append(']')
+		it
+	}
 
 	// ********** labels ***********
 	public def text(FCPort element) {
 		val styledString = element.name.convertToStyledString
-		if (element.name != element.interface.name) {
-			val TextStyle textStyle = new TextStyle()
-			val fontData= JFaceResources.getDialogFont().getFontData
-			fontData.get(0).style = SWT.ITALIC
-			textStyle.setFontData(fontData)
-			// textStyle.color = new RGB(63, 72, 204)
-			textStyle.color = new RGB(0, 0, 0)
-			styledString.append(' [')
-			styledString.append(stylerFactory.createFromXtextStyle(element.interface.name, textStyle))
-			styledString.append(']')
-		}
+		if (element.name != element.interface.name.split('\\.'))
+			styledString.appendItalicInBrackets(element.interface.name.split('\\.').last)
 		styledString	
 	}
 	
-	public def String text(FCComponent element) {
-		var String text = ''
-		if (element.abstract)
-			text += "<abstract> "
-		if (element.service)
-			text += "<service> "
-		if (element.singleton)
-			text += "<root> "
+	public def text(FCComponent element) {
+		val StyledString styledString = new StyledString
 		
-		text + element.name.split('\\.').last
+		if (element.abstract)
+			styledString.append("<abstract> ")
+		if (element.service)
+			styledString.append("<service> ")
+		if (element.singleton)
+			styledString.append("<root> ")
+		
+		styledString.append(element.name.split('\\.').last)
+		
+		if (element.superType !== null) 
+			styledString.appendItalicInBrackets(element.superType.name.split('\\.').last)
+		styledString	
+	}
+	
+	public def text(FCPrototypeInjection element) {
+		val StyledString styledString = new StyledString
+		
+		if (element.modifier.value == FCInjectionModifier.FINALLY_VALUE)
+			styledString.append("<finally> ")
+		styledString.append(element.name.split('\\.').last.convertToStyledString)
+					
+		if (element.ref !== null) 
+			styledString.appendItalicInBrackets(element.ref.name.split('\\.').last)
+		styledString	
 	}
 
 	public def String text(FCAssemblyConnector element) {
@@ -88,10 +111,6 @@ class FCompLabelProvider extends DefaultEObjectLabelProvider {
 	
 	public def String text(FCAnnotationBlock element) {
 		"annotations"
-	}
-	
-	public def String text(FCPrototypeInjection inject) {
-		inject.ref.name.split('\\.').last +" by " + inject.name.split('\\.').last  
 	}
 	
 	public def String text(FCAnnotation element) {

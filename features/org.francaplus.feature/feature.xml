@@ -2,7 +2,7 @@
 <feature
       id="org.francaplus.feature"
       label="%featureName"
-      version="0.12.0.qualifier"
+      version="0.13.0.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -51,6 +51,13 @@
 
    <plugin
          id="org.franca.compmodel.dsl.ide"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.franca.compdeploymodel.dsl.ide"
          download-size="0"
          install-size="0"
          version="0.0.0"

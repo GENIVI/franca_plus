@@ -8,10 +8,14 @@
 
 package org.franca.compmodel.dsl.ui.wizards;
 
+import org.eclipse.core.internal.resources.Folder;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.internal.core.PackageFragment;
+import org.eclipse.jdt.internal.core.PackageFragmentRoot;
+import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
@@ -34,12 +38,15 @@ import org.eclipse.ui.dialogs.ContainerSelectionDialog;
  * OR with the extension that matches the expected one (fidl).
  */
 
+@SuppressWarnings("restriction")
 public class NewFidlFileWizardPage extends WizardPage {
 	private Text containerText;
 
 	private Text fileText;
 
 	private ISelection selection;
+	
+	private String packageName = "default";
 
 	/**
 	 * Constructor for SampleNewWizardPage.
@@ -116,8 +123,21 @@ public class NewFidlFileWizardPage extends WizardPage {
 					container = ((IResource) obj).getParent();
 				containerText.setText(container.getFullPath().toString());
 			}
+			else if (obj instanceof PackageFragmentRoot) {
+				PackageFragmentRoot pfr = (PackageFragmentRoot)obj;
+				containerText.setText(pfr.getPath().toString());
+			}
+			else if (obj instanceof PackageFragment) {
+				PackageFragment pf = (PackageFragment)obj;
+				containerText.setText(pf.getPath().toString());
+				packageName = pf.getElementName();
+			}
+			else if (obj instanceof Folder) {
+				Folder f = (Folder)obj;
+				containerText.setText(f.getFullPath().toString());
+			}
 		}
-		fileText.setText("interface.fidl");
+		fileText.setText("Interface.fidl");
 	}
 
 	/**
@@ -189,5 +209,9 @@ public class NewFidlFileWizardPage extends WizardPage {
 
 	public String getFileName() {
 		return fileText.getText();
+	}
+
+	public String getPackageName() {
+		return packageName;
 	}
 }

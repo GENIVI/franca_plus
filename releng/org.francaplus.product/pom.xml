@@ -5,13 +5,18 @@
 	<groupId>org.franca</groupId>
 	<artifactId>org.francaplus.product</artifactId>
 	<packaging>eclipse-repository</packaging>
+	<version>0.13.0-SNAPSHOT</version>
 
 	<parent>
 		<groupId>org.franca</groupId>
 		<artifactId>org.francaplus.parent</artifactId>
-		<version>0.12.0-SNAPSHOT</version>
-		<relativePath>../../releng/org.francaplus.parent/pom.xml</relativePath>
+		<version>0.13.0-SNAPSHOT</version>
+		<relativePath>../org.francaplus.parent/pom.xml</relativePath>
 	</parent>
+
+	<properties>
+        <skip.deployment>false</skip.deployment>
+    </properties>
 
 	<build>
 		<plugins>
@@ -44,9 +49,4 @@
   			</plugin>
 		</plugins>
 	</build>
-
-	<properties>
-        <skip.deployment>true</skip.deployment>
-    </properties>
-	<version>0.12.0-SNAPSHOT</version>
 </project>

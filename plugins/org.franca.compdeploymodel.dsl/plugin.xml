@@ -5,11 +5,20 @@
   <extension-point id="deploySpecProvider" name="Franca Component Deployment Specification Provider" schema="schema/deploySpecProvider.exsd"/>
   <extension-point id="deploymentValidator" name="Franca Component Deployment Model Validator" schema="schema/deploymentValidator.exsd"/>
 
-  <extension point="org.eclipse.emf.ecore.generated_package">
-    <package 
-       uri = "http://www.franca.org/compdeploymodel/dsl/FDeploy" 
-       class = "org.franca.compdeploymodel.dsl.fDeploy.FDeployPackage"
-       genModel = "model/FDeploy.genmodel" /> 
-  </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated CDeploy -->
+      <package
+            uri="http://www.franca.org/compdeploymodel/dsl/CDeploy"
+            class="org.franca.compdeploymodel.dsl.cDeploy.CDeployPackage"
+            genModel="model/CDeploy.genmodel"/>
+   </extension>
+   <extension
+         point="org.franca.deploymodel.dsl.deploymentExtension">
+      <validator
+            class="org.franca.compdeploymodel.dsl.CDeployExtension"
+            name="Component Model Deploy Extension ">
+      </validator>
+   </extension>
 
 </plugin>

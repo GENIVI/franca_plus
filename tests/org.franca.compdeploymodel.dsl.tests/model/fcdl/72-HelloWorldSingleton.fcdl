@@ -1,0 +1,29 @@
+package org.example
+
+import org.example.* from "../fidl/70-HelloWorld.fidl"
+
+singleton service component HelloWorldServer {
+	provides HelloWorld2 as AskMePort
+	provides HelloWorld as AskMePortCan
+}
+
+service component HelloWorldClient {
+	requires org.example.HelloWorld2 as AnswerMePort
+}
+
+component MeetingPoint {
+	contains HelloWorldServer as Service
+	
+	contains HelloWorldClient as Client1
+	contains HelloWorldClient as Client2 
+	
+	connect Client1.AnswerMePort to Service.AskMePort
+	connect Client2.AnswerMePort to Service.AskMePort
+}
+
+root component World {
+	contains MeetingPoint as Room1
+	contains MeetingPoint as Room2
+}
+
+device HelloServerECU 

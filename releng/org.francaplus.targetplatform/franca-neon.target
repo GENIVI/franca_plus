@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Franca Multi Target Platform - Eclipse 4.6" sequenceNumber="1499085242">
+<?pde version="3.8"?><target name="Franca Multi Target Platform - Eclipse 4.6" sequenceNumber="1499085272">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="de.itemis.xtext.antlr.sdk.feature.group" version="2.1.1.v201405091103"/>
@@ -49,13 +49,6 @@
 <repository location="http://www.xpect-tests.org/updatesite/nightly/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.franca.core.feature.group" version="0.12.0.201801261637"/>
-<unit id="org.franca.core.sdk.feature.group" version="0.12.0.201801261637"/>
-<unit id="org.franca.ui.feature.group" version="0.12.0.201801261637"/>
-<unit id="org.franca.ui.sdk.feature.group" version="0.12.0.201801261637"/>
-<repository location="http://franca.github.io/franca/update_site/releases"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.feature.group" version="4.11.0.201803080745-r"/>
 <unit id="org.eclipse.egit.feature.group" version="4.11.0.201803080745-r"/>
 <repository location="http://download.eclipse.org/egit/updates"/>
@@ -77,11 +70,16 @@
 <unit id="org.eclipse.emf.compare.source.feature.group" version="3.0.1.201408191310"/>
 <repository location="http://download.eclipse.org/modeling/emf/compare/updates/releases/3.0"/>
 </location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.franca.core.sdk.feature.group" version="0.13.0.201804131325"/>
+<unit id="org.franca.core.feature.group" version="0.13.0.201804131325"/>
+<unit id="org.franca.ui.sdk.feature.group" version="0.13.0.201804131325"/>
+<unit id="org.franca.ui.feature.group" version="0.13.0.201804131325"/>
+<repository location="http://franca.github.io/franca/update_site/releases"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="com.itemis.xtext.testing.feature.feature.group" version="0.2.0.201612011358"/>
+<repository location="https://dl.bintray.com/itemis/generic/xtext-testing/updates"/>
+</location>
 </locations>
-<environment>
-<os>win32</os>
-<ws>win32</ws>
-<arch>x86</arch>
-<nl>en</nl>
-</environment>
 </target>

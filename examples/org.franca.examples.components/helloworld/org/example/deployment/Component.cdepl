@@ -1,0 +1,11 @@
+package org.example.deployment
+
+import "platform:/plugin/org.franca.someip/deployment/network_SOMEIP_deployment_spec.cdepl"
+import "../HelloWorld.fcdl"
+
+// deployment for the service type 
+define network.someip for component org.example.HelloWorldClient as HelloWorldClientComponentDeployment {
+	require AnswerMePort on network.someip 	
+}
+
+
