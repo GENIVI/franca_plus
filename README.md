@@ -1,4 +1,5 @@
-# franca_plus
+# franca_plus [![Build Status](https://travis-ci.org/GENIVI/franca_plus.svg?branch=master)](https://travis-ci.org/GENIVI/franca_plus)
+
 Proof of concept that extends franca for components.
 
 
