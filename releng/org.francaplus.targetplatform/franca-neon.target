@@ -49,8 +49,8 @@
 <repository location="http://www.xpect-tests.org/updatesite/nightly/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jgit.feature.group" version="4.11.0.201803080745-r"/>
-<unit id="org.eclipse.egit.feature.group" version="4.11.0.201803080745-r"/>
+<unit id="org.eclipse.jgit.feature.group" version="5.5.1.201910021850-r"/>
+<unit id="org.eclipse.egit.feature.group" version="5.5.1.201910021850-r"/>
 <repository location="http://download.eclipse.org/egit/updates"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
